@@ -1,89 +1,106 @@
-﻿  Training6.cpp
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(46,1): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(80,24): warning C4244: '=': 'std::streamoff'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(200,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(201,18): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(202,19): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(203,18): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(204,19): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(205,18): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(209,22): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(210,22): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(211,22): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(215,18): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(216,18): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(217,18): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(218,18): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(220,18): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(222,18): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(226,22): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(227,22): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(228,22): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(232,19): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(233,19): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(234,19): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(235,19): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(236,19): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(237,19): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(239,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(240,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(241,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(245,22): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(247,22): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(252,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(253,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(254,21): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(255,19): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(256,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(257,19): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(258,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(259,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(260,21): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(264,22): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(265,22): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(266,22): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(296,21): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(297,21): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(303,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(304,19): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(317,21): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(318,21): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(325,19): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(327,19): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(340,22): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(341,21): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(342,22): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(343,21): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(344,21): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(345,21): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(346,22): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(347,22): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(348,22): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(354,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(355,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(356,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(357,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(358,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(359,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(361,21): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(362,21): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(363,21): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(376,23): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(377,24): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(378,24): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(379,22): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(380,23): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(381,22): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(382,23): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(383,24): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(384,24): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(391,21): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(392,21): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(393,22): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(394,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(395,21): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(396,20): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(397,21): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(398,21): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training6.cpp(399,22): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+﻿  Training3.cpp
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(72,1): warning C4305: '초기화 중': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(94,23): warning C4305: '초기화 중': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(135,6): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(136,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(137,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(138,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(140,7): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(141,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(143,8): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(150,6): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(151,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(152,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(153,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(155,7): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(156,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(158,8): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(165,6): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(166,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(167,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(168,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(170,7): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(171,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(173,8): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(181,6): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(182,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(183,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(184,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(186,7): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(187,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(189,8): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(196,6): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(197,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(198,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(199,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(201,7): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(202,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(204,8): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(211,6): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(212,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(213,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(214,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(216,7): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(217,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(219,8): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(227,6): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(228,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(229,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(230,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(232,7): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(233,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(235,8): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(242,6): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(243,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(244,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(245,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(247,7): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(248,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(250,8): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(257,6): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(258,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(259,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(260,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(262,7): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(263,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(265,8): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(273,6): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(274,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(275,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(276,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(278,7): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(279,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(281,8): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(288,6): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(289,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(290,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(291,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(293,7): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(294,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(296,8): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(303,6): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(304,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(305,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(306,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(308,7): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(309,1): warning C4305: '인수': 'double'에서 'const GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(311,8): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(372,29): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(373,29): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(375,29): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(376,30): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(378,29): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(379,30): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(381,28): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(382,30): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(384,28): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(385,30): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(387,28): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(388,29): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(390,28): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(391,29): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(393,29): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(394,29): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(513,24): warning C4244: '=': 'std::streamoff'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\OpenGL 3주차\Training3.cpp(712,1): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
   OpenGL 3주차.vcxproj -> D:\Visual Studio\Project\컴퓨터그래픽스\OpenGL 3주차\Debug\OpenGL 3주차.exe

@@ -39,15 +39,16 @@ void make_fragmentShaders();
 void InitShader();
 void InitTriangle();
 void TimerFunction(int value);
+void Mouse(int button, int state, int x, int y);
 void SetRectangle();
 void RandomColor(int index);
-bool IsCollide(int Seed);
+bool IsCollide(int Seed, int Index);
 GLvoid InitBuffer();
 GLvoid Reshape(int w, int h);
 char* filetobuf(const char* file);
 GLvoid DrawScene();
-Direction dir[3];
-Shape shape[4];
+Direction dir[6];
+Shape shape[6];
 
 struct MyPoint {
 	GLfloat Point_X;
@@ -61,15 +62,18 @@ GLuint s_program;
 GLuint vao, vbo[2];
 GLint width, height;
 
-MyPoint myPoint[3] = {
+MyPoint myPoint[6] = {
 	{0.4, -0.9},
+	{0.9, 0},
+	{0.6, 0.9},
+	{-0.9, 0},
 	{0.0, 0.16},
 	{0., -0.16}
 };
 
-GLfloat triShape[17][3];
+GLfloat triShape[26][3];
 
-GLfloat colors[12][3] = { //--- 삼각형 꼭지점 색상
+GLfloat colors[18][3] = { //--- 삼각형 꼭지점 색상
 	{ 0.95, 0.82, 0.71 },
 	{ 0.95, 0.82, 0.71 },
 	{ 0.95, 0.82, 0.71 },
@@ -78,7 +82,18 @@ GLfloat colors[12][3] = { //--- 삼각형 꼭지점 색상
 	{ 0.95, 0.78, 0.41 },
 	{ 0.91, 0.50, 0.21 },
 	{ 0.91, 0.50, 0.21 },
-	{ 0.91, 0.50, 0.21 }};
+	{ 0.91, 0.50, 0.21 },
+	{ 0.53, 0.51, 0.64 },
+	{ 0.53, 0.51, 0.64 },
+	{ 0.53, 0.51, 0.64 },
+	{ 0.47, 0.60, 0.50 },
+	{ 0.47, 0.60, 0.50 },
+	{ 0.47, 0.60, 0.50 },
+	{ 0.33, 0.78, 0.82 },
+	{ 0.33, 0.78, 0.82 },
+	{ 0.33, 0.78, 0.82 } };
+
+int iIndex = 0;
 
 int CCW(const GLfloat ax, const GLfloat ay, const GLfloat bx, const GLfloat by, const GLfloat cx, const GLfloat cy)
 {
@@ -112,50 +127,50 @@ bool ParallelCollide(GLfloat p1, GLfloat p2, GLfloat p3, GLfloat p4)
 		return false;
 }
 
-bool IsCollide(int Seed)
+bool IsCollide(int Seed, int Index)
 {
 	switch (Seed)
 	{
 	case 0:
-		if (CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[0][0], triShape[0][1]) *
-			CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[1][0], triShape[0][1]) <= 0 &&
-			CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[0][1], -BoxWidth, -BoxHeight) *
-			CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[0][1], BoxWidth, -BoxHeight) <= 0)
+		if (CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) *
+			CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index][1]) <= 0 &&
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index][1], -BoxWidth, -BoxHeight) *
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index][1], BoxWidth, -BoxHeight) <= 0)
 		{
-			if (CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[0][0], triShape[0][1]) * CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[1][0], triShape[1][1]) == 0 &&
-				CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[1][1], -BoxWidth, -BoxHeight) * CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[1][1], BoxWidth, -BoxHeight) == 0)
+			if (CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) * CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index + 1][1]) == 0 &&
+				CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], -BoxWidth, -BoxHeight) * CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], BoxWidth, -BoxHeight) == 0)
 			{
-				if (ParallelCollide(-BoxWidth, BoxWidth, triShape[0][0], triShape[1][0]))
+				if (ParallelCollide(-BoxWidth, BoxWidth, triShape[3 * Index][0], triShape[3 * Index + 1][0]))
 					return true;
 			}
 			else
 				return true;
 		}
 
-		if (CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[1][0], triShape[1][1]) *
-			CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[2][0], triShape[2][1]) <= 0 &&
-			CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], -BoxWidth, -BoxHeight) *
-			CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], BoxWidth, -BoxHeight) <= 0)
+		if (CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index + 1][1]) *
+			CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) <= 0 &&
+			CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, -BoxHeight) *
+			CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, -BoxHeight) <= 0)
 		{
-			if (CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[1][0], triShape[1][1]) * CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[2][0], triShape[2][1]) == 0 &&
-				CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], -BoxWidth, -BoxHeight) * CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], BoxWidth, -BoxHeight) == 0)
+			if (CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index + 1][1]) * CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) == 0 &&
+				CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, -BoxHeight) * CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, -BoxHeight) == 0)
 			{
-				if (ParallelCollide(-BoxWidth, BoxWidth, triShape[1][0], triShape[2][0]))
+				if (ParallelCollide(-BoxWidth, BoxWidth, triShape[3 * Index + 1][0], triShape[3 * Index + 2][0]))
 					return true;
 			}
 			else
 				return true;
 		}
 
-		if (CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[0][0], triShape[0][1]) *
-			CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[2][0], triShape[2][1]) <= 0 &&
-			CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], -BoxWidth, -BoxHeight) *
-			CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], BoxWidth, -BoxHeight) <= 0)
+		if (CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) *
+			CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) <= 0 &&
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, -BoxHeight) *
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, -BoxHeight) <= 0)
 		{
-			if (CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[0][0], triShape[0][1]) * CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[2][0], triShape[2][1]) == 0 &&
-				CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], -BoxWidth, -BoxHeight) * CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], BoxWidth, -BoxHeight) == 0)
+			if (CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) * CCW(-BoxWidth, -BoxHeight, BoxWidth, -BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) == 0 &&
+				CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, -BoxHeight) * CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, -BoxHeight) == 0)
 			{
-				if (ParallelCollide(-BoxWidth, BoxWidth, triShape[0][0], triShape[2][0]))
+				if (ParallelCollide(-BoxWidth, BoxWidth, triShape[3 * Index][0], triShape[3 * Index + 2][0]))
 					return true;
 			}
 			else
@@ -163,45 +178,45 @@ bool IsCollide(int Seed)
 		}
 		break;
 	case 1:
-		if (CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[0][0], triShape[0][1]) *
-			CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[1][0], triShape[0][1]) <= 0 &&
-			CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[0][1], BoxWidth, -BoxHeight) *
-			CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[0][1], BoxWidth, BoxHeight) <= 0)
+		if (CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) *
+			CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index][1]) <= 0 &&
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index][1], BoxWidth, -BoxHeight) *
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index][1], BoxWidth, BoxHeight) <= 0)
 		{
-			if (CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[0][0], triShape[0][1]) * CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[1][0], triShape[1][1]) == 0 &&
-				CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[1][1], BoxWidth, -BoxHeight) * CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[1][1], BoxWidth, BoxHeight) == 0)
+			if (CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) * CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index + 1][1]) == 0 &&
+				CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], BoxWidth, -BoxHeight) * CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], BoxWidth, BoxHeight) == 0)
 			{
-				if (ParallelCollide(-BoxHeight, BoxHeight, triShape[0][1], triShape[1][1]))
+				if (ParallelCollide(-BoxHeight, BoxHeight, triShape[3 * Index][1], triShape[3 * Index + 1][1]))
 					return true;
 			}
 			else
 				return true;
 		}
 
-		if (CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[1][0], triShape[1][1]) *
-			CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[2][0], triShape[2][1]) <= 0 &&
-			CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], BoxWidth, -BoxHeight) *
-			CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], BoxWidth, BoxHeight) <= 0)
+		if (CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index + 1][1]) *
+			CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) <= 0 &&
+			CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, -BoxHeight) *
+			CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, BoxHeight) <= 0)
 		{
-			if (CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[1][0], triShape[1][1]) * CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[2][0], triShape[2][1]) == 0 &&
-				CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], BoxWidth, -BoxHeight) * CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], BoxWidth, BoxHeight) == 0)
+			if (CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index + 1][1]) * CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) == 0 &&
+				CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, -BoxHeight) * CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, BoxHeight) == 0)
 			{
-				if (ParallelCollide(-BoxHeight, BoxHeight, triShape[1][1], triShape[2][1]))
+				if (ParallelCollide(-BoxHeight, BoxHeight, triShape[3 * Index + 1][1], triShape[3 * Index + 2][1]))
 					return true;
 			}
 			else
 				return true;
 		}
 
-		if (CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[0][0], triShape[0][1]) *
-			CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[2][0], triShape[2][1]) <= 0 &&
-			CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], BoxWidth, -BoxHeight) *
-			CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], BoxWidth, BoxHeight) <= 0)
+		if (CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) *
+			CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) <= 0 &&
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, -BoxHeight) *
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, BoxHeight) <= 0)
 		{
-			if (CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[0][0], triShape[0][1]) * CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[2][0], triShape[2][1]) == 0 &&
-				CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], BoxWidth, -BoxHeight) * CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], BoxWidth, BoxHeight) == 0)
+			if (CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) * CCW(BoxWidth, -BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) == 0 &&
+				CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, -BoxHeight) * CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, BoxHeight) == 0)
 			{
-				if (ParallelCollide(-BoxHeight, BoxHeight, triShape[0][1], triShape[2][1]))
+				if (ParallelCollide(-BoxHeight, BoxHeight, triShape[3 * Index][1], triShape[3 * Index + 2][1]))
 					return true;
 			}
 			else
@@ -209,45 +224,45 @@ bool IsCollide(int Seed)
 		}
 		break;
 	case 2:
-		if (CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[0][0], triShape[0][1]) *
-			CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[1][0], triShape[0][1]) <= 0 &&
-			CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[0][1], -BoxWidth, BoxHeight) *
-			CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[0][1], BoxWidth, BoxHeight) <= 0)
+		if (CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) *
+			CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index][1]) <= 0 &&
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index][1], -BoxWidth, BoxHeight) *
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index][1], BoxWidth, BoxHeight) <= 0)
 		{
-			if (CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[0][0], triShape[0][1]) * CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[1][0], triShape[1][1]) == 0 &&
-				CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[1][1], -BoxWidth, BoxHeight) * CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[1][1], BoxWidth, BoxHeight) == 0)
+			if (CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) * CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index + 1][1]) == 0 &&
+				CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], -BoxWidth, BoxHeight) * CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], BoxWidth, BoxHeight) == 0)
 			{
-				if (ParallelCollide(-BoxWidth, BoxWidth, triShape[0][0], triShape[1][0]))
+				if (ParallelCollide(-BoxWidth, BoxWidth, triShape[3 * Index][0], triShape[3 * Index + 1][0]))
 					return true;
 			}
 			else
 				return true;
 		}
 
-		if (CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[1][0], triShape[1][1]) *
-			CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[2][0], triShape[2][1]) <= 0 &&
-			CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], -BoxWidth, BoxHeight) *
-			CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], BoxWidth, BoxHeight) <= 0)
+		if (CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index + 1][1]) *
+			CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) <= 0 &&
+			CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, BoxHeight) *
+			CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, BoxHeight) <= 0)
 		{
-			if (CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[1][0], triShape[1][1]) * CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[2][0], triShape[2][1]) == 0 &&
-				CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], -BoxWidth, BoxHeight) * CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], BoxWidth, BoxHeight) == 0)
+			if (CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index + 1][1]) * CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) == 0 &&
+				CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, BoxHeight) * CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, BoxHeight) == 0)
 			{
-				if (ParallelCollide(-BoxWidth, BoxWidth, triShape[1][0], triShape[2][0]))
+				if (ParallelCollide(-BoxWidth, BoxWidth, triShape[3 * Index + 1][0], triShape[3 * Index + 2][0]))
 					return true;
 			}
 			else
 				return true;
 		}
 
-		if (CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[0][0], triShape[0][1]) *
-			CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[2][0], triShape[2][1]) <= 0 &&
-			CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], -BoxWidth, BoxHeight) *
-			CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], BoxWidth, BoxHeight) <= 0)
+		if (CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) *
+			CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) <= 0 &&
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, BoxHeight) *
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, BoxHeight) <= 0)
 		{
-			if (CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[0][0], triShape[0][1]) * CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[2][0], triShape[2][1]) == 0 &&
-				CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], -BoxWidth, BoxHeight) * CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], BoxWidth, BoxHeight) == 0)
+			if (CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) * CCW(-BoxWidth, BoxHeight, BoxWidth, BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) == 0 &&
+				CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, BoxHeight) * CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], BoxWidth, BoxHeight) == 0)
 			{
-				if (ParallelCollide(-BoxWidth, BoxWidth, triShape[0][0], triShape[2][0]))
+				if (ParallelCollide(-BoxWidth, BoxWidth, triShape[3 * Index][0], triShape[3 * Index + 2][0]))
 					return true;
 			}
 			else
@@ -255,45 +270,45 @@ bool IsCollide(int Seed)
 		}
 		break;
 	case 3:
-		if (CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[0][0], triShape[0][1]) *
-			CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[1][0], triShape[0][1]) <= 0 &&
-			CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[0][1], -BoxWidth, BoxHeight) *
-			CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[0][1], -BoxWidth, -BoxHeight) <= 0)
+		if (CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) *
+			CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index][1]) <= 0 &&
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index][1], -BoxWidth, BoxHeight) *
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index][1], -BoxWidth, -BoxHeight) <= 0)
 		{
-			if (CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[0][0], triShape[0][1]) * CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[1][0], triShape[1][1]) == 0 &&
-				CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[1][1], -BoxWidth, BoxHeight) * CCW(triShape[0][0], triShape[0][1], triShape[1][0], triShape[1][1], -BoxWidth, -BoxHeight) == 0)
+			if (CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) * CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index + 1][1]) == 0 &&
+				CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], -BoxWidth, BoxHeight) * CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], -BoxWidth, -BoxHeight) == 0)
 			{
-				if (ParallelCollide(-BoxHeight, BoxHeight, triShape[0][1], triShape[1][1]))
+				if (ParallelCollide(-BoxHeight, BoxHeight, triShape[3 * Index][1], triShape[3 * Index + 1][1]))
 					return true;
 			}
 			else
 				return true;
 		}
 
-		if (CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[1][0], triShape[1][1]) *
-			CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[2][0], triShape[2][1]) <= 0 &&
-			CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], -BoxWidth, BoxHeight) *
-			CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], -BoxWidth, -BoxHeight) <= 0)
+		if (CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index + 1][1]) *
+			CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) <= 0 &&
+			CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, BoxHeight) *
+			CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, -BoxHeight) <= 0)
 		{
-			if (CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[1][0], triShape[1][1]) * CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[2][0], triShape[2][1]) == 0 &&
-				CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], -BoxWidth, BoxHeight) * CCW(triShape[1][0], triShape[1][1], triShape[2][0], triShape[2][1], -BoxWidth, -BoxHeight) == 0)
+			if (CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[3 * Index + 1][0], triShape[3 * Index + 1][1]) * CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) == 0 &&
+				CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, BoxHeight) * CCW(triShape[3 * Index + 1][0], triShape[3 * Index + 1][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, -BoxHeight) == 0)
 			{
-				if (ParallelCollide(-BoxHeight, BoxHeight, triShape[1][1], triShape[2][1]))
+				if (ParallelCollide(-BoxHeight, BoxHeight, triShape[3 * Index + 1][1], triShape[3 * Index + 2][1]))
 					return true;
 			}
 			else
 				return true;
 		}
 
-		if (CCW(-BoxWidth, BoxHeight, -BoxWidth, 0-.24f, triShape[0][0], triShape[0][1]) *
-			CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[2][0], triShape[2][1]) <= 0 &&
-			CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], -BoxWidth, BoxHeight) *
-			CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], -BoxWidth, -BoxHeight) <= 0)
+		if (CCW(-BoxWidth, BoxHeight, -BoxWidth, 0-.24f, triShape[3 * Index][0], triShape[3 * Index][1]) *
+			CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) <= 0 &&
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, BoxHeight) *
+			CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, -BoxHeight) <= 0)
 		{
-			if (CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[0][0], triShape[0][1]) * CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[2][0], triShape[2][1]) == 0 &&
-				CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], -BoxWidth, BoxHeight) * CCW(triShape[0][0], triShape[0][1], triShape[2][0], triShape[2][1], -BoxWidth, -BoxHeight) == 0)
+			if (CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[3 * Index][0], triShape[3 * Index][1]) * CCW(-BoxWidth, BoxHeight, -BoxWidth, -BoxHeight, triShape[3 * Index + 2][0], triShape[3 * Index + 2][1]) == 0 &&
+				CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, BoxHeight) * CCW(triShape[3 * Index][0], triShape[3 * Index][1], triShape[3 * Index + 2][0], triShape[3 * Index + 2][1], -BoxWidth, -BoxHeight) == 0)
 			{
-				if (ParallelCollide(-BoxHeight, BoxHeight, triShape[0][1], triShape[2][1]))
+				if (ParallelCollide(-BoxHeight, BoxHeight, triShape[3 * Index][1], triShape[3 * Index + 2][1]))
 					return true;
 			}
 			else
@@ -309,7 +324,7 @@ bool IsCollide(int Seed)
 
 void InitTriangle()
 {
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 6; ++i)
 	{
 		switch (shape[i])
 		{
@@ -354,30 +369,30 @@ void InitTriangle()
 
 void SetRectangle()
 {
-	triShape[9][0] = -BoxWidth;
-	triShape[9][1] = BoxHeight;
-	triShape[9][2] = 0;
-	triShape[10][0] = -BoxWidth;
-	triShape[10][1] = -BoxHeight;
-	triShape[10][2] = 0;
-	triShape[11][0] = -BoxWidth;
-	triShape[11][1] = -BoxHeight;
-	triShape[11][2] = 0;
-	triShape[12][0] = BoxWidth;
-	triShape[12][1] = -BoxHeight;
-	triShape[12][2] = 0;
-	triShape[13][0] = BoxWidth;
-	triShape[13][1] = -BoxHeight;
-	triShape[13][2] = 0;
-	triShape[14][0] = BoxWidth;
-	triShape[14][1] = BoxHeight;
-	triShape[14][2] = 0;
-	triShape[15][0] = BoxWidth;
-	triShape[15][1] = BoxHeight;
-	triShape[15][2] = 0;
-	triShape[16][0] = -BoxWidth;
-	triShape[16][1] = BoxHeight;
-	triShape[16][2] = 0;
+	triShape[18][0] = -BoxWidth;
+	triShape[18][1] = BoxHeight;
+	triShape[18][2] = 0;
+	triShape[19][0] = -BoxWidth;
+	triShape[19][1] = -BoxHeight;
+	triShape[19][2] = 0;
+	triShape[20][0] = -BoxWidth;
+	triShape[20][1] = -BoxHeight;
+	triShape[20][2] = 0;
+	triShape[21][0] = BoxWidth;
+	triShape[21][1] = -BoxHeight;
+	triShape[21][2] = 0;
+	triShape[22][0] = BoxWidth;
+	triShape[22][1] = -BoxHeight;
+	triShape[22][2] = 0;
+	triShape[23][0] = BoxWidth;
+	triShape[23][1] = BoxHeight;
+	triShape[23][2] = 0;
+	triShape[24][0] = BoxWidth;
+	triShape[24][1] = BoxHeight;
+	triShape[24][2] = 0;
+	triShape[25][0] = -BoxWidth;
+	triShape[25][1] = BoxHeight;
+	triShape[25][2] = 0;
 }
 void make_vertexShaders()
 {
@@ -475,8 +490,8 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	//--- 사용할 VAO 불러오기
 	glBindVertexArray(vao);
 	//--- 삼각형 그리기
-	glDrawArrays(GL_TRIANGLES, 0, 9);
-	glDrawArrays(GL_LINES, 9, 8);
+	glDrawArrays(GL_TRIANGLES, 0, 18);
+	glDrawArrays(GL_LINES, 18, 8);
 	glutSwapBuffers(); //--- 화면에 출력하기
 }
 
@@ -508,6 +523,27 @@ char* filetobuf(const char* file)
 		return NULL;
 }
 
+void Mouse(int button, int state, int x, int y)
+{
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	{
+		if (x >= 180 && x <=720 && y >=315 && y <= 585)
+		{
+			
+		}
+
+		else
+		{
+			myPoint[iIndex].Point_X = ((GLfloat)x / (GLfloat)width - 0.5f) * 2.0f;
+			myPoint[iIndex].Point_Y = ((GLfloat)y / (GLfloat)height - 0.5f) * -2.0f;
+			iIndex += 1;
+			if (iIndex == 4)
+				iIndex = 0;
+		}
+	}
+	glutPostRedisplay();
+}
+
 void RandomColor(int index)
 {
 	std::random_device rd;
@@ -524,7 +560,7 @@ void RandomColor(int index)
 void TimerFunction(int value)
 {
 	int tmp = -1;
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 6; ++i)
 	{
 		switch (dir[i])
 		{
@@ -532,14 +568,14 @@ void TimerFunction(int value)
 			myPoint[i].Point_X -= 0.05f;
 			myPoint[i].Point_Y += 0.05f;
 			
-			if (IsCollide(0))
+			if (IsCollide(0, i))
 			{
 				myPoint[i].Point_Y -= 0.1f;
 				dir[i] = Direction::LeftDown;
 				--shape[i];
 			}
 
-			if (IsCollide(1))
+			if (IsCollide(1, i))
 			{
 				myPoint[i].Point_X += 0.1f;
 				dir[i] = Direction::RightUp;
@@ -562,14 +598,14 @@ void TimerFunction(int value)
 			myPoint[i].Point_X -= 0.05f;
 			myPoint[i].Point_Y -= 0.05f;
 
-			if (IsCollide(1))
+			if (IsCollide(1, i))
 			{
 				myPoint[i].Point_X += 0.1f;
 				dir[i] = Direction::RightDown;
 				--shape[i];
 			}
 
-			if (IsCollide(2))
+			if (IsCollide(2, i))
 			{
 				myPoint[i].Point_Y += 0.1f;
 				dir[i] = Direction::LeftUp;
@@ -592,14 +628,14 @@ void TimerFunction(int value)
 			myPoint[i].Point_X += 0.05f;
 			myPoint[i].Point_Y += 0.05f;
 
-			if (IsCollide(0))
+			if (IsCollide(0, i))
 			{
 				myPoint[i].Point_Y -= 0.1f;
 				dir[i] = Direction::RightDown;
 				++shape[i];
 			}
 
-			if (IsCollide(3))
+			if (IsCollide(3, i))
 			{
 				myPoint[i].Point_X -= 0.1f;
 				dir[i] = Direction::LeftUp;
@@ -621,14 +657,14 @@ void TimerFunction(int value)
 			myPoint[i].Point_X += 0.05f;
 			myPoint[i].Point_Y -= 0.05f;
 
-			if (IsCollide(2))
+			if (IsCollide(2, i))
 			{
 				myPoint[i].Point_Y += 0.1f;
 				dir[i] = Direction::RightUp;
 				--shape[i];
 			}
 
-			if (IsCollide(3))
+			if (IsCollide(3, i))
 			{
 				myPoint[i].Point_X -= 0.1f;
 				dir[i] = Direction::LeftDown;
@@ -679,10 +715,16 @@ void main(int argc, char** argv)	//---윈도우 출력하고 콜백함수 설정
 
 	dir[0] = Direction::LeftUp;
 	shape[0] = Shape::ToTop;
-	dir[1] = Direction::Left;
-	shape[1] = Shape::ToBottom;
-	dir[2] = Direction::Right;
-	shape[2] = Shape::ToTop;
+	dir[1] = Direction::RightUp;
+	shape[1] = Shape::ToLeft;
+	dir[2] = Direction::LeftDown;
+	shape[2] = Shape::ToBottom;
+	dir[3] = Direction::RightDown;
+	shape[3] = Shape::ToRight;
+	dir[4] = Direction::Left;
+	shape[4] = Shape::ToBottom;
+	dir[5] = Direction::Right;
+	shape[5] = Shape::ToTop;
 	SetRectangle();
 	InitTriangle();
 
@@ -699,6 +741,7 @@ void main(int argc, char** argv)	//---윈도우 출력하고 콜백함수 설정
 	InitShader();
 	InitBuffer();
 	glutDisplayFunc(DrawScene);
+	glutMouseFunc(Mouse);
 	glutReshapeFunc(Reshape);
 	glutTimerFunc(50, TimerFunction, 1);
 	glutMainLoop();
