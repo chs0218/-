@@ -15,30 +15,44 @@ GLchar* vertexsource;
 GLchar* fragmentsource;
 GLuint vertexShader, fragmentShader;
 GLuint s_program;
-GLuint vao, vbo[2];
+GLuint vao, vbo[2], EBO[2];
 GLint width, height;
 
+GLfloat mx, my;
+int iIndex = -1;
+bool ButtonDown = false;
+bool RectangleClick = false;
+void Mouse(int button, int state, int x, int y);
+void Motion(int x, int y);
 
-GLfloat Dots[8][3] = {
+bool IsInside(GLfloat x, GLfloat y);
+
+GLfloat Dots[4][3] = {
 	{-0.5, -0.5, 0},
 	{0.5, -0.5, 0},
-	{0.5, -0.5, 0},
 	{0.5, 0.5, 0},
-	{0.5, 0.5, 0},
-	{-0.5, 0.5, 0},
-	{-0.5, 0.5, 0},
-	{-0.5, -0.5, 0}
+	{-0.5, 0.5, 0}
 };
 
-GLfloat colors[8][3] = { //--- 삼각형 꼭지점 색상
-	{ 0.95, 0.82, 0.71 },
+GLfloat tmpDots[4][3] = {
+	{-0.5, -0.5, 0},
+	{0.5, -0.5, 0},
+	{0.5, 0.5, 0},
+	{-0.5, 0.5, 0}
+};
+
+GLfloat colors[4][3] = { //--- 삼각형 꼭지점 색상
 	{ 0.95, 0.82, 0.71 },
 	{ 0.95, 0.78, 0.41 },
-	{ 0.95, 0.78, 0.41 },
 	{ 0.91, 0.50, 0.21 },
-	{ 0.91, 0.50, 0.21 },
-	{ 0.53, 0.51, 0.64 },
-	{ 0.53, 0.51, 0.64 },
+	{ 0.53, 0.51, 0.64 }
+};
+
+unsigned int index[]{
+	0, 1,
+	1, 2,
+	2, 3,
+	3, 0
 };
 
 void make_vertexShaders()
@@ -80,13 +94,25 @@ void InitBuffer()
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 	glGenBuffers(2, vbo);
+	glGenBuffers(2, EBO);
+
+	glBindVertexArray(vao);
+
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Dots), Dots, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), index, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
+
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[1]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), index, GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 	glEnableVertexAttribArray(1);
 }
 
@@ -113,7 +139,7 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	glUseProgram(s_program);
 	glBindVertexArray(vao);
 	glLineWidth(5);
-	glDrawArrays(GL_LINES, 0, 8);
+	glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT, 0);
 	glutSwapBuffers(); //--- 화면에 출력하기
 }
 
@@ -163,13 +189,99 @@ void main(int argc, char** argv)	//---윈도우 출력하고 콜백함수 설정
 	InitShader();
 	InitBuffer();
 	glutDisplayFunc(DrawScene);
+	glutMouseFunc(Mouse);
+	glutMotionFunc(Motion);
 	glutReshapeFunc(Reshape);
 	glutMainLoop();
 }
 
+void Mouse(int button, int state, int x, int y)
+{
+	GLfloat float_X = ((GLfloat)x / (GLfloat)width - 0.5f) * 2.0f;
+	GLfloat float_Y = ((GLfloat)y / (GLfloat)height - 0.5f) * -2.0f;
 
+	
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	{
+		iIndex = -1;
+		ButtonDown = true;
+		mx = float_X;
+		my = float_Y;
+		std::cout << "mx: " << mx << " my: " << my << std::endl;
+		for (int i = 0; i < 4; ++i)
+		{
+			if (float_X >= Dots[i][0] - 0.01f && float_X <= Dots[i][0] + 0.01f && float_Y <= Dots[i][1] + 0.01f && float_Y >= Dots[i][1] - 0.01f)
+				iIndex = i;
+		}
 
+		if (iIndex == -1)
+		{
+			if (IsInside(float_X, float_Y))
+			{
+				RectangleClick = true;
+				for (int i = 0; i < 4; ++i)
+				{
+					tmpDots[i][0] = Dots[i][0];
+					tmpDots[i][1] = Dots[i][1];
+				}
+			}
+		}
+	}
 
+	else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+	{
+		ButtonDown = false;
+		RectangleClick = false;
+	}
+}
+
+void Motion(int x, int y)
+{
+	if (ButtonDown)
+	{
+		GLfloat float_X = ((GLfloat)x / (GLfloat)width - 0.5f) * 2.0f;
+		GLfloat float_Y = ((GLfloat)y / (GLfloat)height - 0.5f) * -2.0f;
+
+		if (iIndex == -1)
+		{
+			if (RectangleClick)
+			{
+				for (int i = 0; i < 4; ++i)
+				{
+					Dots[i][0] = tmpDots[i][0] +(float_X - mx);
+					Dots[i][1] = tmpDots[i][1] + (float_Y - my);
+
+					std::cout << "Dots[i][0] " << Dots[i][0] << " Dots[i][1]" << Dots[i][1] << std::endl;
+				}
+			}
+		}
+
+		else
+		{
+			Dots[iIndex][0] = float_X;
+			Dots[iIndex][1] = float_Y;
+		}
+	}
+
+	glutPostRedisplay();
+}
+
+bool IsInside(GLfloat x, GLfloat y)
+{
+	bool isInnerPoint = false;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		if ((Dots[i % 4][1] < y && y <= Dots[(i + 1) % 4][1]) || (Dots[(i + 1) % 4][1] < y && y <= Dots[i % 4][1]))
+		{
+			if (Dots[i % 4][0] + (y - Dots[i % 4][1]) / (Dots[(i + 1) % 4][1] - Dots[i % 4][1]) * (Dots[(i + 1) % 4][0] - Dots[i % 4][0]) < x) {
+				isInnerPoint = !isInnerPoint;
+			}
+		}
+	}
+
+	return isInnerPoint;
+}
 
 
 
