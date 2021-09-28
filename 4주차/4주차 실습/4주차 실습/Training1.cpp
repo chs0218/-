@@ -207,7 +207,6 @@ void Mouse(int button, int state, int x, int y)
 		ButtonDown = true;
 		mx = float_X;
 		my = float_Y;
-		std::cout << "mx: " << mx << " my: " << my << std::endl;
 		for (int i = 0; i < 4; ++i)
 		{
 			if (float_X >= Dots[i][0] - 0.01f && float_X <= Dots[i][0] + 0.01f && float_Y <= Dots[i][1] + 0.01f && float_Y >= Dots[i][1] - 0.01f)
@@ -250,8 +249,6 @@ void Motion(int x, int y)
 				{
 					Dots[i][0] = tmpDots[i][0] +(float_X - mx);
 					Dots[i][1] = tmpDots[i][1] + (float_Y - my);
-
-					std::cout << "Dots[i][0] " << Dots[i][0] << " Dots[i][1]" << Dots[i][1] << std::endl;
 				}
 			}
 		}
