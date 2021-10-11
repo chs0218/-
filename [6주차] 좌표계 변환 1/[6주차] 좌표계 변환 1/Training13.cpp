@@ -86,8 +86,8 @@ GLfloat colors[][3] = {
 unsigned int index[]{
 	0, 1, 2,
 	0, 2, 3,
-	4, 5, 6,
-	4, 6, 7,
+	4, 6, 5,
+	4, 7, 6,
 	3, 2, 6,
 	3, 6, 7,
 	4, 5, 1,
@@ -133,7 +133,7 @@ void InitTriangle()
 
 void make_vertexShaders()
 {
-	vertexsource = filetobuf("vertex13.glsl");
+	vertexsource = filetobuf("vertex.glsl");
 	vertexShader[0] = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader[0], 1, (const GLchar**)&vertexsource, NULL);
 	glCompileShader(vertexShader[0]);
@@ -196,9 +196,6 @@ void InitShader()
 	glAttachShader(s_program[0], fragmentShader[0]);
 	glLinkProgram(s_program[0]);
 
-	glDeleteShader(vertexShader[0]);
-	glDeleteShader(fragmentShader[0]);
-
 	s_program[1] = glCreateProgram();
 	glAttachShader(s_program[1], vertexShader[1]);
 	glAttachShader(s_program[1], fragmentShader[1]);
@@ -219,7 +216,8 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 
 	glUseProgram(s_program[0]);
 	glm::mat4 transformMatrix = glm::mat4(1.0f);
-	transformMatrix = glm::rotate(transformMatrix, (GLfloat)glm::radians(30.0), glm::vec3(-1.0, 1.0, 0.0));
+	transformMatrix = glm::rotate(transformMatrix, (GLfloat)glm::radians(30.0), glm::vec3(-1.0, 0.0, 0.0));
+	transformMatrix = glm::rotate(transformMatrix, (GLfloat)glm::radians(30.0), glm::vec3(0.0, 1.0, 0.0));
 	unsigned int modelLocation = glGetUniformLocation(s_program[0], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
 	glBindVertexArray(vao[0]);
