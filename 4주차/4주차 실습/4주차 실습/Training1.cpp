@@ -279,10 +279,3 @@ bool IsInside(GLfloat x, GLfloat y)
 
 	return isInnerPoint;
 }
-
-
-
-
-
-
-
