@@ -298,6 +298,8 @@ void KeyBoard(unsigned char key, int x, int y)
 		TransX = 0.0, TransY = 0.0;
 		ShowPyramid = false;
 		HideBehind = true;
+		RotateX = false, RotateY = false;
+		MovePlusX = false, MovePlusY = false, MoveMinusX = false, MoveMinusY = false;
 		break;
 	case 'Q':
 	case 'q':
