@@ -122,8 +122,6 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(s_program);
 	glBindVertexArray(vao);
-	glPolygonMode(GL_FRONT, GL_LINE);
-	glPolygonMode(GL_BACK, GL_FILL);
 	if(ButtonDown)
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glDrawElements(GL_TRIANGLES, 600, GL_UNSIGNED_INT, (void*)(6 * sizeof(GLuint)));
