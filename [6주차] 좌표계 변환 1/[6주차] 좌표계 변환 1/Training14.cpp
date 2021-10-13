@@ -247,7 +247,7 @@ void main(int argc, char** argv)	//---윈도우 출력하고 콜백함수 설정
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowPosition(100, 30);
 	glutInitWindowSize(width, height);
-	glutCreateWindow("Training13");
+	glutCreateWindow("Training14");
 
 	//--- GLEW 초기화하기
 	glewExperimental = GL_TRUE;

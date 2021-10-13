@@ -36,7 +36,7 @@ GLfloat LeftXradius = 0.0, LeftYradius = 0.0;
 bool RotateRightX = false, RotateRightY = false;
 bool RotateLeftX = false, RotateLeftY = false;
 bool RotateR = false;
-GLint LeftSeed = 2, RightSeed = 4;
+GLint LeftSeed = 1, RightSeed = 0;
 
 GLfloat LineData[][3] = {
 	{1.0, 0.0, 0.0},
@@ -353,6 +353,7 @@ void KeyBoard(unsigned char key, int x, int y)
 		Xradius = 30.0, Rradius = 330.0, Yradius = 330.0;
 		RightXradius = 0.0, RightYradius = 0.0;
 		LeftXradius = 0.0, LeftYradius = 0.0;
+		RightSeed = 0, LeftSeed = 1;
 		break;
 	case 'C':
 	case 'c':
