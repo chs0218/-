@@ -32,21 +32,16 @@ void TimerFunc(int value);
 void DrawRight();
 void DrawLeft();
 
-GLfloat Xradius = 30.0, Rradius = 330.0, Yradius = 330.0;
-GLfloat RightXradius = 0.0, RightYradius = 0.0;
 GLfloat RightMoveX = 0.0, RightMoveY = 0.0, RightMoveZ = 0.0;
 GLfloat LeftMoveX = 0.0, LeftMoveY = 0.0, LeftMoveZ = 0.0;
-GLfloat LeftXradius = 0.0, LeftYradius = 0.0;
+GLfloat MoveAllX = 0.0, MoveAllY = 0.0;
+GLfloat LeftScale = 1.0, RightScale = 1.0;
+GLfloat LeftZeroScale = 1.0, RightZeroScale = 1.0;
 
 bool RightMovePlusX = false, RightMovePlusY = false, RightMovePlusZ = false;
 bool LeftMovePlusX = false, LeftMovePlusY = false, LeftMovePlusZ = false;
 bool RightMoveMinusX = false, RightMoveMinusY = false, RightMoveMinusZ = false;
 bool LeftMoveMinusX = false, LeftMoveMinusY = false, LeftMoveMinusZ = false;
-
-bool RotateRightX = false, RotateRightY = false;
-bool RotateLeftX = false, RotateLeftY = false;
-bool RotateR = false;
-GLint LeftSeed = 1, RightSeed = 0;
 
 GLfloat LineData[][3] = {
 	{1.0, 0.0, 0.0},
@@ -81,32 +76,31 @@ GLfloat Dots[][3] = {
 };
 
 GLfloat colors[][3] = {
+	{ 1.0, 0.0, 0.0 },
+	{ 0.0, 1.0, 0.0 },
+	{ 0.0, 0.0, 1.0 },
+	{ 1.0, 1.0, 0.0 },
+	{ 1.0, 0.0, 1.0 },
+	{ 0.0, 1.0, 1.0 },
+	{ 1.0, 1.0, 1.0 },
+	{ 0.0, 0.0, 0.0 },
 	{ 0.95, 0.82, 0.71 },
-	{ 0.95, 0.78, 0.41 },
-	{ 0.91, 0.50, 0.21 },
-	{ 0.53, 0.51, 0.64 },
-	{ 0.47, 0.60, 0.50 },
-	{ 0.33, 0.78, 0.82 },
-
-	{ 0.12, 0.71, 0.65 },
-	{ 0.71, 0.46, 0.13 },
-	{ 0.95, 0.82, 0.71 },
-	{ 0.95, 0.78, 0.41 }
 };
 
 unsigned int index[]{
 	0, 1, 2,
 	0, 2, 3,
-	4, 6, 5,
-	4, 7, 6,
 	3, 2, 6,
 	3, 6, 7,
-	4, 5, 1,
-	4, 1, 0,
 	4, 0, 3,
 	4, 3, 7,
-	1, 5, 6,
-	1, 6, 2,
+	4, 6, 5,
+	4, 7, 6,
+	4, 5, 1,
+	4, 1, 0,
+	5, 1, 2,
+	5, 2, 6,
+
 
 	8, 1, 2,
 	8, 2, 6,
@@ -235,31 +229,38 @@ void InitShader()
 
 void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 {
+	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glEnable(GL_DEPTH_TEST);
-	glm::mat4 tmp1 = glm::mat4(1.0f);
-	glm::mat4 tmp2 = glm::mat4(1.0f);
+	glm::mat4 transLeft = glm::mat4(1.0f);
+	glm::mat4 transRight = glm::mat4(1.0f);
+	glm::mat4 LeftScaleMat = glm::mat4(1.0f);
+	glm::mat4 RightScaleMat = glm::mat4(1.0f);
+	glm::mat4 MoveAll = glm::mat4(1.0f);
+	LeftScaleMat = glm::scale(LeftScaleMat, glm::vec3(LeftZeroScale, LeftZeroScale, LeftZeroScale));
+	RightScaleMat = glm::scale(RightScaleMat, glm::vec3(RightZeroScale, RightZeroScale, RightZeroScale));
+	MoveAll = glm::translate(MoveAll, glm::vec3(MoveAllX, MoveAllY, 0.0f));
+	
 
 	glUseProgram(s_program[0]);
 	glBindVertexArray(vao[0]);
 	glm::mat4 transformMatrix0 = glm::mat4(1.0f);
 	transformMatrix0 = glm::rotate(transformMatrix0, (GLfloat)glm::radians(30.0), glm::vec3(1.0, 0.0, 0.0));
-	transformMatrix0 = glm::rotate(transformMatrix0, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
+	transformMatrix0 = glm::rotate(transformMatrix0, (GLfloat)glm::radians(330.0), glm::vec3(0.0, 1.0, 0.0));
+
 	unsigned int modelLocation0 = glGetUniformLocation(s_program[0], "modelTransform");
 	glUniformMatrix4fv(modelLocation0, 1, GL_FALSE, glm::value_ptr(transformMatrix0));
 	glBindVertexArray(vao[0]);
 
 	glDrawArrays(GL_LINES, 0, 6);
 
-	tmp1 = glm::translate(transformMatrix0, glm::vec3(-0.5 + LeftMoveX, LeftMoveY, LeftMoveZ));
-	tmp2 = glm::translate(transformMatrix0, glm::vec3(0.5 + RightMoveX, RightMoveY, RightMoveZ));
+	transLeft = glm::translate(transformMatrix0, glm::vec3(-0.5 + LeftMoveX, LeftMoveY, LeftMoveZ));
+	transRight = glm::translate(transformMatrix0, glm::vec3(0.5 + RightMoveX, RightMoveY, RightMoveZ));
 
 	glUseProgram(s_program[1]);
 	glm::mat4 transformMatrix1 = glm::mat4(1.0f);
-	transformMatrix1 = glm::rotate(transformMatrix1, (GLfloat)glm::radians(RightXradius), glm::vec3(1.0, 0.0, 0.0));
-	transformMatrix1 = glm::rotate(transformMatrix1, (GLfloat)glm::radians(RightYradius), glm::vec3(0.0, 1.0, 0.0));
-	transformMatrix1 = tmp1 * transformMatrix1;
+	transformMatrix1 = glm::scale(transformMatrix1, glm::vec3(LeftScale, LeftScale, LeftScale));
+	transformMatrix1 = LeftScaleMat * MoveAll * transLeft * transformMatrix1;
 
 	unsigned int modelLocation1 = glGetUniformLocation(s_program[1], "modelTransform");
 	glUniformMatrix4fv(modelLocation1, 1, GL_FALSE, glm::value_ptr(transformMatrix1));
@@ -267,17 +268,16 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	DrawLeft();
 
 	glUseProgram(s_program[2]);
+	
 	glm::mat4 transformMatrix2 = glm::mat4(1.0f);
-	transformMatrix2 = glm::rotate(transformMatrix2, (GLfloat)glm::radians(LeftXradius), glm::vec3(1.0, 0.0, 0.0));
-	transformMatrix2 = glm::rotate(transformMatrix2, (GLfloat)glm::radians(LeftYradius), glm::vec3(0.0, 1.0, 0.0));
-	transformMatrix2 = tmp2 * transformMatrix2;
-
+	transformMatrix2 = glm::scale(transformMatrix2, glm::vec3(RightScale, RightScale, RightScale));
+	transformMatrix2 = RightScaleMat * MoveAll * transRight * transformMatrix2;
+	
 	unsigned int modelLocation2 = glGetUniformLocation(s_program[2], "modelTransform");
 	glUniformMatrix4fv(modelLocation2, 1, GL_FALSE, glm::value_ptr(transformMatrix2));
 	glBindVertexArray(vao[2]);
 	DrawRight();
 
-	glDisable(GL_DEPTH_TEST);
 	glutSwapBuffers();
 }
 
@@ -342,37 +342,25 @@ void KeyBoard(unsigned char key, int x, int y)
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<int> dis(0, 4);
 	switch (key) {
-	case 'X':
-	case 'x':
-		RotateRightX = !RotateRightX;
+	case 'w':
+		if (MoveAllY < 0.5f)
+			MoveAllY += 0.01f;
 		break;
-	case 'Y':
-	case 'y':
-		RotateRightY = !RotateRightY;
-		break;
-	case 'A':
 	case 'a':
-		RotateLeftX = !RotateLeftX;
+		if (MoveAllX > -0.5f)
+			MoveAllX -= 0.01f;
 		break;
-	case 'B':
-	case 'b':
-		RotateLeftY = !RotateLeftY;
-		break;
-	case 'R':
-	case 'r':
-		RotateR = !RotateR;
-		break;
-	case 'S':
 	case 's':
-		Xradius = 30.0, Rradius = 330.0, Yradius = 330.0;
-		RightXradius = 0.0, RightYradius = 0.0;
-		LeftXradius = 0.0, LeftYradius = 0.0;
-		RightSeed = 0, LeftSeed = 1;
+		if (MoveAllY > -0.5f)
+			MoveAllY -= 0.01f;
+		break;
+	case 'd':
+		if (MoveAllX < 0.5f)
+			MoveAllX += 0.01f;
 		break;
 	case 'C':
 	case 'c':
-		LeftSeed = dis(gen);
-		RightSeed = dis(gen);
+
 		break;
 	case 'L':
 	case 'l':
@@ -397,6 +385,38 @@ void KeyBoard(unsigned char key, int x, int y)
 	case 'P':
 	case 'p':
 		LeftMoveMinusZ = true;
+		break;
+	case 'm':
+		if (LeftScale < 2.0f)
+			LeftScale += 0.2f;
+		break;
+	case 'n':
+		if (LeftScale > 0.5f)
+			LeftScale -= 0.2f;
+		break;
+	case 'M':
+		if (RightScale < 2.0f)
+			RightScale += 0.2f;
+		break;
+	case 'N':
+		if (RightScale > 0.5f)
+			RightScale -= 0.2f;
+		break;
+	case ',':
+		if (LeftZeroScale > 0.5f)
+			LeftZeroScale -= 0.2f;
+		break;
+	case '.':
+		if (LeftZeroScale < 2.0f)
+			LeftZeroScale += 0.2f;
+		break;
+	case '<':
+		if (RightZeroScale > 0.5f)
+			RightZeroScale -= 0.2f;
+		break;
+	case '>':
+		if (RightZeroScale < 2.0f)
+			RightZeroScale += 0.2f;
 		break;
 	case 'Q':
 	case 'q':
@@ -437,16 +457,6 @@ void KeyBoardUp(unsigned char key, int x, int y)
 
 void TimerFunc(int value)
 {
-	if (RotateRightX)
-		RightXradius = (int)(RightXradius + 5.0) % 360;
-	if (RotateRightY)
-		RightYradius = (int)(RightYradius + 5.0) % 360;
-	if (RotateLeftX)
-		LeftXradius = (int)(LeftXradius + 5.0) % 360;
-	if (RotateLeftY)
-		LeftYradius = (int)(LeftYradius + 5.0) % 360;
-	if (RotateR)
-		Rradius = (int)(Rradius + 5.0) % 360;
 	if (RightMovePlusX)
 	{
 		if (RightMoveX < 0.49f)
@@ -517,76 +527,17 @@ void TimerFunc(int value)
 void DrawLeft()
 {
 	GLUquadricObj* qobj;
-	switch (LeftSeed)
-	{
-	case 0:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		break;
-	case 1:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, (void*)(36 * sizeof(GLuint)));
-		break;
-	case 2:
-		qobj = gluNewQuadric();
-		gluQuadricDrawStyle(qobj, GLU_LINE); // 도형 스타일
-		gluQuadricNormals(qobj, GLU_SMOOTH);
-		gluQuadricOrientation(qobj, GLU_OUTSIDE);
-		gluSphere(qobj, 0.1, 10, 10);
-		break;
-	case 3:
-		qobj = gluNewQuadric();
-		gluQuadricDrawStyle(qobj, GLU_LINE); // 도형 스타일
-		gluQuadricNormals(qobj, GLU_SMOOTH);
-		gluQuadricOrientation(qobj, GLU_OUTSIDE);
-		gluSphere(qobj, 0.1, 3, 8);
-		break;
-	case 4:
-		qobj = gluNewQuadric();
-		gluQuadricDrawStyle(qobj, GLU_LINE); // 도형 스타일
-		gluQuadricNormals(qobj, GLU_SMOOTH);
-		gluQuadricOrientation(qobj, GLU_OUTSIDE);
-		gluDisk(qobj, 0.05, 0.2, 10, 3);
-		break;
-	}
-
+	qobj = gluNewQuadric();
+	gluQuadricDrawStyle(qobj, GLU_LINE); // 도형 스타일
+	gluQuadricNormals(qobj, GLU_SMOOTH);
+	gluQuadricOrientation(qobj, GLU_OUTSIDE);
+	gluSphere(qobj, 0.1, 10, 10);
 }
 
 void DrawRight()
 {
-	GLUquadricObj* qobj;
-	switch (RightSeed)
-	{
-	case 0:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		break;
-	case 1:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, (void*)(36 * sizeof(GLuint)));
-		break;
-	case 2:
-		qobj = gluNewQuadric();
-		gluQuadricDrawStyle(qobj, GLU_LINE); // 도형 스타일
-		gluQuadricNormals(qobj, GLU_SMOOTH);
-		gluQuadricOrientation(qobj, GLU_OUTSIDE);
-		gluSphere(qobj, 0.1, 10, 10);
-		break;
-	case 3:
-		qobj = gluNewQuadric();
-		gluQuadricDrawStyle(qobj, GLU_LINE); // 도형 스타일
-		gluQuadricNormals(qobj, GLU_SMOOTH);
-		gluQuadricOrientation(qobj, GLU_OUTSIDE);
-		gluSphere(qobj, 0.1, 3, 8);
-		break;
-	case 4:
-		qobj = gluNewQuadric();
-		gluQuadricDrawStyle(qobj, GLU_LINE); // 도형 스타일
-		gluQuadricNormals(qobj, GLU_SMOOTH);
-		gluQuadricOrientation(qobj, GLU_OUTSIDE);
-		gluDisk(qobj, 0.05, 0.2, 10, 3);
-		break;
-	}
+	glPolygonMode(GL_FRONT, GL_FILL);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }
 
 void SpecialKeyBoard(int key, int x, int y)

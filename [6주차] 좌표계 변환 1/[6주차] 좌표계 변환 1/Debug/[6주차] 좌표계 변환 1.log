@@ -1,11 +1,6 @@
 ﻿  Training16.cpp
-D:\Projects\-\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\Training16.cpp(81,1): warning C4305: '초기화 중': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Projects\-\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\Training16.cpp(95,1): warning C4305: '초기화 중': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Projects\-\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\Training16.cpp(299,24): warning C4244: '=': 'std::streamoff'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\Training16.cpp(313,1): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
-D:\Projects\-\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\Training16.cpp(441,44): warning C4244: '=': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\Training16.cpp(443,44): warning C4244: '=': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\Training16.cpp(445,42): warning C4244: '=': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\Training16.cpp(447,42): warning C4244: '=': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\Training16.cpp(449,34): warning C4244: '=': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  [6주차] 좌표계 변환 1.vcxproj -> D:\Projects\-\[6주차] 좌표계 변환 1\Debug\[6주차] 좌표계 변환 1.exe
+D:\Visual Studio\Project\컴퓨터그래픽스\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\Training16.cpp(76,1): warning C4305: '초기화 중': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\Training16.cpp(88,1): warning C4305: '초기화 중': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\Training16.cpp(299,24): warning C4244: '=': 'std::streamoff'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\Training16.cpp(313,1): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+  [6주차] 좌표계 변환 1.vcxproj -> D:\Visual Studio\Project\컴퓨터그래픽스\[6주차] 좌표계 변환 1\Debug\[6주차] 좌표계 변환 1.exe
