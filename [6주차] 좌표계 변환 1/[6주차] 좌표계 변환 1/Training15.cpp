@@ -421,13 +421,11 @@ void DrawLeft()
 	switch (LeftSeed)
 	{
 	case 0:
-		glPolygonMode(GL_FRONT, GL_FILL);
-		glPolygonMode(GL_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 		break;
 	case 1:
-		glPolygonMode(GL_FRONT, GL_FILL);
-		glPolygonMode(GL_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, (void*)(36 * sizeof(GLuint)));
 		break;
 	case 2:
@@ -461,13 +459,11 @@ void DrawRight()
 	switch (RightSeed)
 	{
 	case 0:
-		glPolygonMode(GL_FRONT, GL_FILL);
-		glPolygonMode(GL_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 		break;
 	case 1:
-		glPolygonMode(GL_FRONT, GL_FILL);
-		glPolygonMode(GL_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, (void*)(36 * sizeof(GLuint)));
 		break;
 	case 2:
