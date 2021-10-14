@@ -7,6 +7,7 @@
 #include <random>
 #include <iostream>
 #include <fstream>
+#include <math.h>
 
 void make_vertexShaders();
 void make_fragmentShaders();
@@ -31,6 +32,7 @@ void SpecialKeyBoardUp(int key, int x, int y);
 void TimerFunc(int value);
 void DrawRight();
 void DrawLeft();
+void InitDots();
 
 GLfloat RightMoveX = 0.0, RightMoveY = 0.0, RightMoveZ = 0.0;
 GLfloat LeftMoveX = 0.0, LeftMoveY = 0.0, LeftMoveZ = 0.0;
@@ -42,8 +44,13 @@ bool RightMovePlusX = false, RightMovePlusY = false, RightMovePlusZ = false;
 bool LeftMovePlusX = false, LeftMovePlusY = false, LeftMovePlusZ = false;
 bool RightMoveMinusX = false, RightMoveMinusY = false, RightMoveMinusZ = false;
 bool LeftMoveMinusX = false, LeftMoveMinusY = false, LeftMoveMinusZ = false;
+bool CycleAnimation = false;
 
-GLfloat LineData[][3] = {
+int CycleDegree = 0;
+const double PI = 3.141592;
+GLfloat CycleRadius = 0.0;
+
+GLfloat LineData[4000][3] = {
 	{1.0, 0.0, 0.0},
 	{-1.0, 0.0, 0.0},
 
@@ -54,7 +61,7 @@ GLfloat LineData[][3] = {
 	{0.0, 0.0, -1.0}
 };
 
-GLfloat LineColor[][3] = {
+GLfloat LineColor[4000][3] = {
 	{0.0, 0.0, 0.0},
 	{0.0, 0.0, 0.0},
 	{0.0, 0.0, 0.0},
@@ -64,15 +71,15 @@ GLfloat LineColor[][3] = {
 };
 
 GLfloat Dots[][3] = {
-	{-0.15, 0.15, 0.15},
-	{-0.15, -0.15, 0.15},
-	{0.15, -0.15, 0.15},
-	{0.15, 0.15, 0.15},
-	{-0.15, 0.15, -0.15},
-	{-0.15, -0.15, -0.15},
-	{0.15, -0.15, -0.15},
-	{0.15, 0.15, -0.15},
-	{0.0, 0.15, 0.0}
+	{-0.1, 0.1, 0.1},
+	{-0.1, -0.1, 0.1},
+	{0.1, -0.1, 0.1},
+	{0.1, 0.1, 0.1},
+	{-0.1, 0.1, -0.1},
+	{-0.1, -0.1, -0.1},
+	{0.1, -0.1, -0.1},
+	{0.1, 0.1, -0.1},
+	{0.0, 0.1, 0.0}
 };
 
 GLfloat colors[][3] = {
@@ -88,18 +95,23 @@ GLfloat colors[][3] = {
 };
 
 unsigned int index[]{
-	0, 1, 2,
-	0, 2, 3,
-	3, 2, 6,
-	3, 6, 7,
-	4, 0, 3,
-	4, 3, 7,
-	4, 6, 5,
-	4, 7, 6,
-	4, 5, 1,
-	4, 1, 0,
-	5, 1, 2,
-	5, 2, 6,
+	3, 2, 0,
+	0, 2, 1,
+
+	4, 7, 3,
+	4, 3, 0,
+
+	3, 7, 2,
+	7, 6, 2,
+
+	4, 1, 5,
+	4, 0, 1,
+
+	1, 6, 5,
+	1, 2, 6,
+
+	7, 5, 6,
+	7, 4, 5,
 
 
 	8, 1, 2,
@@ -253,6 +265,8 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	glBindVertexArray(vao[0]);
 
 	glDrawArrays(GL_LINES, 0, 6);
+	if (CycleAnimation)
+		glDrawArrays(GL_LINES, 6, 4000);
 
 	transLeft = glm::translate(transformMatrix0, glm::vec3(-0.5 + LeftMoveX, LeftMoveY, LeftMoveZ));
 	transRight = glm::translate(transformMatrix0, glm::vec3(0.5 + RightMoveX, RightMoveY, RightMoveZ));
@@ -268,11 +282,25 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	DrawLeft();
 
 	glUseProgram(s_program[2]);
-	
 	glm::mat4 transformMatrix2 = glm::mat4(1.0f);
-	transformMatrix2 = glm::scale(transformMatrix2, glm::vec3(RightScale, RightScale, RightScale));
-	transformMatrix2 = RightScaleMat * MoveAll * transRight * transformMatrix2;
-	
+	if (CycleAnimation)
+	{
+		
+		transformMatrix2 = glm::rotate(transformMatrix2, (GLfloat)glm::radians(30.0), glm::vec3(1.0, 0.0, 0.0));
+		transformMatrix2 = glm::rotate(transformMatrix2, (GLfloat)glm::radians(330.0), glm::vec3(0.0, 1.0, 0.0));
+		transformMatrix2 = glm::translate(transformMatrix2,
+			glm::vec3(CycleRadius * (GLfloat)cos(CycleDegree * PI / 180.0f), 0,
+				CycleRadius * (GLfloat)sin(CycleDegree * PI / 180.0f)));
+		transformMatrix2 = glm::scale(transformMatrix2, glm::vec3(RightScale, RightScale, RightScale));
+		
+	}
+
+	else
+	{
+		transformMatrix2 = glm::scale(transformMatrix2, glm::vec3(RightScale, RightScale, RightScale));
+		transformMatrix2 = RightScaleMat * MoveAll * transRight * transformMatrix2;
+	}
+
 	unsigned int modelLocation2 = glGetUniformLocation(s_program[2], "modelTransform");
 	glUniformMatrix4fv(modelLocation2, 1, GL_FALSE, glm::value_ptr(transformMatrix2));
 	glBindVertexArray(vao[2]);
@@ -313,6 +341,7 @@ void main(int argc, char** argv)	//---윈도우 출력하고 콜백함수 설정
 {
 	width = 900;
 	height = 900;
+	InitDots();
 
 	//---윈도우 생성하기
 	glutInit(&argc, argv);
@@ -358,9 +387,24 @@ void KeyBoard(unsigned char key, int x, int y)
 		if (MoveAllX < 0.5f)
 			MoveAllX += 0.01f;
 		break;
+	case 'r':
+		CycleAnimation = !CycleAnimation;
+		break;
 	case 'C':
 	case 'c':
+		RightMoveX = 0.0, RightMoveY = 0.0, RightMoveZ = 0.0;
+		LeftMoveX = 0.0, LeftMoveY = 0.0, LeftMoveZ = 0.0;
+		MoveAllX = 0.0, MoveAllY = 0.0;
+		LeftScale = 1.0, RightScale = 1.0;
+		LeftZeroScale = 1.0, RightZeroScale = 1.0;
 
+		RightMovePlusX = false, RightMovePlusY = false, RightMovePlusZ = false;
+		LeftMovePlusX = false, LeftMovePlusY = false, LeftMovePlusZ = false;
+		RightMoveMinusX = false, RightMoveMinusY = false, RightMoveMinusZ = false;
+		LeftMoveMinusX = false, LeftMoveMinusY = false, LeftMoveMinusZ = false;
+		CycleAnimation = false;
+		CycleDegree = 0;
+		CycleRadius = 0.0;
 		break;
 	case 'L':
 	case 'l':
@@ -457,6 +501,17 @@ void KeyBoardUp(unsigned char key, int x, int y)
 
 void TimerFunc(int value)
 {
+	if (CycleAnimation)
+	{
+		if (CycleRadius > 0.7988)
+		{
+			CycleRadius = 0.0f;
+			CycleDegree = 0;
+		}
+		CycleRadius += 0.0016f;
+		CycleDegree = (CycleDegree + 4) % 360;
+	}
+
 	if (RightMovePlusX)
 	{
 		if (RightMoveX < 0.49f)
@@ -586,4 +641,39 @@ void SpecialKeyBoardUp(int key, int x, int y)
 		RightMoveMinusZ = false;
 		break;
 	}
+}
+
+void InitDots()
+{
+	int iDegree = 0;
+	GLfloat fRadius = 0;
+
+	LineData[6][0] = fRadius * (GLfloat)cos(iDegree * PI / 180.0f);
+	LineData[6][2] = fRadius * (GLfloat)sin(iDegree * PI / 180.0f);
+	LineColor[6][0] = 0.0f;
+	LineColor[6][1] = 0.0f;
+	LineColor[6][2] = 0.0f;
+	fRadius += 0.0004f;
+	iDegree += 1;
+
+	for (int i = 0; i < 1996; ++i)
+	{
+		LineData[i * 2 + 7][0] = fRadius * (GLfloat)cos(iDegree * PI / 180.0f);
+		LineData[i * 2 + 7][2] = fRadius * (GLfloat)sin(iDegree * PI / 180.0f);
+		LineData[i * 2 + 8][0] = fRadius * (GLfloat)cos(iDegree * PI / 180.0f);
+		LineData[i * 2 + 8][2] = fRadius * (GLfloat)sin(iDegree * PI / 180.0f);
+		LineColor[i * 2 + 7][0] = 0.0f;
+		LineColor[i * 2 + 7][1] = 0.0f;
+		LineColor[i * 2 + 7][2] = 0.0f;
+		LineColor[i * 2 + 8][0] = 0.0f;
+		LineColor[i * 2 + 8][1] = 0.0f;
+		LineColor[i * 2 + 8][2] = 0.0f;
+		fRadius += 0.0004f;
+		iDegree += 1;
+	}
+	LineData[3999][0] = fRadius * (GLfloat)cos(iDegree * PI / 180.0f);
+	LineData[3999][2] = fRadius * (GLfloat)sin(iDegree * PI / 180.0f);
+	LineColor[3999][0] = 0.0f;
+	LineColor[3999][1] = 0.0f;
+	LineColor[3999][2] = 0.0f;
 }

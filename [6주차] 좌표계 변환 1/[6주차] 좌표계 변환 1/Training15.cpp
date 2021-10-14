@@ -253,6 +253,7 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	unsigned int modelLocation1 = glGetUniformLocation(s_program[1], "modelTransform");
 	glUniformMatrix4fv(modelLocation1, 1, GL_FALSE, glm::value_ptr(transformMatrix1));
 	glBindVertexArray(vao[1]);
+	glEnable(GL_DEPTH_TEST);
 	DrawLeft();
 
 	glUseProgram(s_program[2]);
@@ -264,6 +265,8 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	unsigned int modelLocation2 = glGetUniformLocation(s_program[2], "modelTransform");
 	glUniformMatrix4fv(modelLocation2, 1, GL_FALSE, glm::value_ptr(transformMatrix2));
 	glBindVertexArray(vao[2]);
+	glEnable(GL_DEPTH_TEST);
+
 	DrawRight();
 	
 	glutSwapBuffers();
@@ -418,11 +421,13 @@ void DrawLeft()
 	switch (LeftSeed)
 	{
 	case 0:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT, GL_FILL);
+		glPolygonMode(GL_BACK, GL_LINE);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 		break;
 	case 1:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT, GL_FILL);
+		glPolygonMode(GL_BACK, GL_LINE);
 		glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, (void*)(36 * sizeof(GLuint)));
 		break;
 	case 2:
@@ -456,11 +461,13 @@ void DrawRight()
 	switch (RightSeed)
 	{
 	case 0:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT, GL_FILL);
+		glPolygonMode(GL_BACK, GL_LINE);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 		break;
 	case 1:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT, GL_FILL);
+		glPolygonMode(GL_BACK, GL_LINE);
 		glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, (void*)(36 * sizeof(GLuint)));
 		break;
 	case 2:
