@@ -24,10 +24,9 @@ GLuint s_program[2];
 GLuint vao[2], vbo[4], EBO[4];
 GLint width, height;
 
-bool HideBehind = true;
 bool RotateR = false, RotateT = false, OpenF = false, CloseF = false, OpenO = false;
 bool OpenLeftRight = false, CloseLeftRight = false;
-bool ShowHexahedron = true, Perspective = true;
+bool ShowHexahedron = true, Perspective = false;
 GLfloat Rradius = 0.0f, Tradius = 0.0f, Fradius = 0.0f, OpenClose = 0.0f, Oradius = 0.0f;
 void KeyBoard(unsigned char key, int x, int y);
 void TimerFunc(int value);
@@ -200,11 +199,9 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	if (HideBehind)
-		glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 	DrawMain();
-	if (HideBehind)
-		glDisable(GL_DEPTH_TEST);
+	glDisable(GL_DEPTH_TEST);
 	glutSwapBuffers(); //--- 화면에 출력하기
 }
 
@@ -246,7 +243,7 @@ void main(int argc, char** argv)	//---윈도우 출력하고 콜백함수 설정
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 30);
 	glutInitWindowSize(width, height);
-	glutCreateWindow("Training1");
+	glutCreateWindow("Training17");
 
 	//--- GLEW 초기화하기
 	glewExperimental = GL_TRUE;
@@ -278,9 +275,6 @@ void KeyBoard(unsigned char key, int x, int y)
 		break;
 	case 't':
 		RotateT = !RotateT;
-		break;
-	case 'h':
-		HideBehind = !HideBehind;
 		break;
 	case 'y':
 		RotateR = !RotateR;
@@ -381,14 +375,19 @@ void TimerFunc(int value)
 void DrawMain()
 {
 	glm::mat4 transformMatrix = glm::mat4(1.0f);
+	glm::mat4 view = glm::mat4(1.0f);
+	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 1.0f); //--- 카메라 위치
+	glm::vec3 cameraDirection = glm::vec3(0.0f, 0.0f, 0.0f); //--- 카메라 바라보는 방향
+	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); //--- 카메라 위쪽 방향
 	glm::mat4 projection = glm::mat4(1.0f);
 	unsigned int projectionLocation;
 	unsigned int modelLocation;
+	unsigned int viewLocation;
 
 	if (Perspective)
 	{
-		projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 50.0f);
-		projection = glm::translate(projection, glm::vec3(0.0, 0.0, -2.0));
+		projection = glm::perspective(glm::radians(130.0f), (float)width / (float)height, 0.1f, 50.0f);
+		projection = glm::translate(projection, glm::vec3(0.0, 0.0, -0.5));
 	}
 
 	else
@@ -398,8 +397,12 @@ void DrawMain()
 
 	transformMatrix = glm::rotate(transformMatrix, (GLfloat)glm::radians(30.0), glm::vec3(1.0, 1.0, 0.0));
 	transformMatrix = glm::rotate(transformMatrix, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
+	view = glm::lookAt(cameraPos, cameraDirection, cameraUp);
 
 	glUseProgram(s_program[0]);
+
+	viewLocation = glGetUniformLocation(s_program[0], "viewTransform");
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 
 	projectionLocation = glGetUniformLocation(s_program[0], "projectionTransform");
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
@@ -412,6 +415,9 @@ void DrawMain()
 
 	glUseProgram(s_program[1]);
 	glBindVertexArray(vao[1]);
+
+	viewLocation = glGetUniformLocation(s_program[1], "viewTransform");
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 
 	projectionLocation = glGetUniformLocation(s_program[1], "projectionTransform");
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);

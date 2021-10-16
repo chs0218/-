@@ -1,4 +1,1 @@
-﻿  test.cpp
-D:\Visual Studio\Project\컴퓨터그래픽스\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\test.cpp(466,24): warning C4244: '=': 'std::streamoff'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[6주차] 좌표계 변환 1\[6주차] 좌표계 변환 1\test.cpp(480,1): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
-  [6주차] 좌표계 변환 1.vcxproj -> D:\Visual Studio\Project\컴퓨터그래픽스\[6주차] 좌표계 변환 1\Debug\[6주차] 좌표계 변환 1.exe
+﻿  [6주차] 좌표계 변환 1.vcxproj -> D:\Visual Studio\Project\컴퓨터그래픽스\[6주차] 좌표계 변환 1\Debug\[6주차] 좌표계 변환 1.exe
