@@ -1,0 +1,4 @@
+﻿  Training17.cpp
+D:\Visual Studio\Project\컴퓨터그래픽스\[7주차] 실습\[7주차] 실습\Training17.cpp(226,24): warning C4244: '=': 'std::streamoff'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[7주차] 실습\[7주차] 실습\Training17.cpp(240,1): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+  [7주차] 실습.vcxproj -> D:\Visual Studio\Project\컴퓨터그래픽스\[7주차] 실습\Debug\[7주차] 실습.exe

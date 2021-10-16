@@ -7,7 +7,7 @@
 #include <iostream>
 #include <fstream>
 
-#define nTriangles 52
+#define nTriangles 48
 
 void make_vertexShaders();
 void make_fragmentShaders();
@@ -70,12 +70,12 @@ GLfloat Dots[][3] = {
 };
 
 GLfloat colors[][3] = {
-	{ 0.95, 0.82, 0.71 },
-	{ 0.95, 0.78, 0.41 },
-	{ 0.91, 0.50, 0.21 },
-	{ 0.53, 0.51, 0.64 },
-	{ 0.47, 0.60, 0.50 },
-	{ 0.33, 0.78, 0.82 },
+	{ 1.0, 0.0, 0.0 },
+	{ 0.0, 1.0, 0.0 },
+	{ 0.0, 0.0, 1.0 },
+	{ 1.0, 1.0, 0.0 },
+	{ 1.0, 0.0, 1.0 },
+	{ 0.0, 1.0, 1.0 },
 
 	{ 0.12, 0.71, 0.65 },
 	{ 0.71, 0.46, 0.13 },
@@ -94,7 +94,7 @@ unsigned int index[]{
 	4, 1, 0,
 	4, 0, 3,
 	4, 3, 7,
-	1, 6, 5,
+	1, 5, 6,
 	1, 6, 2,
 
 	9, 11, 10,
@@ -223,6 +223,8 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	glBindVertexArray(vao[0]);
 	
 	glEnable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT, GL_FILL);
+	glPolygonMode(GL_BACK, GL_LINE);
 	DrawCase();
 	glDisable (GL_DEPTH_TEST);
 	glutSwapBuffers();

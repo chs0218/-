@@ -36,19 +36,27 @@ void InitDots();
 
 GLfloat RightMoveX = 0.0, RightMoveY = 0.0, RightMoveZ = 0.0;
 GLfloat LeftMoveX = 0.0, LeftMoveY = 0.0, LeftMoveZ = 0.0;
-GLfloat MoveAllX = 0.0, MoveAllY = 0.0;
+GLfloat MoveAllX = 0.0, MoveAllY = 0.0, MoveAllZ = 0.0;
 GLfloat LeftScale = 1.0, RightScale = 1.0;
 GLfloat LeftZeroScale = 1.0, RightZeroScale = 1.0;
+
+GLfloat Xradius = 30.0, Rradius = 330.0, Yradius = 330.0;
+GLfloat RightXradius = 0.0, RightYradius = 0.0;
+GLfloat LeftXradius = 0.0, LeftYradius = 0.0;
 
 bool RightMovePlusX = false, RightMovePlusY = false, RightMovePlusZ = false;
 bool LeftMovePlusX = false, LeftMovePlusY = false, LeftMovePlusZ = false;
 bool RightMoveMinusX = false, RightMoveMinusY = false, RightMoveMinusZ = false;
 bool LeftMoveMinusX = false, LeftMoveMinusY = false, LeftMoveMinusZ = false;
 bool CycleAnimation = false;
+bool RotateRightX = false, RotateRightY = false;
+bool RotateLeftX = false, RotateLeftY = false;
+bool RotateR = false;
 
 int CycleDegree = 0;
 const double PI = 3.141592;
 GLfloat CycleRadius = 0.0;
+GLint LeftSeed = 2, RightSeed = 0;
 
 GLfloat LineData[4000][3] = {
 	{1.0, 0.0, 0.0},
@@ -248,17 +256,15 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	glm::mat4 transRight = glm::mat4(1.0f);
 	glm::mat4 LeftScaleMat = glm::mat4(1.0f);
 	glm::mat4 RightScaleMat = glm::mat4(1.0f);
-	glm::mat4 MoveAll = glm::mat4(1.0f);
 	LeftScaleMat = glm::scale(LeftScaleMat, glm::vec3(LeftZeroScale, LeftZeroScale, LeftZeroScale));
 	RightScaleMat = glm::scale(RightScaleMat, glm::vec3(RightZeroScale, RightZeroScale, RightZeroScale));
-	MoveAll = glm::translate(MoveAll, glm::vec3(MoveAllX, MoveAllY, 0.0f));
-	
+
 
 	glUseProgram(s_program[0]);
 	glBindVertexArray(vao[0]);
 	glm::mat4 transformMatrix0 = glm::mat4(1.0f);
 	transformMatrix0 = glm::rotate(transformMatrix0, (GLfloat)glm::radians(30.0), glm::vec3(1.0, 0.0, 0.0));
-	transformMatrix0 = glm::rotate(transformMatrix0, (GLfloat)glm::radians(330.0), glm::vec3(0.0, 1.0, 0.0));
+	transformMatrix0 = glm::rotate(transformMatrix0, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
 
 	unsigned int modelLocation0 = glGetUniformLocation(s_program[0], "modelTransform");
 	glUniformMatrix4fv(modelLocation0, 1, GL_FALSE, glm::value_ptr(transformMatrix0));
@@ -268,13 +274,15 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	if (CycleAnimation)
 		glDrawArrays(GL_LINES, 6, 4000);
 
-	transLeft = glm::translate(transformMatrix0, glm::vec3(-0.5 + LeftMoveX, LeftMoveY, LeftMoveZ));
-	transRight = glm::translate(transformMatrix0, glm::vec3(0.5 + RightMoveX, RightMoveY, RightMoveZ));
+	transLeft = glm::translate(transformMatrix0, glm::vec3(-0.5 + LeftMoveX + MoveAllX, LeftMoveY + MoveAllY, LeftMoveZ + MoveAllZ));
+	transRight = glm::translate(transformMatrix0, glm::vec3(0.5 + RightMoveX + MoveAllX, RightMoveY + MoveAllY, RightMoveZ + MoveAllZ));
 
 	glUseProgram(s_program[1]);
 	glm::mat4 transformMatrix1 = glm::mat4(1.0f);
 	transformMatrix1 = glm::scale(transformMatrix1, glm::vec3(LeftScale, LeftScale, LeftScale));
-	transformMatrix1 = LeftScaleMat * MoveAll * transLeft * transformMatrix1;
+	transformMatrix1 = glm::rotate(transformMatrix1, (GLfloat)glm::radians(RightXradius), glm::vec3(1.0, 0.0, 0.0));
+	transformMatrix1 = glm::rotate(transformMatrix1, (GLfloat)glm::radians(RightYradius), glm::vec3(0.0, 1.0, 0.0));
+	transformMatrix1 = LeftScaleMat * transLeft * transformMatrix1;
 
 	unsigned int modelLocation1 = glGetUniformLocation(s_program[1], "modelTransform");
 	glUniformMatrix4fv(modelLocation1, 1, GL_FALSE, glm::value_ptr(transformMatrix1));
@@ -285,20 +293,23 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	glm::mat4 transformMatrix2 = glm::mat4(1.0f);
 	if (CycleAnimation)
 	{
-		
+
 		transformMatrix2 = glm::rotate(transformMatrix2, (GLfloat)glm::radians(30.0), glm::vec3(1.0, 0.0, 0.0));
-		transformMatrix2 = glm::rotate(transformMatrix2, (GLfloat)glm::radians(330.0), glm::vec3(0.0, 1.0, 0.0));
+		transformMatrix2 = glm::rotate(transformMatrix2, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
 		transformMatrix2 = glm::translate(transformMatrix2,
 			glm::vec3(CycleRadius * (GLfloat)cos(CycleDegree * PI / 180.0f), 0,
 				CycleRadius * (GLfloat)sin(CycleDegree * PI / 180.0f)));
+		transformMatrix2 = glm::rotate(transformMatrix2, (GLfloat)glm::radians(LeftXradius), glm::vec3(1.0, 0.0, 0.0));
+		transformMatrix2 = glm::rotate(transformMatrix2, (GLfloat)glm::radians(LeftYradius), glm::vec3(0.0, 1.0, 0.0));
 		transformMatrix2 = glm::scale(transformMatrix2, glm::vec3(RightScale, RightScale, RightScale));
-		
 	}
 
 	else
 	{
 		transformMatrix2 = glm::scale(transformMatrix2, glm::vec3(RightScale, RightScale, RightScale));
-		transformMatrix2 = RightScaleMat * MoveAll * transRight * transformMatrix2;
+		transformMatrix2 = glm::rotate(transformMatrix2, (GLfloat)glm::radians(LeftXradius), glm::vec3(1.0, 0.0, 0.0));
+		transformMatrix2 = glm::rotate(transformMatrix2, (GLfloat)glm::radians(LeftYradius), glm::vec3(0.0, 1.0, 0.0));
+		transformMatrix2 = RightScaleMat * transRight * transformMatrix2;
 	}
 
 	unsigned int modelLocation2 = glGetUniformLocation(s_program[2], "modelTransform");
@@ -371,6 +382,21 @@ void KeyBoard(unsigned char key, int x, int y)
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<int> dis(0, 4);
 	switch (key) {
+	case '1':
+		RotateRightX = !RotateRightX;
+		break;
+	case '2':
+		RotateRightY = !RotateRightY;
+		break;
+	case '3':
+		RotateLeftX = !RotateLeftX;
+		break;
+	case '4':
+		RotateLeftY = !RotateLeftY;
+		break;
+	case '5':
+		RotateR = !RotateR;
+		break;
 	case 'w':
 		if (MoveAllY < 0.5f)
 			MoveAllY += 0.01f;
@@ -387,17 +413,39 @@ void KeyBoard(unsigned char key, int x, int y)
 		if (MoveAllX < 0.5f)
 			MoveAllX += 0.01f;
 		break;
+	case 'z':
+		if (MoveAllZ > -0.5f)
+			MoveAllZ -= 0.01f;
+		break;
+	case 'x':
+		if (MoveAllZ < 0.5f)
+			MoveAllZ += 0.01f;
+		break;
 	case 'r':
 		CycleAnimation = !CycleAnimation;
+		CycleDegree = 0;
+		CycleRadius = 0.0;
+		break;
+	case 'V':
+	case 'v':
+		LeftSeed = dis(gen);
+		RightSeed = dis(gen);
 		break;
 	case 'C':
 	case 'c':
 		RightMoveX = 0.0, RightMoveY = 0.0, RightMoveZ = 0.0;
 		LeftMoveX = 0.0, LeftMoveY = 0.0, LeftMoveZ = 0.0;
-		MoveAllX = 0.0, MoveAllY = 0.0;
+		MoveAllX = 0.0, MoveAllY = 0.0, MoveAllZ = 0.0;
 		LeftScale = 1.0, RightScale = 1.0;
 		LeftZeroScale = 1.0, RightZeroScale = 1.0;
+		Xradius = 30.0, Rradius = 330.0, Yradius = 330.0;
+		RightXradius = 0.0, RightYradius = 0.0;
+		LeftXradius = 0.0, LeftYradius = 0.0;
+		LeftSeed = 2, RightSeed = 0;
 
+		RotateRightX = false, RotateRightY = false;
+		RotateLeftX = false, RotateLeftY = false;
+		RotateR = false;
 		RightMovePlusX = false, RightMovePlusY = false, RightMovePlusZ = false;
 		LeftMovePlusX = false, LeftMovePlusY = false, LeftMovePlusZ = false;
 		RightMoveMinusX = false, RightMoveMinusY = false, RightMoveMinusZ = false;
@@ -501,6 +549,19 @@ void KeyBoardUp(unsigned char key, int x, int y)
 
 void TimerFunc(int value)
 {
+
+	if (RotateRightX)
+		RightXradius = (int)(RightXradius + 5.0) % 360;
+	if (RotateRightY)
+		RightYradius = (int)(RightYradius + 5.0) % 360;
+	if (RotateLeftX)
+		LeftXradius = (int)(LeftXradius + 5.0) % 360;
+	if (RotateLeftY)
+		LeftYradius = (int)(LeftYradius + 5.0) % 360;
+	if (RotateR)
+	{
+		Rradius = (int)(Rradius - 5.0) % 360;
+	}
 	if (CycleAnimation)
 	{
 		if (CycleRadius > 0.7988)
@@ -582,17 +643,75 @@ void TimerFunc(int value)
 void DrawLeft()
 {
 	GLUquadricObj* qobj;
-	qobj = gluNewQuadric();
-	gluQuadricDrawStyle(qobj, GLU_LINE); // 도형 스타일
-	gluQuadricNormals(qobj, GLU_SMOOTH);
-	gluQuadricOrientation(qobj, GLU_OUTSIDE);
-	gluSphere(qobj, 0.1, 10, 10);
+	switch (LeftSeed)
+	{
+	case 0:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		break;
+	case 1:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, (void*)(36 * sizeof(GLuint)));
+		break;
+	case 2:
+		qobj = gluNewQuadric();
+		gluQuadricDrawStyle(qobj, GLU_LINE); // 도형 스타일
+		gluQuadricNormals(qobj, GLU_SMOOTH);
+		gluQuadricOrientation(qobj, GLU_OUTSIDE);
+		gluSphere(qobj, 0.1, 10, 10);
+		break;
+	case 3:
+		qobj = gluNewQuadric();
+		gluQuadricDrawStyle(qobj, GLU_LINE); // 도형 스타일
+		gluQuadricNormals(qobj, GLU_SMOOTH);
+		gluQuadricOrientation(qobj, GLU_OUTSIDE);
+		gluSphere(qobj, 0.1, 3, 8);
+		break;
+	case 4:
+		qobj = gluNewQuadric();
+		gluQuadricDrawStyle(qobj, GLU_LINE); // 도형 스타일
+		gluQuadricNormals(qobj, GLU_SMOOTH);
+		gluQuadricOrientation(qobj, GLU_OUTSIDE);
+		gluDisk(qobj, 0.05, 0.2, 10, 3);
+		break;
+	}
 }
 
 void DrawRight()
 {
-	glPolygonMode(GL_FRONT, GL_FILL);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	GLUquadricObj* qobj;
+	switch (RightSeed)
+	{
+	case 0:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		break;
+	case 1:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, (void*)(36 * sizeof(GLuint)));
+		break;
+	case 2:
+		qobj = gluNewQuadric();
+		gluQuadricDrawStyle(qobj, GLU_LINE); // 도형 스타일
+		gluQuadricNormals(qobj, GLU_SMOOTH);
+		gluQuadricOrientation(qobj, GLU_OUTSIDE);
+		gluSphere(qobj, 0.1, 10, 10);
+		break;
+	case 3:
+		qobj = gluNewQuadric();
+		gluQuadricDrawStyle(qobj, GLU_LINE); // 도형 스타일
+		gluQuadricNormals(qobj, GLU_SMOOTH);
+		gluQuadricOrientation(qobj, GLU_OUTSIDE);
+		gluSphere(qobj, 0.1, 3, 8);
+		break;
+	case 4:
+		qobj = gluNewQuadric();
+		gluQuadricDrawStyle(qobj, GLU_LINE); // 도형 스타일
+		gluQuadricNormals(qobj, GLU_SMOOTH);
+		gluQuadricOrientation(qobj, GLU_OUTSIDE);
+		gluDisk(qobj, 0.05, 0.2, 10, 3);
+		break;
+	}
 }
 
 void SpecialKeyBoard(int key, int x, int y)
@@ -602,19 +721,19 @@ void SpecialKeyBoard(int key, int x, int y)
 		RightMovePlusX = true;
 		break;
 	case GLUT_KEY_LEFT:
-		RightMoveMinusX = true; 
+		RightMoveMinusX = true;
 		break;
 	case GLUT_KEY_UP:
 		RightMovePlusY = true;
 		break;
 	case GLUT_KEY_DOWN:
-		RightMoveMinusY = true; 
+		RightMoveMinusY = true;
 		break;
 	case GLUT_KEY_PAGE_UP:
 		RightMovePlusZ = true;
 		break;
 	case GLUT_KEY_PAGE_DOWN:
-		RightMoveMinusZ = true; 
+		RightMoveMinusZ = true;
 		break;
 	}
 }
