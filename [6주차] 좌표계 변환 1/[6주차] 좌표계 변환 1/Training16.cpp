@@ -36,7 +36,7 @@ void InitDots();
 
 GLfloat RightMoveX = 0.0, RightMoveY = 0.0, RightMoveZ = 0.0;
 GLfloat LeftMoveX = 0.0, LeftMoveY = 0.0, LeftMoveZ = 0.0;
-GLfloat MoveAllX = 0.0, MoveAllY = 0.0, MoveAllZ = 0.0;
+GLfloat MoveAllY = 0.0;
 GLfloat LeftScale = 1.0, RightScale = 1.0;
 GLfloat LeftZeroScale = 1.0, RightZeroScale = 1.0;
 
@@ -62,8 +62,8 @@ GLfloat LineData[4000][3] = {
 	{1.0, 0.0, 0.0},
 	{-1.0, 0.0, 0.0},
 
-	{0.0, 1.0, 0.0},
-	{0.0, -1.0, 0.0},
+	{0.0, 10.0, 0.0},
+	{0.0, -10.0, 0.0},
 
 	{0.0, 0.0, 1.0},
 	{0.0, 0.0, -1.0}
@@ -252,12 +252,14 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::mat4 MoveAll = glm::mat4(1.0f);
 	glm::mat4 transLeft = glm::mat4(1.0f);
 	glm::mat4 transRight = glm::mat4(1.0f);
 	glm::mat4 LeftScaleMat = glm::mat4(1.0f);
 	glm::mat4 RightScaleMat = glm::mat4(1.0f);
 	LeftScaleMat = glm::scale(LeftScaleMat, glm::vec3(LeftZeroScale, LeftZeroScale, LeftZeroScale));
 	RightScaleMat = glm::scale(RightScaleMat, glm::vec3(RightZeroScale, RightZeroScale, RightZeroScale));
+	MoveAll = glm::translate(MoveAll, glm::vec3(0.0f, MoveAllY, 0.0f));
 
 
 	glUseProgram(s_program[0]);
@@ -265,7 +267,7 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	glm::mat4 transformMatrix0 = glm::mat4(1.0f);
 	transformMatrix0 = glm::rotate(transformMatrix0, (GLfloat)glm::radians(30.0), glm::vec3(1.0, 0.0, 0.0));
 	transformMatrix0 = glm::rotate(transformMatrix0, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
-
+	transformMatrix0 = MoveAll * transformMatrix0;
 	unsigned int modelLocation0 = glGetUniformLocation(s_program[0], "modelTransform");
 	glUniformMatrix4fv(modelLocation0, 1, GL_FALSE, glm::value_ptr(transformMatrix0));
 	glBindVertexArray(vao[0]);
@@ -274,8 +276,8 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	if (CycleAnimation)
 		glDrawArrays(GL_LINES, 6, 4000);
 
-	transLeft = glm::translate(transformMatrix0, glm::vec3(-0.5 + LeftMoveX + MoveAllX, LeftMoveY + MoveAllY, LeftMoveZ + MoveAllZ));
-	transRight = glm::translate(transformMatrix0, glm::vec3(0.5 + RightMoveX + MoveAllX, RightMoveY + MoveAllY, RightMoveZ + MoveAllZ));
+	transLeft = glm::translate(transformMatrix0, glm::vec3(-0.5 + LeftMoveX, LeftMoveY, LeftMoveZ));
+	transRight = glm::translate(transformMatrix0, glm::vec3(0.5 + RightMoveX, RightMoveY, RightMoveZ));
 
 	glUseProgram(s_program[1]);
 	glm::mat4 transformMatrix1 = glm::mat4(1.0f);
@@ -302,6 +304,7 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 		transformMatrix2 = glm::rotate(transformMatrix2, (GLfloat)glm::radians(LeftXradius), glm::vec3(1.0, 0.0, 0.0));
 		transformMatrix2 = glm::rotate(transformMatrix2, (GLfloat)glm::radians(LeftYradius), glm::vec3(0.0, 1.0, 0.0));
 		transformMatrix2 = glm::scale(transformMatrix2, glm::vec3(RightScale, RightScale, RightScale));
+		transformMatrix2 = MoveAll * transformMatrix2;
 	}
 
 	else
@@ -359,7 +362,7 @@ void main(int argc, char** argv)	//---윈도우 출력하고 콜백함수 설정
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowPosition(100, 30);
 	glutInitWindowSize(width, height);
-	glutCreateWindow("Training13");
+	glutCreateWindow("Training16");
 
 	//--- GLEW 초기화하기
 	glewExperimental = GL_TRUE;
@@ -401,25 +404,9 @@ void KeyBoard(unsigned char key, int x, int y)
 		if (MoveAllY < 0.5f)
 			MoveAllY += 0.01f;
 		break;
-	case 'a':
-		if (MoveAllX > -0.5f)
-			MoveAllX -= 0.01f;
-		break;
 	case 's':
 		if (MoveAllY > -0.5f)
 			MoveAllY -= 0.01f;
-		break;
-	case 'd':
-		if (MoveAllX < 0.5f)
-			MoveAllX += 0.01f;
-		break;
-	case 'z':
-		if (MoveAllZ > -0.5f)
-			MoveAllZ -= 0.01f;
-		break;
-	case 'x':
-		if (MoveAllZ < 0.5f)
-			MoveAllZ += 0.01f;
 		break;
 	case 'r':
 		CycleAnimation = !CycleAnimation;
@@ -435,7 +422,7 @@ void KeyBoard(unsigned char key, int x, int y)
 	case 'c':
 		RightMoveX = 0.0, RightMoveY = 0.0, RightMoveZ = 0.0;
 		LeftMoveX = 0.0, LeftMoveY = 0.0, LeftMoveZ = 0.0;
-		MoveAllX = 0.0, MoveAllY = 0.0, MoveAllZ = 0.0;
+		MoveAllY = 0.0;
 		LeftScale = 1.0, RightScale = 1.0;
 		LeftZeroScale = 1.0, RightZeroScale = 1.0;
 		Xradius = 30.0, Rradius = 330.0, Yradius = 330.0;
