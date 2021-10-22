@@ -138,10 +138,20 @@ int main()
 	P_Rect[1].x = rand() % 801;
 	P_Rect[1].y = rand() % 601;
 
+	P_Rect[0].x = 100;
+	P_Rect[0].y = 100;
+	P_Rect[1].x = 200;
+	P_Rect[1].y = 200;
+
 	P_Line[0].x = rand() % 801;
 	P_Line[0].y = rand() % 601;
 	P_Line[1].x = rand() % 801;
 	P_Line[1].y = rand() % 601;
+
+	P_Line[0].x = 50;
+	P_Line[0].y = 50;
+	P_Line[1].x = 50;
+	P_Line[1].y = 150;
 
 	if (P_Rect[0].x > P_Rect[1].x)
 	{
