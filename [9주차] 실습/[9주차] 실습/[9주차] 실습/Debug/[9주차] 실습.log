@@ -1,0 +1,15 @@
+﻿  Training 21.cpp
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 21.cpp(235,24): warning C4244: '=': 'std::streamoff'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 21.cpp(249,1): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 21.cpp(329,48): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 21.cpp(330,48): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 21.cpp(335,49): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 21.cpp(336,49): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 21.cpp(501,22): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 21.cpp(505,22): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 21.cpp(509,22): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 21.cpp(513,22): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 21.cpp(517,22): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 21.cpp(522,21): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 21.cpp(526,21): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  [9주차] 실습.vcxproj -> D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\Debug\[9주차] 실습.exe

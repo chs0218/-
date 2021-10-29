@@ -25,8 +25,9 @@ GLint width, height;
 
 bool RotateA = false, RotateR = false, RotateY = false, MovePlusZ = false, MoveMinusZ = false, RotateCranePlus = false, RotateCraneMinus = false, RotateArm = false, ArmPlus = true;
 GLfloat RotateCenterY = 0.0, cameraX = 0.0, cameraY = 3.0, cameraZ = 4.0, cameraR = 0.0, craneZ = 0.0, cranebodyR = 0.0, armR = 0.0, RotateCenter = 0.0;
+GLfloat CameraDirX = 0.0, CameraDirY = 0.0, CameraDirZ = 0.0;
 glm::vec3 cameraPos = glm::vec3(cameraX, cameraY, cameraZ); //--- 카메라 위치
-glm::vec3 cameraDirection = glm::vec3(0.0f, 0.0f, 0.0f); //--- 카메라 바라보는 방향
+glm::vec3 cameraDirection = glm::vec3(CameraDirX, CameraDirY, CameraDirZ); //--- 카메라 바라보는 방향
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); //--- 카메라 위쪽 방향
 
 void DrawMain();
@@ -261,12 +262,12 @@ void KeyBoard(unsigned char key, int x, int y)
 		RotateArm = !RotateArm;
 		break;
 	case 'X':
-		if (cameraX > -10.0f && !RotateR && !RotateY)
-			cameraX -= 0.5f;
+		CameraDirX -= 0.5f;
+		cameraX -= 0.5f;
 		break;
 	case 'x':
-		if (cameraX < 10.0f && !RotateR && !RotateY)
-			cameraX += 0.5f;
+		CameraDirX += 0.5f;
+		cameraX += 0.5f;
 		break;
 	case 'y':
 	case 'Y':
@@ -277,12 +278,12 @@ void KeyBoard(unsigned char key, int x, int y)
 		RotateA = !RotateA;
 		break;
 	case 'Z':
-		if (cameraZ > -10.0f && !RotateR && !RotateY)
-			cameraZ -= 0.5f;
+		CameraDirZ -= 0.5f;
+		cameraZ -= 0.5f;
 		break;
 	case 'z':
-		if (cameraZ < 10.0f && !RotateR && !RotateY)
-			cameraZ += 0.5f;
+		CameraDirZ += 0.5f;
+		cameraZ += 0.5f;
 		break;
 	case 'R':
 	case 'r':
@@ -294,6 +295,7 @@ void KeyBoard(unsigned char key, int x, int y)
 		break;
 	case 'C':
 	case 'c':
+		CameraDirX = 0.0, CameraDirY = 0.0, CameraDirZ = 0.0;
 		RotateCenterY = 0.0, cameraX = 0.0, cameraY = 3.0, cameraZ = 4.0, cameraR = 0.0, craneZ = 0.0, cranebodyR = 0.0, armR = 0.0, RotateCenter = 0.0;;
 		RotateA = false, RotateR = false, RotateY = false, MovePlusZ = false, MoveMinusZ = false, RotateCranePlus = false, RotateCraneMinus = false, RotateArm = false, ArmPlus = true;
 		break;
@@ -356,8 +358,10 @@ void RotateCameraCenter()
 
 void RotateCamera()
 {
-	GLfloat tmpX = (-cameraZ) * glm::sin(glm::radians(cameraR)) + (-cameraX) * glm::cos(glm::radians(cameraR));
-	GLfloat tmpZ = (-cameraZ) * glm::cos(glm::radians(cameraR)) - (-cameraX) * glm::sin(glm::radians(cameraR));
+	GLfloat tmpDirX = CameraDirX - cameraX;
+	GLfloat tmpDirZ = CameraDirZ - cameraZ;
+	GLfloat tmpX = tmpDirZ * glm::sin(glm::radians(cameraR)) + tmpDirX * glm::cos(glm::radians(cameraR));
+	GLfloat tmpZ = tmpDirZ * glm::cos(glm::radians(cameraR)) - tmpDirX * glm::sin(glm::radians(cameraR));
 
 	cameraDirection = glm::vec3(tmpX + cameraX, 0.0f, tmpZ + cameraZ);
 }
@@ -407,6 +411,7 @@ void DrawMain()
 	projection = glm::translate(projection, glm::vec3(0.0, 0.0, -0.5));
 
 	cameraPos = glm::vec3(cameraX, cameraY, cameraZ);
+	cameraDirection = glm::vec3(CameraDirX, CameraDirY, CameraDirZ);
 	RotateCamera();
 
 	// 바닥
