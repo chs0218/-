@@ -18,14 +18,26 @@ char* filetobuf(const char* file);
 
 GLchar* vertexsource;
 GLchar* fragmentsource;
-GLuint vertexShader, fragmentShader[4];
-GLuint s_program[5];
-GLuint vao, vbo, EBO;
+GLuint vertexShader[2], fragmentShader[5];
+GLuint s_program[6];
+GLuint vao[2], vbo[3], EBO[3];
 GLint width, height;
 
 bool RotateA = false, RotateR = false, RotateY = false, MovePlusZ = false, MoveMinusZ = false, RotateCranePlus = false, RotateCraneMinus = false, RotateArm = false, ArmPlus = true;
-GLfloat RotateCenterY = 0.0, cameraX = 0.0, cameraY = 3.0, cameraZ = 4.0, cameraR = 0.0, craneZ = 0.0, cranebodyR = 0.0, armR = 0.0, RotateCenter = 0.0;
+GLfloat RotateCenterY = 0.0, cameraX = 0.0, cameraY = 3.0, cameraZ = 4.0, frontcameraX = 0.0, frontcameraZ = 1.0, topcameraX = 0.0, topcameraZ = 0.0, cameraR = 0.0, craneZ = 0.0, cranebodyR = 0.0, armR = 0.0, RotateCenter = 0.0;
 GLfloat CameraDirX = 0.0, CameraDirY = 0.0, CameraDirZ = 0.0;
+GLfloat frontCameraDirX = 0.0, frontCameraDirZ = 0.0;
+GLfloat topCameraDirX = 0.0, topCameraDirZ = 0.0;
+
+
+glm::vec3 topcameraPos = glm::vec3(topcameraX, 2.0, topcameraZ); //--- 카메라 위치
+glm::vec3 topcameraDirection = glm::vec3(topCameraDirX, 0.0, topCameraDirZ); //--- 카메라 바라보는 방향
+glm::vec3 topcameraUp = glm::vec3(1.0 * glm::sin(glm::radians(cameraR)), 0.0f, 1.0 * glm::cos(glm::radians(cameraR))); //--- 카메라 위쪽 방향
+
+glm::vec3 frontcameraPos = glm::vec3(frontcameraX, 0.0, frontcameraZ); //--- 카메라 위치
+glm::vec3 frontcameraDirection = glm::vec3(frontCameraDirX, 0.0, frontCameraDirZ); //--- 카메라 바라보는 방향
+glm::vec3 frontcameraUp = glm::vec3(0.0f, 1.0f, 0.0f); //--- 카메라 위쪽 방향
+
 glm::vec3 cameraPos = glm::vec3(cameraX, cameraY, cameraZ); //--- 카메라 위치
 glm::vec3 cameraDirection = glm::vec3(CameraDirX, CameraDirY, CameraDirZ); //--- 카메라 바라보는 방향
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); //--- 카메라 위쪽 방향
@@ -37,10 +49,35 @@ void DrawTop();
 void RotateCameraCenterY();
 void RotateCameraCenter();
 void RotateCamera();
+void RotatefrontCamera();
 void RotateCrane();
 void MoveCraneZ();
 void KeyBoard(unsigned char key, int x, int y);
 void TimerFunc(int value);
+
+GLfloat LineDots[][3] = {
+	{5.0, 0.0, 0.0},
+	{-5.0, 0.0, 0.0},
+	{0.0, 5.0, 0.0},
+	{0.0, 0.0, 0.0},
+	{0.0, 0.0, 5.0},
+	{0.0, 0.0, -5.0},
+};
+
+GLfloat LineColors[][3] = {
+	{1.0, 0.0, 0.0},
+	{1.0, 0.0, 0.0},
+	{0.0, 1.0, 0.0},
+	{0.0, 1.0, 0.0},
+	{0.0, 0.0, 1.0},
+	{0.0, 0.0, 1.0},
+};
+
+unsigned int Lineindex[] = {
+	0, 1,
+	2, 3,
+	4, 5
+};
 
 GLfloat Dots[][3] = {
 	// 육면체
@@ -72,46 +109,72 @@ unsigned int Shapeindex[] = {
 
 void make_vertexShaders()
 {
+	vertexsource = filetobuf("vertex.glsl");
+	vertexShader[0] = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader[0], 1, (const GLchar**)&vertexsource, NULL);
+	glCompileShader(vertexShader[0]);
+
 	vertexsource = filetobuf("vertex_crane.glsl");
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, (const GLchar**)&vertexsource, NULL);
-	glCompileShader(vertexShader);
+	vertexShader[1] = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader[1], 1, (const GLchar**)&vertexsource, NULL);
+	glCompileShader(vertexShader[1]);
 }
 
 void make_fragmentShaders()
 {
-	fragmentsource = filetobuf("fragment_floor.glsl");
+	fragmentsource = filetobuf("fragment.glsl");
 	fragmentShader[0] = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader[0], 1, (const GLchar**)&fragmentsource, NULL);
 	glCompileShader(fragmentShader[0]);
 
-	fragmentsource = filetobuf("fragment_body.glsl");
+	fragmentsource = filetobuf("fragment_floor.glsl");
 	fragmentShader[1] = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader[1], 1, (const GLchar**)&fragmentsource, NULL);
 	glCompileShader(fragmentShader[1]);
 
-	fragmentsource = filetobuf("fragment_head.glsl");
+	fragmentsource = filetobuf("fragment_body.glsl");
 	fragmentShader[2] = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader[2], 1, (const GLchar**)&fragmentsource, NULL);
 	glCompileShader(fragmentShader[2]);
 
-	fragmentsource = filetobuf("fragment_arm.glsl");
+	fragmentsource = filetobuf("fragment_head.glsl");
 	fragmentShader[3] = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader[3], 1, (const GLchar**)&fragmentsource, NULL);
 	glCompileShader(fragmentShader[3]);
+
+	fragmentsource = filetobuf("fragment_arm.glsl");
+	fragmentShader[4] = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader[4], 1, (const GLchar**)&fragmentsource, NULL);
+	glCompileShader(fragmentShader[4]);
 }
 
 void InitBuffer()
 {
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &EBO);
+	glGenVertexArrays(2, vao);
+	glGenBuffers(3, vbo);
+	glGenBuffers(3, EBO);
 
-	glBindVertexArray(vao);
+	glBindVertexArray(vao[0]);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(LineDots), LineDots, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Lineindex), Lineindex, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(LineColors), LineColors, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[1]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Lineindex), Lineindex, GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+	glEnableVertexAttribArray(1);
+
+	glBindVertexArray(vao[1]);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Dots), Dots, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[2]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Shapeindex), Shapeindex, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
@@ -124,35 +187,42 @@ void InitShader()
 
 	s_program[0] = glCreateProgram();
 
-	glAttachShader(s_program[0], vertexShader);
+	glAttachShader(s_program[0], vertexShader[0]);
 	glAttachShader(s_program[0], fragmentShader[0]);
 	glLinkProgram(s_program[0]);
 
 	s_program[1] = glCreateProgram();
 
-	glAttachShader(s_program[1], vertexShader);
+	glAttachShader(s_program[1], vertexShader[1]);
 	glAttachShader(s_program[1], fragmentShader[1]);
 	glLinkProgram(s_program[1]);
 
 	s_program[2] = glCreateProgram();
 
-	glAttachShader(s_program[2], vertexShader);
+	glAttachShader(s_program[2], vertexShader[1]);
 	glAttachShader(s_program[2], fragmentShader[2]);
 	glLinkProgram(s_program[2]);
 
 	s_program[3] = glCreateProgram();
 
-	glAttachShader(s_program[3], vertexShader);
+	glAttachShader(s_program[3], vertexShader[1]);
 	glAttachShader(s_program[3], fragmentShader[3]);
 	glLinkProgram(s_program[3]);
 
 	s_program[4] = glCreateProgram();
 
-	glAttachShader(s_program[4], vertexShader);
-	glAttachShader(s_program[4], fragmentShader[3]);
+	glAttachShader(s_program[4], vertexShader[1]);
+	glAttachShader(s_program[4], fragmentShader[4]);
 	glLinkProgram(s_program[4]);
 
-	glDeleteShader(vertexShader);
+	s_program[5] = glCreateProgram();
+
+	glAttachShader(s_program[5], vertexShader[1]);
+	glAttachShader(s_program[5], fragmentShader[4]);
+	glLinkProgram(s_program[5]);
+
+	glDeleteShader(vertexShader[0]);
+	glDeleteShader(vertexShader[1]);
 	glDeleteShader(fragmentShader[0]);
 	glDeleteShader(fragmentShader[1]);
 	glDeleteShader(fragmentShader[2]);
@@ -279,11 +349,19 @@ void KeyBoard(unsigned char key, int x, int y)
 		RotateArm = !RotateArm;
 		break;
 	case 'X':
+		topCameraDirX -= 0.5f;
+		frontCameraDirX -= 0.5f;
 		CameraDirX -= 0.5f;
+		topcameraX -= 0.5f;
+		frontcameraX -= 0.5f;
 		cameraX -= 0.5f;
 		break;
 	case 'x':
+		topCameraDirX += 0.5f;
+		frontCameraDirX += 0.5f;
 		CameraDirX += 0.5f;
+		topcameraX += 0.5f;
+		frontcameraX += 0.5f;
 		cameraX += 0.5f;
 		break;
 	case 'y':
@@ -295,11 +373,19 @@ void KeyBoard(unsigned char key, int x, int y)
 		RotateA = !RotateA;
 		break;
 	case 'Z':
+		topCameraDirZ -= 0.5f;
+		frontCameraDirZ -= 0.5f;
 		CameraDirZ -= 0.5f;
+		topcameraZ -= 0.5f;
+		frontcameraZ -= 0.5f;
 		cameraZ -= 0.5f;
 		break;
 	case 'z':
+		topCameraDirZ += 0.5f;
+		frontCameraDirZ += 0.5f;
 		CameraDirZ += 0.5f;
+		topcameraZ += 0.5f;
+		frontcameraZ += 0.5f;
 		cameraZ += 0.5f;
 		break;
 	case 'R':
@@ -312,9 +398,11 @@ void KeyBoard(unsigned char key, int x, int y)
 		break;
 	case 'C':
 	case 'c':
-		CameraDirX = 0.0, CameraDirY = 0.0, CameraDirZ = 0.0;
-		RotateCenterY = 0.0, cameraX = 0.0, cameraY = 3.0, cameraZ = 4.0, cameraR = 0.0, craneZ = 0.0, cranebodyR = 0.0, armR = 0.0, RotateCenter = 0.0;;
 		RotateA = false, RotateR = false, RotateY = false, MovePlusZ = false, MoveMinusZ = false, RotateCranePlus = false, RotateCraneMinus = false, RotateArm = false, ArmPlus = true;
+		RotateCenterY = 0.0, cameraX = 0.0, cameraY = 3.0, cameraZ = 4.0, frontcameraX = 0.0, frontcameraZ = 1.0, topcameraX = 0.0, topcameraZ = 0.0, cameraR = 0.0, craneZ = 0.0, cranebodyR = 0.0, armR = 0.0, RotateCenter = 0.0;
+		CameraDirX = 0.0, CameraDirY = 0.0, CameraDirZ = 0.0;
+		frontCameraDirX = 0.0, frontCameraDirZ = 0.0;
+		topCameraDirX = 0.0, topCameraDirZ = 0.0;
 		break;
 	case 'Q':
 	case 'q':
@@ -331,7 +419,11 @@ void TimerFunc(int value)
 	if (RotateA)
 		RotateCameraCenter();
 	if (RotateY)
+	{
+		RotatefrontCamera();
 		cameraR = (GLfloat)((int)(cameraR + 1.0) % 360);
+	}
+	
 	if (MoveMinusZ || MovePlusZ)
 		MoveCraneZ();
 	if (RotateCranePlus || RotateCraneMinus)
@@ -362,6 +454,15 @@ void RotateCameraCenterY()
 
 	cameraX = tmpX;
 	cameraZ = tmpZ;
+}
+
+void RotatefrontCamera()
+{
+	GLfloat tmpX = frontcameraZ * glm::sin(glm::radians(1.0)) + frontcameraX * glm::cos(glm::radians(1.0));
+	GLfloat tmpZ = frontcameraZ * glm::cos(glm::radians(1.0)) - frontcameraX * glm::sin(glm::radians(1.0));
+
+	frontcameraX = tmpX;
+	frontcameraZ = tmpZ;
 }
 
 void RotateCameraCenter()
@@ -431,15 +532,9 @@ void DrawMain()
 	RotateCamera();
 	view = glm::lookAt(cameraPos, cameraDirection, cameraUp);
 
-	// 바닥
-	transformMatrix[0] = glm::rotate(transformMatrix[0], (GLfloat)glm::radians(-90.0), glm::vec3(1.0, 0.0, 0.0));
-	transformMatrix[0] = glm::scale(transformMatrix[0], glm::vec3(20.0, 20.0, 1.0));
-	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, 0.0, -BOXSIZE));
-
-
-	// 바닥깔기
+	// 좌표축
 	glUseProgram(s_program[0]);
-	glBindVertexArray(vao);
+	glBindVertexArray(vao[0]);
 
 	viewLocation = glGetUniformLocation(s_program[0], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -450,16 +545,18 @@ void DrawMain()
 	modelLocation = glGetUniformLocation(s_program[0], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[0]));
 
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, 0);
 
-	// 몸체
-	transformMatrix[0] = glm::mat4(1.0f);
-	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, BOXSIZE, craneZ));
-	transformMatrix[0] = glm::scale(transformMatrix[0], glm::vec3(2.0, 1.0, 2.0));
+	// 바닥
+	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, -0.05, -BOXSIZE));
+	transformMatrix[0] = glm::rotate(transformMatrix[0], (GLfloat)glm::radians(-90.0), glm::vec3(1.0, 0.0, 0.0));
+	transformMatrix[0] = glm::scale(transformMatrix[0], glm::vec3(20.0, 20.0, 1.0));
+	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, 0.0, -BOXSIZE));
 
-	// 크레인 몸체
+
+	// 바닥깔기
 	glUseProgram(s_program[1]);
-	glBindVertexArray(vao);
+	glBindVertexArray(vao[1]);
 
 	viewLocation = glGetUniformLocation(s_program[1], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -470,16 +567,16 @@ void DrawMain()
 	modelLocation = glGetUniformLocation(s_program[1], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[0]));
 
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-	// 머리
-	transformMatrix[1] = glm::translate(transformMatrix[1], glm::vec3(0.0, 2.0 * BOXSIZE, craneZ));
-	transformMatrix[1] = glm::rotate(transformMatrix[1], (GLfloat)glm::radians(cranebodyR), glm::vec3(0.0, 1.0, 0.0));
-	transformMatrix[1] = glm::scale(transformMatrix[1], glm::vec3(1.25, 1.0, 1.25));
+	// 몸체
+	transformMatrix[0] = glm::mat4(1.0f);
+	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, BOXSIZE, craneZ));
+	transformMatrix[0] = glm::scale(transformMatrix[0], glm::vec3(2.0, 1.0, 2.0));
 
-	// 크레인 머리
+	// 크레인 몸체
 	glUseProgram(s_program[2]);
-	glBindVertexArray(vao);
+	glBindVertexArray(vao[1]);
 
 	viewLocation = glGetUniformLocation(s_program[2], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -488,6 +585,26 @@ void DrawMain()
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
 	modelLocation = glGetUniformLocation(s_program[2], "modelTransform");
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[0]));
+
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	// 머리
+	transformMatrix[1] = glm::translate(transformMatrix[1], glm::vec3(0.0, 2.0 * BOXSIZE, craneZ));
+	transformMatrix[1] = glm::rotate(transformMatrix[1], (GLfloat)glm::radians(cranebodyR), glm::vec3(0.0, 1.0, 0.0));
+	transformMatrix[1] = glm::scale(transformMatrix[1], glm::vec3(1.25, 1.0, 1.25));
+
+	// 크레인 머리
+	glUseProgram(s_program[3]);
+	glBindVertexArray(vao[1]);
+
+	viewLocation = glGetUniformLocation(s_program[3], "viewTransform");
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
+
+	projectionLocation = glGetUniformLocation(s_program[3], "projectionTransform");
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
+
+	modelLocation = glGetUniformLocation(s_program[3], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[1]));
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -500,16 +617,16 @@ void DrawMain()
 	transformMatrix[2] = glm::scale(transformMatrix[2], glm::vec3(0.25, 1.5, 0.25));
 
 	// 크레인 왼쪽 팔
-	glUseProgram(s_program[3]);
-	glBindVertexArray(vao);
+	glUseProgram(s_program[4]);
+	glBindVertexArray(vao[1]);
 
-	viewLocation = glGetUniformLocation(s_program[3], "viewTransform");
+	viewLocation = glGetUniformLocation(s_program[4], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 
-	projectionLocation = glGetUniformLocation(s_program[3], "projectionTransform");
+	projectionLocation = glGetUniformLocation(s_program[4], "projectionTransform");
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
-	modelLocation = glGetUniformLocation(s_program[3], "modelTransform");
+	modelLocation = glGetUniformLocation(s_program[4], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[2]));
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -522,16 +639,16 @@ void DrawMain()
 	transformMatrix[3] = glm::scale(transformMatrix[3], glm::vec3(0.25, 1.5, 0.25));
 
 	// 크레인 오른쪽 팔
-	glUseProgram(s_program[4]);
-	glBindVertexArray(vao);
+	glUseProgram(s_program[5]);
+	glBindVertexArray(vao[1]);
 
-	viewLocation = glGetUniformLocation(s_program[4], "viewTransform");
+	viewLocation = glGetUniformLocation(s_program[5], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 
-	projectionLocation = glGetUniformLocation(s_program[4], "projectionTransform");
+	projectionLocation = glGetUniformLocation(s_program[5], "projectionTransform");
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
-	modelLocation = glGetUniformLocation(s_program[4], "modelTransform");
+	modelLocation = glGetUniformLocation(s_program[5], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[3]));
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -543,26 +660,20 @@ void DrawFront()
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
 
-	glm::vec3 camerafrontPos = glm::vec3(0.0, 0.0, 1.0); //--- 카메라 위치
-	glm::vec3 camerafrontDirection = glm::vec3(0.0, 0.0, 0.0); //--- 카메라 바라보는 방향
-	glm::vec3 camerafrontUp = glm::vec3(0.0f, 1.0f, 0.0f); //--- 카메라 위쪽 방향
-
 	unsigned int projectionLocation;
 	unsigned int modelLocation;
 	unsigned int viewLocation;
 
 	projection = glm::ortho(-10.0, 10.0, -2.0, 18.0, -15.0, 15.0);
-	view = glm::lookAt(camerafrontPos, camerafrontDirection, camerafrontUp);
 
-	// 바닥
-	transformMatrix[0] = glm::rotate(transformMatrix[0], (GLfloat)glm::radians(-90.0), glm::vec3(1.0, 0.0, 0.0));
-	transformMatrix[0] = glm::scale(transformMatrix[0], glm::vec3(20.0, 20.0, 1.0));
-	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, 0.0, -BOXSIZE));
+	frontcameraPos = glm::vec3(frontcameraX, 0.0, frontcameraZ);
+	frontcameraDirection = glm::vec3(frontCameraDirX, 0.0, frontCameraDirZ);
+	topcameraUp = glm::vec3(1.0 * glm::sin(glm::radians(cameraR)), 0.0f, 1.0 * glm::cos(glm::radians(cameraR)));
+	view = glm::lookAt(frontcameraPos, frontcameraDirection, frontcameraUp);
 
-
-	// 바닥깔기
+	// 좌표축
 	glUseProgram(s_program[0]);
-	glBindVertexArray(vao);
+	glBindVertexArray(vao[0]);
 
 	viewLocation = glGetUniformLocation(s_program[0], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -573,16 +684,18 @@ void DrawFront()
 	modelLocation = glGetUniformLocation(s_program[0], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[0]));
 
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, 0);
 
-	// 몸체
-	transformMatrix[0] = glm::mat4(1.0f);
-	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, BOXSIZE, craneZ));
-	transformMatrix[0] = glm::scale(transformMatrix[0], glm::vec3(2.0, 1.0, 2.0));
+	// 바닥
+	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, -0.05, -BOXSIZE));
+	transformMatrix[0] = glm::rotate(transformMatrix[0], (GLfloat)glm::radians(-90.0), glm::vec3(1.0, 0.0, 0.0));
+	transformMatrix[0] = glm::scale(transformMatrix[0], glm::vec3(20.0, 20.0, 1.0));
+	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, 0.0, -BOXSIZE));
 
-	// 크레인 몸체
+
+	// 바닥깔기
 	glUseProgram(s_program[1]);
-	glBindVertexArray(vao);
+	glBindVertexArray(vao[1]);
 
 	viewLocation = glGetUniformLocation(s_program[1], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -593,16 +706,16 @@ void DrawFront()
 	modelLocation = glGetUniformLocation(s_program[1], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[0]));
 
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-	// 머리
-	transformMatrix[1] = glm::translate(transformMatrix[1], glm::vec3(0.0, 2.0 * BOXSIZE, craneZ));
-	transformMatrix[1] = glm::rotate(transformMatrix[1], (GLfloat)glm::radians(cranebodyR), glm::vec3(0.0, 1.0, 0.0));
-	transformMatrix[1] = glm::scale(transformMatrix[1], glm::vec3(1.25, 1.0, 1.25));
+	// 몸체
+	transformMatrix[0] = glm::mat4(1.0f);
+	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, BOXSIZE, craneZ));
+	transformMatrix[0] = glm::scale(transformMatrix[0], glm::vec3(2.0, 1.0, 2.0));
 
-	// 크레인 머리
+	// 크레인 몸체
 	glUseProgram(s_program[2]);
-	glBindVertexArray(vao);
+	glBindVertexArray(vao[1]);
 
 	viewLocation = glGetUniformLocation(s_program[2], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -611,6 +724,26 @@ void DrawFront()
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
 	modelLocation = glGetUniformLocation(s_program[2], "modelTransform");
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[0]));
+
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	// 머리
+	transformMatrix[1] = glm::translate(transformMatrix[1], glm::vec3(0.0, 2.0 * BOXSIZE, craneZ));
+	transformMatrix[1] = glm::rotate(transformMatrix[1], (GLfloat)glm::radians(cranebodyR), glm::vec3(0.0, 1.0, 0.0));
+	transformMatrix[1] = glm::scale(transformMatrix[1], glm::vec3(1.25, 1.0, 1.25));
+
+	// 크레인 머리
+	glUseProgram(s_program[3]);
+	glBindVertexArray(vao[1]);
+
+	viewLocation = glGetUniformLocation(s_program[3], "viewTransform");
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
+
+	projectionLocation = glGetUniformLocation(s_program[3], "projectionTransform");
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
+
+	modelLocation = glGetUniformLocation(s_program[3], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[1]));
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -623,16 +756,16 @@ void DrawFront()
 	transformMatrix[2] = glm::scale(transformMatrix[2], glm::vec3(0.25, 1.5, 0.25));
 
 	// 크레인 왼쪽 팔
-	glUseProgram(s_program[3]);
-	glBindVertexArray(vao);
+	glUseProgram(s_program[4]);
+	glBindVertexArray(vao[1]);
 
-	viewLocation = glGetUniformLocation(s_program[3], "viewTransform");
+	viewLocation = glGetUniformLocation(s_program[4], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 
-	projectionLocation = glGetUniformLocation(s_program[3], "projectionTransform");
+	projectionLocation = glGetUniformLocation(s_program[4], "projectionTransform");
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
-	modelLocation = glGetUniformLocation(s_program[3], "modelTransform");
+	modelLocation = glGetUniformLocation(s_program[4], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[2]));
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -645,16 +778,16 @@ void DrawFront()
 	transformMatrix[3] = glm::scale(transformMatrix[3], glm::vec3(0.25, 1.5, 0.25));
 
 	// 크레인 오른쪽 팔
-	glUseProgram(s_program[4]);
-	glBindVertexArray(vao);
+	glUseProgram(s_program[5]);
+	glBindVertexArray(vao[1]);
 
-	viewLocation = glGetUniformLocation(s_program[4], "viewTransform");
+	viewLocation = glGetUniformLocation(s_program[5], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 
-	projectionLocation = glGetUniformLocation(s_program[4], "projectionTransform");
+	projectionLocation = glGetUniformLocation(s_program[5], "projectionTransform");
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
-	modelLocation = glGetUniformLocation(s_program[4], "modelTransform");
+	modelLocation = glGetUniformLocation(s_program[5], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[3]));
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -666,26 +799,18 @@ void DrawTop()
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
 
-	glm::vec3 camerafrontPos = glm::vec3(0.0, 2.0, 0.0); //--- 카메라 위치
-	glm::vec3 camerafrontDirection = glm::vec3(0.0, 0.0, 0.0); //--- 카메라 바라보는 방향
-	glm::vec3 camerafrontUp = glm::vec3(0.0f, 0.0f, 1.0f); //--- 카메라 위쪽 방향
-
 	unsigned int projectionLocation;
 	unsigned int modelLocation;
 	unsigned int viewLocation;
 
 	projection = glm::ortho(-10.0, 10.0, -10.0, 10.0, -5.0, 5.0);
-	view = glm::lookAt(camerafrontPos, camerafrontDirection, camerafrontUp);
+	glm::vec3 topcameraPos = glm::vec3(topcameraX, 2.0, topcameraZ);
+	glm::vec3 topcameraDirection = glm::vec3(topCameraDirX, 0.0, topCameraDirZ);
+	view = glm::lookAt(topcameraPos, topcameraDirection, topcameraUp);
 
-	// 바닥
-	transformMatrix[0] = glm::rotate(transformMatrix[0], (GLfloat)glm::radians(-90.0), glm::vec3(1.0, 0.0, 0.0));
-	transformMatrix[0] = glm::scale(transformMatrix[0], glm::vec3(20.0, 20.0, 1.0));
-	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, 0.0, -BOXSIZE));
-
-
-	// 바닥깔기
+	// 좌표축
 	glUseProgram(s_program[0]);
-	glBindVertexArray(vao);
+	glBindVertexArray(vao[0]);
 
 	viewLocation = glGetUniformLocation(s_program[0], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -696,16 +821,18 @@ void DrawTop()
 	modelLocation = glGetUniformLocation(s_program[0], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[0]));
 
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, 0);
 
-	// 몸체
-	transformMatrix[0] = glm::mat4(1.0f);
-	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, BOXSIZE, craneZ));
-	transformMatrix[0] = glm::scale(transformMatrix[0], glm::vec3(2.0, 1.0, 2.0));
+	// 바닥
+	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, -0.05, -BOXSIZE));
+	transformMatrix[0] = glm::rotate(transformMatrix[0], (GLfloat)glm::radians(-90.0), glm::vec3(1.0, 0.0, 0.0));
+	transformMatrix[0] = glm::scale(transformMatrix[0], glm::vec3(20.0, 20.0, 1.0));
+	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, 0.0, -BOXSIZE));
 
-	// 크레인 몸체
+
+	// 바닥깔기
 	glUseProgram(s_program[1]);
-	glBindVertexArray(vao);
+	glBindVertexArray(vao[1]);
 
 	viewLocation = glGetUniformLocation(s_program[1], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -716,16 +843,16 @@ void DrawTop()
 	modelLocation = glGetUniformLocation(s_program[1], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[0]));
 
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-	// 머리
-	transformMatrix[1] = glm::translate(transformMatrix[1], glm::vec3(0.0, 2.0 * BOXSIZE, craneZ));
-	transformMatrix[1] = glm::rotate(transformMatrix[1], (GLfloat)glm::radians(cranebodyR), glm::vec3(0.0, 1.0, 0.0));
-	transformMatrix[1] = glm::scale(transformMatrix[1], glm::vec3(1.25, 1.0, 1.25));
+	// 몸체
+	transformMatrix[0] = glm::mat4(1.0f);
+	transformMatrix[0] = glm::translate(transformMatrix[0], glm::vec3(0.0, BOXSIZE, craneZ));
+	transformMatrix[0] = glm::scale(transformMatrix[0], glm::vec3(2.0, 1.0, 2.0));
 
-	// 크레인 머리
+	// 크레인 몸체
 	glUseProgram(s_program[2]);
-	glBindVertexArray(vao);
+	glBindVertexArray(vao[1]);
 
 	viewLocation = glGetUniformLocation(s_program[2], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -734,6 +861,26 @@ void DrawTop()
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
 	modelLocation = glGetUniformLocation(s_program[2], "modelTransform");
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[0]));
+
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	// 머리
+	transformMatrix[1] = glm::translate(transformMatrix[1], glm::vec3(0.0, 2.0 * BOXSIZE, craneZ));
+	transformMatrix[1] = glm::rotate(transformMatrix[1], (GLfloat)glm::radians(cranebodyR), glm::vec3(0.0, 1.0, 0.0));
+	transformMatrix[1] = glm::scale(transformMatrix[1], glm::vec3(1.25, 1.0, 1.25));
+
+	// 크레인 머리
+	glUseProgram(s_program[3]);
+	glBindVertexArray(vao[1]);
+
+	viewLocation = glGetUniformLocation(s_program[3], "viewTransform");
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
+
+	projectionLocation = glGetUniformLocation(s_program[3], "projectionTransform");
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
+
+	modelLocation = glGetUniformLocation(s_program[3], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[1]));
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -746,16 +893,16 @@ void DrawTop()
 	transformMatrix[2] = glm::scale(transformMatrix[2], glm::vec3(0.25, 1.5, 0.25));
 
 	// 크레인 왼쪽 팔
-	glUseProgram(s_program[3]);
-	glBindVertexArray(vao);
+	glUseProgram(s_program[4]);
+	glBindVertexArray(vao[1]);
 
-	viewLocation = glGetUniformLocation(s_program[3], "viewTransform");
+	viewLocation = glGetUniformLocation(s_program[4], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 
-	projectionLocation = glGetUniformLocation(s_program[3], "projectionTransform");
+	projectionLocation = glGetUniformLocation(s_program[4], "projectionTransform");
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
-	modelLocation = glGetUniformLocation(s_program[3], "modelTransform");
+	modelLocation = glGetUniformLocation(s_program[4], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[2]));
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -768,16 +915,16 @@ void DrawTop()
 	transformMatrix[3] = glm::scale(transformMatrix[3], glm::vec3(0.25, 1.5, 0.25));
 
 	// 크레인 오른쪽 팔
-	glUseProgram(s_program[4]);
-	glBindVertexArray(vao);
+	glUseProgram(s_program[5]);
+	glBindVertexArray(vao[1]);
 
-	viewLocation = glGetUniformLocation(s_program[4], "viewTransform");
+	viewLocation = glGetUniformLocation(s_program[5], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 
-	projectionLocation = glGetUniformLocation(s_program[4], "projectionTransform");
+	projectionLocation = glGetUniformLocation(s_program[5], "projectionTransform");
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
-	modelLocation = glGetUniformLocation(s_program[4], "modelTransform");
+	modelLocation = glGetUniformLocation(s_program[5], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix[3]));
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
