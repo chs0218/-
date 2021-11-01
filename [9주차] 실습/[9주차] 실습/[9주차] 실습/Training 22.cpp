@@ -21,7 +21,7 @@ GLchar* vertexsource;
 GLchar* fragmentsource;
 GLuint vertexShader, fragmentShader[9];
 GLuint s_program[9];
-GLuint vao, vbo, EBO;
+GLuint vao[2], vbo[2], EBO[2];
 GLint width, height;
 
 GLfloat RandomX[2], RandomZ[2];
@@ -53,7 +53,9 @@ GLfloat Dots[][3] = {
 	{BOXSIZE, BOXSIZE, -BOXSIZE}
 };
 
-unsigned int Shapeindex[] = {
+
+
+unsigned int ShapeindexRHS[] = {
 	// 육면체
 	0, 1, 2,
 	0, 2, 3,
@@ -67,6 +69,22 @@ unsigned int Shapeindex[] = {
 	4, 3, 7,
 	1, 5, 6,
 	1, 6, 2
+};
+
+unsigned int ShapeindexLHS[] = {
+	// 육면체
+	0, 2, 1,
+	0, 3, 2,
+	4, 5, 6,
+	4, 6, 7,
+	3, 6, 2,
+	3, 7, 6,
+	4, 1, 5,
+	4, 0, 1,
+	4, 3, 0,
+	4, 7, 3,
+	1, 6, 5,
+	1, 2, 6
 };
 
 void make_vertexShaders()
@@ -127,15 +145,23 @@ void make_fragmentShaders()
 
 void InitBuffer()
 {
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &EBO);
+	glGenVertexArrays(2, vao);
+	glGenBuffers(2, vbo);
+	glGenBuffers(2, EBO);
 
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBindVertexArray(vao[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Dots), Dots, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Shapeindex), Shapeindex, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ShapeindexRHS), ShapeindexRHS, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+	glEnableVertexAttribArray(0);
+
+	glBindVertexArray(vao[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Dots), Dots, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[1]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ShapeindexLHS), ShapeindexLHS, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
 }
@@ -215,6 +241,8 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	/*glPolygonMode(GL_FRONT, GL_FILL);
+	glPolygonMode(GL_BACK, GL_LINE);*/
 	glEnable(GL_DEPTH_TEST);
 	DrawMain();
 	glDisable(GL_DEPTH_TEST);
@@ -351,7 +379,6 @@ void KeyBoard(unsigned char key, int x, int y)
 	case 'Y':
 	case 'y':
 		RotateY = !RotateY;
-		break;
 		break;
 	case 'J':
 	case 'j':
@@ -545,7 +572,6 @@ void DrawMain()
 	
 	// skyblue
 	glUseProgram(s_program[0]);
-	glBindVertexArray(vao);
 
 	viewLocation = glGetUniformLocation(s_program[0], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -555,17 +581,24 @@ void DrawMain()
 
 	modelLocation = glGetUniformLocation(s_program[0], "modelTransform");
 
+	glBindVertexArray(vao[1]);
+
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(FrontMatrix));
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(24 * sizeof(GLuint)));
 
+	glBindVertexArray(vao[0]);
+
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(rightarmMatrix));
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+
+	
+
 	// white
 	glUseProgram(s_program[1]);
-	glBindVertexArray(vao);
 
 	viewLocation = glGetUniformLocation(s_program[1], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -575,12 +608,13 @@ void DrawMain()
 
 	modelLocation = glGetUniformLocation(s_program[1], "modelTransform");
 
+	glBindVertexArray(vao[1]);
+
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(30 * sizeof(GLuint)));
 
 	// blue
 	glUseProgram(s_program[2]);
-	glBindVertexArray(vao);
 
 	viewLocation = glGetUniformLocation(s_program[2], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -589,6 +623,8 @@ void DrawMain()
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
 	modelLocation = glGetUniformLocation(s_program[2], "modelTransform");
+
+	glBindVertexArray(vao[0]);
 
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(bodyMatrix));
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -599,7 +635,6 @@ void DrawMain()
 
 	// gray
 	glUseProgram(s_program[3]);
-	glBindVertexArray(vao);
 
 	viewLocation = glGetUniformLocation(s_program[3], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -609,12 +644,13 @@ void DrawMain()
 
 	modelLocation = glGetUniformLocation(s_program[3], "modelTransform");
 
+	glBindVertexArray(vao[1]);
+
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(6 * sizeof(GLuint)));
 
 	// purple
 	glUseProgram(s_program[4]);
-	glBindVertexArray(vao);
 
 	viewLocation = glGetUniformLocation(s_program[4], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -624,15 +660,18 @@ void DrawMain()
 
 	modelLocation = glGetUniformLocation(s_program[4], "modelTransform");
 
+	glBindVertexArray(vao[1]);
+
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(18 * sizeof(GLuint)));
+
+	glBindVertexArray(vao[0]);
 
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(leftarmMatrix));
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	// green
 	glUseProgram(s_program[5]);
-	glBindVertexArray(vao);
 
 	viewLocation = glGetUniformLocation(s_program[5], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -642,12 +681,13 @@ void DrawMain()
 
 	modelLocation = glGetUniformLocation(s_program[5], "modelTransform");
 
+	glBindVertexArray(vao[0]);
+
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(faceMatrix));
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	// yello
 	glUseProgram(s_program[6]);
-	glBindVertexArray(vao);
 
 	viewLocation = glGetUniformLocation(s_program[6], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -657,6 +697,8 @@ void DrawMain()
 
 	modelLocation = glGetUniformLocation(s_program[6], "modelTransform");
 
+	glBindVertexArray(vao[0]);
+
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(leftlegMatrix));
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
@@ -665,7 +707,6 @@ void DrawMain()
 
 	// brown
 	glUseProgram(s_program[7]);
-	glBindVertexArray(vao);
 
 	viewLocation = glGetUniformLocation(s_program[7], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -675,12 +716,13 @@ void DrawMain()
 
 	modelLocation = glGetUniformLocation(s_program[7], "modelTransform");
 
+	glBindVertexArray(vao[1]);
+
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(12 * sizeof(GLuint)));
 
 	// red
 	glUseProgram(s_program[8]);
-	glBindVertexArray(vao);
 
 	viewLocation = glGetUniformLocation(s_program[8], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -689,6 +731,8 @@ void DrawMain()
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
 	modelLocation = glGetUniformLocation(s_program[8], "modelTransform");
+
+	glBindVertexArray(vao[0]);
 
 	ObstacleMatrix = glm::mat4(1.0f);
 	ObstacleMatrix = glm::translate(ObstacleMatrix, glm::vec3(RandomX[0], -0.85, RandomZ[0]));

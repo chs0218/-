@@ -1,16 +1,9 @@
-﻿  Training 22.cpp
-D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 22.cpp(239,24): warning C4244: '=': 'std::streamoff'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 22.cpp(253,1): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 22.cpp(392,22): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 22.cpp(398,22): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 22.cpp(713,33): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 22.cpp(714,33): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 22.cpp(715,33): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 22.cpp(716,33): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 22.cpp(719,34): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 22.cpp(721,34): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 22.cpp(723,34): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 22.cpp(725,34): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 22.cpp(751,15): warning C4244: '초기화 중': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 22.cpp(752,15): warning C4244: '초기화 중': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+﻿  Training 23.cpp
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 23.cpp(264,24): warning C4244: '=': 'std::streamoff'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 23.cpp(278,1): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 23.cpp(487,34): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 23.cpp(488,34): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 23.cpp(489,34): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 23.cpp(564,15): warning C4244: '초기화 중': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\[9주차] 실습\Training 23.cpp(565,15): warning C4244: '초기화 중': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   [9주차] 실습.vcxproj -> D:\Visual Studio\Project\컴퓨터그래픽스\[9주차] 실습\[9주차] 실습\Debug\[9주차] 실습.exe
