@@ -37,6 +37,7 @@ void RotateCameraCenterY();
 void TimerFunc(int value);
 void CheckCollision();
 void ShrinkObject();
+void ResetObject();
 
 GLfloat ObjectsX[20], ObjectsZ[20];
 GLfloat ScaleX[20], ScaleY[20], ScaleZ[20];
@@ -301,6 +302,9 @@ void KeyBoard(unsigned char key, int x, int y)
 		RotateReverseR = false;
 		RotateR = !RotateR;
 		break;
+	case 'c':
+		ResetObject();
+		break;
 	case 'Q':
 	case 'q':
 		glutLeaveMainLoop();
@@ -483,7 +487,6 @@ void ShrinkObject()
 				ScaleZ[i] -= 0.1f;
 			else if (ScaleZ[i] < 0)
 				ScaleZ[i] = 0.0;
-			std::cout << ScaleX[i] << " " << ScaleZ[i] << "\n";
 		}
 	}
 }
@@ -525,4 +528,15 @@ void RandomObjects()
 	tmp = (GLfloat)dis(gen);
 	tmp = (tmp - 80.0) * 0.1;
 	eraserZ = tmp;
+}
+
+void ResetObject()
+{
+	cameraX = 0.0, cameraY = 5.0, cameraZ = 5.0;
+	RandomObjects();
+	for (int i = 0; i < 20; ++i)
+	{
+		ObjectCollision[i] = false;
+	}
+	RotateR = false, RotateReverseR = false;
 }
