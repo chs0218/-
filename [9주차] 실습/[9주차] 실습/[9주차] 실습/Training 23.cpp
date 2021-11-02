@@ -28,7 +28,11 @@ GLUquadricObj* qobj;
 GLfloat SphereX[5], SphereY[5], SphereZ[5];
 GLfloat cameraX = 0.0, cameraY = 0.0, cameraZ = 2.0;
 GLfloat CameraDirX = 0.0, CameraDirY = 0.0, CameraDirZ = 0.0;
-bool SphereMoveX[5], SphereMoveY[5], SphereMoveZ[5], RotateY = false;;
+GLfloat BoxX[3], BoxY[3], BoxZ[3] = { -0.99 + BOXSIZE * 0.5f ,  -0.99 + BOXSIZE * 1.5 , -0.99 + BOXSIZE * 2.0 }, BoxSize[3] = { 0.5, 0.25, 0.125 }, BoxAccel[3], RRadius = 0.0f;
+GLfloat floorR = 0.0f;
+bool SphereMoveX[5], SphereMoveY[5], SphereMoveZ[5], RotateY = false;
+bool Click = false, OpenFloor = false;
+int mx;
 
 glm::vec3 cameraPos = glm::vec3(cameraX, cameraY, cameraZ); //--- 카메라 위치
 glm::vec3 cameraDirection = glm::vec3(CameraDirX, CameraDirY, CameraDirZ); //--- 카메라 바라보는 방향
@@ -36,8 +40,11 @@ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); //--- 카메라 위쪽 방향
 
 void DrawMain();
 void MoveSphere();
+void MoveBox();
 void RotateCameraCenterY();
 void RandomSphere();
+void Mouse(int button, int state, int x, int y);
+void Motion(int x, int y);
 void KeyBoard(unsigned char key, int x, int y);
 void TimerFunc(int value);
 
@@ -241,8 +248,10 @@ void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
 	/*glPolygonMode(GL_FRONT, GL_FILL);
 	glPolygonMode(GL_BACK, GL_LINE);*/
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 	DrawMain();
 	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
 	glutSwapBuffers(); //--- 화면에 출력하기
 }
 
@@ -293,6 +302,8 @@ void main(int argc, char** argv)	//---윈도우 출력하고 콜백함수 설정
 	InitShader();
 	InitBuffer();
 	glutDisplayFunc(DrawScene);
+	glutMouseFunc(Mouse);
+	glutMotionFunc(Motion);
 	glutKeyboardFunc(KeyBoard);
 	glutTimerFunc(25, TimerFunc, 1);
 	glutReshapeFunc(Reshape);
@@ -302,6 +313,29 @@ void main(int argc, char** argv)	//---윈도우 출력하고 콜백함수 설정
 void KeyBoard(unsigned char key, int x, int y)
 {
 	switch (key) {
+	case 'R':
+	case 'r':
+		RandomSphere();
+		cameraX = 0.0, cameraY = 0.0, cameraZ = 2.0;
+		CameraDirX = 0.0, CameraDirY = 0.0, CameraDirZ = 0.0;
+		for (int i = 0; i < 3; ++i)
+		{
+			BoxX[i] = 0;
+			BoxY[i] = 0;
+			BoxAccel[i] = 0;
+		}
+		BoxZ[0] = -0.99 + BOXSIZE * 0.5f;
+		BoxZ[1] = -0.99 + BOXSIZE * 1.5f;
+		BoxZ[2] = -0.99 + BOXSIZE * 2.0f;
+		RRadius = 0.0f;
+		floorR = 0.0f;
+		RotateY = false;
+		Click = false, OpenFloor = false;
+		break;
+	case 'O':
+	case 'o':
+		OpenFloor = true;
+		break;
 	case 'Z':
 		cameraZ += 0.1f;
 		break;
@@ -328,6 +362,14 @@ void TimerFunc(int value)
 {
 	if (RotateY)
 		RotateCameraCenterY();
+	if (OpenFloor)
+	{
+		if (floorR < 90.0)
+			floorR += 5.0f;
+		else
+			floorR = 90.0;
+	}
+	MoveBox();
 	MoveSphere();
 	glutTimerFunc(25, TimerFunc, 1);
 	glutPostRedisplay();
@@ -335,6 +377,8 @@ void TimerFunc(int value)
 
 void DrawMain()
 {
+	glm::mat4 RotateMatrix = glm::mat4(1.0f);
+	glm::mat4 FloorMatrix = glm::mat4(1.0f);
 	glm::mat4 SphereMatrix = glm::mat4(1.0f);
 	glm::mat4 BoxMatrix[3] = { glm::mat4(1.0f), glm::mat4(1.0f), glm::mat4(1.0f) };
 	glm::mat4 transformMatrix = glm::mat4(1.0f);
@@ -345,6 +389,7 @@ void DrawMain()
 	unsigned int modelLocation;
 	unsigned int viewLocation;
 
+	RotateMatrix = glm::rotate(RotateMatrix, (GLfloat)glm::radians(RRadius), glm::vec3(0.0, 0.0, 1.0));
 
 	//projection = glm::ortho(-5.0, 5.0, -5.0, 5.0, -5.0, 5.0);
 	projection = glm::perspective(glm::radians(130.0f), (float)width / (float)height, 0.1f, 50.0f);
@@ -355,8 +400,14 @@ void DrawMain()
 
 	view = glm::lookAt(cameraPos, cameraDirection, cameraUp);
 
-	transformMatrix = glm::scale(transformMatrix, glm::vec3(2.0, 2.0, 2.0));
 
+	transformMatrix = glm::scale(transformMatrix, glm::vec3(2.0, 2.0, 2.0));
+	transformMatrix = RotateMatrix * transformMatrix;
+
+	FloorMatrix = glm::translate(FloorMatrix, glm::vec3(0.0, 2.0 * BOXSIZE, -2.0 * BOXSIZE));
+	FloorMatrix = glm::rotate(FloorMatrix, (GLfloat)glm::radians(floorR), glm::vec3(1.0, 0.0, 0.0));
+	FloorMatrix = glm::translate(FloorMatrix, glm::vec3(0.0, -2.0 * BOXSIZE, 2.0 * BOXSIZE));
+	FloorMatrix = FloorMatrix * transformMatrix;
 	// 상자 생성
 	glUseProgram(s_program[0]);
 
@@ -370,8 +421,11 @@ void DrawMain()
 
 	glBindVertexArray(vao[1]);
 
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(FloorMatrix));
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(6 * sizeof(GLuint)));
+
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	glUseProgram(s_program[1]);
 
@@ -419,6 +473,7 @@ void DrawMain()
 	{
 		SphereMatrix = glm::mat4(1.0f);
 		SphereMatrix = glm::translate(SphereMatrix, glm::vec3(SphereX[i], SphereY[i], SphereZ[i]));
+		SphereMatrix = RotateMatrix * SphereMatrix;
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(SphereMatrix));
 		qobj = gluNewQuadric();
 		gluQuadricDrawStyle(qobj, GLU_FILL);
@@ -431,14 +486,17 @@ void DrawMain()
 	glUseProgram(s_program[4]);
 	glBindVertexArray(vao[0]);
 
-	BoxMatrix[0] = glm::translate(BoxMatrix[0], glm::vec3(-0.99 + BOXSIZE * 0.5f, -0.99 + BOXSIZE * 0.5f, -0.99 + BOXSIZE * 0.5f));
+	BoxMatrix[0] = glm::translate(BoxMatrix[0], glm::vec3(BoxX[0], BoxY[0], BoxZ[0]));
 	BoxMatrix[0] = glm::scale(BoxMatrix[0], glm::vec3(0.5f, 0.5f, 0.5f));
+	BoxMatrix[0] = RotateMatrix * BoxMatrix[0];
 
-	BoxMatrix[1] = glm::translate(BoxMatrix[1], glm::vec3(-0.99 + BOXSIZE * 0.25f, -0.99 + BOXSIZE * 0.25f, -0.99 + BOXSIZE * 1.5));
+	BoxMatrix[1] = glm::translate(BoxMatrix[1], glm::vec3(BoxX[1], BoxY[1], BoxZ[1]));
 	BoxMatrix[1] = glm::scale(BoxMatrix[1], glm::vec3(0.25f, 0.25f, 0.25f));
+	BoxMatrix[1] = RotateMatrix * BoxMatrix[1];
 
-	BoxMatrix[2] = glm::translate(BoxMatrix[2], glm::vec3(-0.99 + BOXSIZE * 0.125f, -0.99 + BOXSIZE * 0.125f, -0.99 + BOXSIZE * 2.0));
+	BoxMatrix[2] = glm::translate(BoxMatrix[2], glm::vec3(BoxX[2], BoxY[2], BoxZ[2]));
 	BoxMatrix[2] = glm::scale(BoxMatrix[2], glm::vec3(0.125f, 0.125f, 0.125f));
+	BoxMatrix[2] = RotateMatrix * BoxMatrix[2];
 
 	viewLocation = glGetUniformLocation(s_program[4], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -500,7 +558,7 @@ void MoveSphere()
 		if (SphereMoveX[i])
 		{
 			SphereX[i] += 0.05f;
-			if (SphereX[i] > 0.89f)
+			if (SphereX[i] > 0.89f && SphereZ[i] > -0.89f)
 			{
 				SphereX[i] = 0.9f;
 				SphereMoveX[i] = false;
@@ -510,7 +568,7 @@ void MoveSphere()
 		else
 		{
 			SphereX[i] -= 0.05f;
-			if (SphereX[i] < -0.89)
+			if (SphereX[i] < -0.89 && SphereZ[i] > -0.89f)
 			{
 				SphereX[i] = -0.9f;
 				SphereMoveX[i] = true;
@@ -520,7 +578,7 @@ void MoveSphere()
 		if (SphereMoveY[i])
 		{
 			SphereY[i] += 0.05f;
-			if (SphereY[i] > 0.89f)
+			if (SphereY[i] > 0.89f && SphereZ[i] > -2.0f)
 			{
 				SphereY[i] = 0.9f;
 				SphereMoveY[i] = false;
@@ -530,7 +588,7 @@ void MoveSphere()
 		else
 		{
 			SphereY[i] -= 0.05f;
-			if (SphereY[i] < -0.89)
+			if (SphereY[i] < -0.89 && SphereZ[i] > -0.89f)
 			{
 				SphereY[i] = -0.9f;
 				SphereMoveY[i] = true;
@@ -550,14 +608,232 @@ void MoveSphere()
 		else
 		{
 			SphereZ[i] -= 0.05f;
-			if (SphereZ[i] < -0.89)
+			if (!OpenFloor)
 			{
-				SphereZ[i] = -0.9f;
-				SphereMoveZ[i] = true;
+				if (SphereZ[i] < -0.89f)
+				{
+					SphereZ[i] = -0.9f;
+					SphereMoveZ[i] = true;
+				}
 			}
 		}
 	}
 }
+
+void MoveBox()
+{
+	for (int i = 0; i < 3; ++i)
+	{
+		if (OpenFloor)
+		{
+			BoxZ[i] -= (0.05f + BoxAccel[i]);
+			BoxAccel[i] += 0.01f;
+		}
+
+		if (RRadius == 0)
+		{
+			if (BoxY[i] > -0.99 + BOXSIZE * BoxSize[i])
+			{
+				BoxY[i] -= (0.05f + BoxAccel[i]);
+				BoxAccel[i] += 0.01f;
+			}
+
+			if (BoxY[i] < -0.99 + BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
+			{
+				BoxY[i] = -0.99 + BOXSIZE * BoxSize[i];
+				BoxAccel[i] = 0.0f;
+			}
+		}
+
+		else if (RRadius > 0 && RRadius < 90)
+		{
+			if (BoxX[i] > -0.99 + BOXSIZE * BoxSize[i])
+			{
+				BoxX[i] -= (0.05f + BoxAccel[i]);
+				BoxAccel[i] += 0.01f;
+			}
+
+			if (BoxX[i] < -0.99 + BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
+			{
+				BoxX[i] = -0.99 + BOXSIZE * BoxSize[i];
+				BoxAccel[i] = 0.0f;
+			}
+
+			if (BoxY[i] > -0.99 + BOXSIZE * BoxSize[i])
+			{
+				BoxY[i] -= (0.05f + BoxAccel[i]);
+				BoxAccel[i] += 0.01f;
+			}
+
+			if (BoxY[i] < -0.99 + BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
+			{
+				BoxY[i] = -0.99 + BOXSIZE * BoxSize[i];
+				BoxAccel[i] = 0.0f;
+			}
+		}
+
+		else if (RRadius == 90)
+		{
+			if (BoxX[i] > -0.99 + BOXSIZE * BoxSize[i])
+			{
+				BoxX[i] -= (0.05f + BoxAccel[i]);
+				BoxAccel[i] += 0.01f;
+			}
+
+			if (BoxX[i] < -0.99 + BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
+			{
+				BoxX[i] = -0.99 + BOXSIZE * BoxSize[i];
+				BoxAccel[i] = 0.0f;
+			}
+		}
+
+		else if (RRadius > 90 && RRadius < 180)
+		{
+			if (BoxX[i] > -0.99 + BOXSIZE * BoxSize[i])
+			{
+				BoxX[i] -= (0.05f + BoxAccel[i]);
+				BoxAccel[i] += 0.01f;
+			}
+
+			if (BoxX[i] < -0.99 + BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
+			{
+				BoxX[i] = -0.99 + BOXSIZE * BoxSize[i];
+				BoxAccel[i] = 0.0f;
+			}
+
+			if (BoxY[i] < 0.99 - BOXSIZE * BoxSize[i])
+			{
+				BoxY[i] += (0.05f + BoxAccel[i]);
+				BoxAccel[i] += 0.01f;
+			}
+
+			if(BoxY[i] > 0.99 - BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
+			{
+				BoxY[i] = 0.99 - BOXSIZE * BoxSize[i];
+				BoxAccel[i] += 0.0f;
+			}
+		}
+
+		else if (RRadius == 180)
+		{
+			if (BoxY[i] < 0.99 - BOXSIZE * BoxSize[i])
+			{
+				BoxY[i] += (0.05f + BoxAccel[i]);
+				BoxAccel[i] += 0.01f;
+			}
+
+			if (BoxY[i] > 0.99 - BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
+			{
+				BoxY[i] = 0.99 - BOXSIZE * BoxSize[i];
+				BoxAccel[i] += 0.0f;
+			}
+		}
+
+		else if (RRadius > 180 && RRadius < 270)
+		{
+			if (BoxX[i] < 0.99 - BOXSIZE * BoxSize[i])
+			{
+				BoxX[i] += (0.05f + BoxAccel[i]);
+				BoxAccel[i] += 0.01f;
+			}
+
+			if (BoxX[i] > 0.99 - BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
+			{
+				BoxX[i] = 0.99 - BOXSIZE * BoxSize[i];
+				BoxAccel[i] += 0.0f;
+			}
+
+			if (BoxY[i] < 0.99 - BOXSIZE * BoxSize[i])
+			{
+				BoxY[i] += (0.05f + BoxAccel[i]);
+				BoxAccel[i] += 0.01f;
+			}
+
+			if (BoxY[i] > 0.99 - BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
+			{
+				BoxY[i] = 0.99 - BOXSIZE * BoxSize[i];
+				BoxAccel[i] += 0.0f;
+			}
+		}
+
+		else if (RRadius == 270)
+		{
+			if (BoxX[i] < 0.99 - BOXSIZE * BoxSize[i])
+			{
+				BoxX[i] += (0.05f + BoxAccel[i]);
+				BoxAccel[i] += 0.01f;
+			}
+
+			if (BoxX[i] > 0.99 - BOXSIZE * BoxSize[i])
+			{
+				BoxX[i] = 0.99 - BOXSIZE * BoxSize[i];
+				BoxAccel[i] += 0.0f;
+			}
+		}
+
+		else if (RRadius > 270 && RRadius < 360)
+		{
+			if (BoxX[i] < 0.99 - BOXSIZE * BoxSize[i])
+			{
+				BoxX[i] += (0.05f + BoxAccel[i]);
+				BoxAccel[i] += 0.01f;
+			}
+
+			if (BoxX[i] > 0.99 - BOXSIZE * BoxSize[i])
+			{
+				BoxX[i] = 0.99 - BOXSIZE * BoxSize[i];
+				BoxAccel[i] += 0.0f;
+			}
+
+			if (BoxY[i] > -0.99 + BOXSIZE * BoxSize[i])
+			{
+				BoxY[i] -= (0.05f + BoxAccel[i]);
+				BoxAccel[i] += 0.01f;
+			}
+
+			if (BoxY[i] < -0.99 + BOXSIZE * BoxSize[i])
+			{
+				BoxY[i] = -0.99 + BOXSIZE * BoxSize[i];
+				BoxAccel[i] = 0.0f;
+			}
+		}
+	}
+}
+
+void Mouse(int button, int state, int x, int y)
+{
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	{
+		mx = x;
+		Click = true;
+	}
+	
+
+	if (state == GLUT_UP)
+		Click = false;
+		
+}
+
+void Motion(int x, int y)
+{
+	if (Click)
+	{
+		if (mx > x)
+		{
+			RRadius = (GLfloat)((int)(RRadius + 5.5) % 360);
+		}
+
+		else if (mx < x)
+		{
+			RRadius = (GLfloat)RRadius - 5.5;
+			if (RRadius < 0.0)
+				RRadius = RRadius + 360.0;
+		}
+		mx = x;
+	}
+
+}
+
 
 void RotateCameraCenterY()
 {
