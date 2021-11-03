@@ -24,6 +24,8 @@ GLuint vao[2], vbo[3], EBO[3];
 GLint width, height;
 
 bool RotateA = false, RotateR = false, RotateY = false, MovePlusZ = false, MoveMinusZ = false, RotateCranePlus = false, RotateCraneMinus = false, RotateArm = false, ArmPlus = true;
+bool RotateOnlyFront = false, RotateOnlyTop = false;
+GLfloat topR = 0.0;
 GLfloat RotateCenterY = 0.0, cameraX = 0.0, cameraY = 3.0, cameraZ = 4.0, frontcameraX = 0.0, frontcameraZ = 1.0, topcameraX = 0.0, topcameraZ = 0.0, cameraR = 0.0, craneZ = 0.0, cranebodyR = 0.0, armR = 0.0, RotateCenter = 0.0;
 GLfloat CameraDirX = 0.0, CameraDirY = 0.0, CameraDirZ = 0.0;
 GLfloat frontCameraDirX = 0.0, frontCameraDirZ = 0.0;
@@ -308,6 +310,12 @@ void main(int argc, char** argv)	//---윈도우 출력하고 콜백함수 설정
 void KeyBoard(unsigned char key, int x, int y)
 {
 	switch (key) {
+	case '1':
+		RotateOnlyFront = !RotateOnlyFront;
+		break;
+	case '2':
+		RotateOnlyTop = !RotateOnlyTop;
+		break;
 	case 'B':
 		if (MoveMinusZ)
 			MoveMinusZ = false;
@@ -422,8 +430,16 @@ void TimerFunc(int value)
 	{
 		RotatefrontCamera();
 		cameraR = (GLfloat)((int)(cameraR + 1.0) % 360);
+		topR = (GLfloat)((int)(topR + 1.0) % 360);
 	}
 	
+	if(RotateOnlyFront)
+		RotatefrontCamera();
+
+	if(RotateOnlyTop)
+		topR = (GLfloat)((int)(topR + 1.0) % 360);
+
+
 	if (MoveMinusZ || MovePlusZ)
 		MoveCraneZ();
 	if (RotateCranePlus || RotateCraneMinus)
@@ -668,7 +684,6 @@ void DrawFront()
 
 	frontcameraPos = glm::vec3(frontcameraX, 0.0, frontcameraZ);
 	frontcameraDirection = glm::vec3(frontCameraDirX, 0.0, frontCameraDirZ);
-	topcameraUp = glm::vec3(1.0 * glm::sin(glm::radians(cameraR)), 0.0f, 1.0 * glm::cos(glm::radians(cameraR)));
 	view = glm::lookAt(frontcameraPos, frontcameraDirection, frontcameraUp);
 
 	// 좌표축
@@ -806,6 +821,7 @@ void DrawTop()
 	projection = glm::ortho(-10.0, 10.0, -10.0, 10.0, -5.0, 5.0);
 	glm::vec3 topcameraPos = glm::vec3(topcameraX, 2.0, topcameraZ);
 	glm::vec3 topcameraDirection = glm::vec3(topCameraDirX, 0.0, topCameraDirZ);
+	topcameraUp = glm::vec3(1.0 * glm::sin(glm::radians(topR)), 0.0f, 1.0 * glm::cos(glm::radians(topR)));
 	view = glm::lookAt(topcameraPos, topcameraDirection, topcameraUp);
 
 	// 좌표축

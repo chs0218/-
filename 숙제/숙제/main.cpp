@@ -29,6 +29,8 @@ void DrawMain();
 void DrawText();
 void RandomObjects();
 void UDObjects();
+void InitMaze();
+void MakeMaze();
 void GetSize();
 void KeyBoard(unsigned char key, int x, int y);
 void Mouse(int button, int state, int x, int y);
@@ -46,6 +48,7 @@ int CursorTimer = 0, lefti = -1, righti = -1;
 int MazeX = 0, MazeY = 0;
 bool Cursor = true, LeftSelected = true, drawMaze = false;
 bool BloackMoveUD = false;
+bool Show[20][20];
 bool UpDown[20][20];
 
 GLfloat Dots[][3] = {
@@ -261,7 +264,7 @@ void KeyBoard(unsigned char key, int x, int y)
 		{
 			SizeX = 6.0 / (GLfloat)MazeX;
 			SizeZ = 6.0 / (GLfloat)MazeY;
-			std::cout << SizeX << " " << SizeZ << " " << std::endl;
+			InitMaze();
 			drawMaze = true;
 		}
 		else
@@ -448,6 +451,16 @@ void KeyBoard(unsigned char key, int x, int y)
 			}
 		}
 		break;
+	case 'R':
+	case 'r':
+		MakeMaze();
+		break;
+	case 'z':
+		cameraZ += 0.1f;
+		break;
+	case 'Z':
+		cameraZ -= 0.1f;
+		break;
 	case 'Q':
 	case 'q':
 		glutLeaveMainLoop();
@@ -521,8 +534,7 @@ void DrawMain()
 	cameraPos = glm::vec3(cameraX, cameraY, cameraZ);
 	view = glm::lookAt(cameraPos, cameraDirection, cameraUp);
 
-
-	projection = glm::perspective(glm::radians(60.0f), (float)800 / (float)800, 0.1f, 50.0f);
+	projection = glm::perspective(glm::radians(65.0f), (float)800 / (float)800, 0.1f, 50.0f);
 	projection = glm::translate(projection, glm::vec3(0.0, 0.0, -1.0));
 
 
@@ -562,16 +574,19 @@ void DrawMain()
 		{
 			for (int j = 0; j < MazeY; ++j)
 			{
-				tmpX = 6.0 - SizeX * (GLfloat)i * 2.0 - SizeX;
-				tmpZ = 6.0 - SizeZ * (GLfloat)j * 2.0 - SizeZ;
-				transformMatrix = glm::mat4(1.0f);
-				transformMatrix = glm::translate(transformMatrix, glm::vec3(tmpX, BOXSIZE * SizeY[i][j], tmpZ));
-				transformMatrix = glm::scale(transformMatrix, glm::vec3(SizeX, SizeY[i][j], SizeZ));
+				if (Show[i][j])
+				{
+					tmpX = 6.0 - SizeX * (GLfloat)i * 2.0 - SizeX;
+					tmpZ = 6.0 - SizeZ * (GLfloat)j * 2.0 - SizeZ;
+					transformMatrix = glm::mat4(1.0f);
+					transformMatrix = glm::translate(transformMatrix, glm::vec3(tmpX, BOXSIZE * SizeY[i][j], tmpZ));
+					transformMatrix = glm::scale(transformMatrix, glm::vec3(SizeX, SizeY[i][j], SizeZ));
 
-				modelLocation = glGetUniformLocation(s_program[2], "modelTransform");
-				glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+					modelLocation = glGetUniformLocation(s_program[2], "modelTransform");
+					glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
 
-				glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+					glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+				}
 
 			}
 		}
@@ -668,5 +683,58 @@ void UDObjects()
 					UpDown[i][j] = true;
 			}
 		}
+	}
+}
+
+void InitMaze()
+{
+	for (int i = 0; i < 20; ++i)
+	{
+		for (int j = 0; j < 20; ++j)
+		{
+			Show[i][j] = true;
+		}
+	}
+}
+
+void MakeMaze()
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> dis(0, 19);
+
+	int n = 0;
+	int Seed = 0;
+	int tmpX = 0, tmpY = 0;
+	Show[tmpX][tmpY] = false;
+	while (n < 5)
+	{
+		Seed = dis(gen);
+
+		if (Seed < 5)
+		{
+			for (int i = 1; i < Seed + 1; ++i)
+			{
+				Show[tmpX + i][tmpY] = false;
+			}
+			tmpX = tmpX + Seed + 1;
+		}
+
+		else if (Seed < 10)
+		{
+
+		}
+
+		else if (Seed < 15)
+		{
+
+		}
+
+		else if (Seed < 20)
+		{
+
+		}
+
+		++n;
 	}
 }

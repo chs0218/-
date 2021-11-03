@@ -549,8 +549,9 @@ void DrawMain()
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	// ¿ÞÂÊ ÆÈ
-	transformMatrix[2] = glm::translate(transformMatrix[2], glm::vec3(-0.5 * BOXSIZE, 3.0 * BOXSIZE, craneZ));
+	transformMatrix[2] = glm::translate(transformMatrix[2], glm::vec3(0.0, 0.0, craneZ));
 	transformMatrix[2] = glm::rotate(transformMatrix[2], (GLfloat)glm::radians(cranebodyR), glm::vec3(0.0, 1.0, 0.0));
+	transformMatrix[2] = glm::translate(transformMatrix[2], glm::vec3(-0.5 * BOXSIZE, 3.0 * BOXSIZE, 0.0));
 	transformMatrix[2] = glm::rotate(transformMatrix[2], (GLfloat)glm::radians(armR), glm::vec3(1.0, 0.0, 0.0));
 	transformMatrix[2] = glm::translate(transformMatrix[2], glm::vec3(0, 1.5 * BOXSIZE, 0));
 	transformMatrix[2] = glm::scale(transformMatrix[2], glm::vec3(0.25, 1.5, 0.25));
@@ -571,8 +572,9 @@ void DrawMain()
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	// ¿À¸¥ÂÊ ÆÈ
-	transformMatrix[3] = glm::translate(transformMatrix[3], glm::vec3(0.5 * BOXSIZE, 3.0 * BOXSIZE, craneZ));
+	transformMatrix[3] = glm::translate(transformMatrix[3], glm::vec3(0.0, 0.0, craneZ));
 	transformMatrix[3] = glm::rotate(transformMatrix[3], (GLfloat)glm::radians(cranebodyR), glm::vec3(0.0, 1.0, 0.0));
+	transformMatrix[3] = glm::translate(transformMatrix[3], glm::vec3(0.5 * BOXSIZE, 3.0 * BOXSIZE, 0.0));
 	transformMatrix[3] = glm::rotate(transformMatrix[3], (GLfloat)glm::radians(-armR), glm::vec3(1.0, 0.0, 0.0));
 	transformMatrix[3] = glm::translate(transformMatrix[3], glm::vec3(0, 1.5 * BOXSIZE, 0));
 	transformMatrix[3] = glm::scale(transformMatrix[3], glm::vec3(0.25, 1.5, 0.25));

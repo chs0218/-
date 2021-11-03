@@ -28,7 +28,7 @@ GLUquadricObj* qobj;
 GLfloat SphereX[5], SphereY[5], SphereZ[5];
 GLfloat cameraX = 0.0, cameraY = 0.0, cameraZ = 2.0;
 GLfloat CameraDirX = 0.0, CameraDirY = 0.0, CameraDirZ = 0.0;
-GLfloat BoxX[3], BoxY[3], BoxZ[3] = { -0.99 + BOXSIZE * 0.5f ,  -0.99 + BOXSIZE * 1.5 , -0.99 + BOXSIZE * 2.0 }, BoxSize[3] = { 0.5, 0.25, 0.125 }, BoxAccel[3], RRadius = 0.0f;
+GLfloat BoxX[3], BoxY[3], BoxZ[3] = { -0.99 + BOXSIZE * 0.5f ,  -0.99 + BOXSIZE * 1.5 , -0.99 + BOXSIZE * 2.0 }, BoxSize[3] = { 0.5, 0.25, 0.125 }, BoxAccel[3], RRadius = 0.0f, tmpRadius = 0.0f;
 GLfloat floorR = 0.0f;
 bool SphereMoveX[5], SphereMoveY[5], SphereMoveZ[5], RotateY = false;
 bool Click = false, OpenFloor = false;
@@ -378,6 +378,7 @@ void TimerFunc(int value)
 void DrawMain()
 {
 	glm::mat4 RotateMatrix = glm::mat4(1.0f);
+	glm::mat4 tmpMatrix = glm::mat4(1.0f);
 	glm::mat4 FloorMatrix = glm::mat4(1.0f);
 	glm::mat4 SphereMatrix = glm::mat4(1.0f);
 	glm::mat4 BoxMatrix[3] = { glm::mat4(1.0f), glm::mat4(1.0f), glm::mat4(1.0f) };
@@ -390,9 +391,10 @@ void DrawMain()
 	unsigned int viewLocation;
 
 	RotateMatrix = glm::rotate(RotateMatrix, (GLfloat)glm::radians(RRadius), glm::vec3(0.0, 0.0, 1.0));
+	tmpMatrix = glm::rotate(tmpMatrix, (GLfloat)glm::radians(tmpRadius), glm::vec3(0.0, 0.0, 1.0));
 
 	//projection = glm::ortho(-5.0, 5.0, -5.0, 5.0, -5.0, 5.0);
-	projection = glm::perspective(glm::radians(130.0f), (float)width / (float)height, 0.1f, 50.0f);
+	projection = glm::perspective(glm::radians(65.0f), (float)width / (float)height, 0.1f, 50.0f);
 	projection = glm::translate(projection, glm::vec3(0.0, 0.0, -0.5));
 
 	cameraPos = glm::vec3(cameraX, cameraY, cameraZ);
@@ -407,7 +409,9 @@ void DrawMain()
 	FloorMatrix = glm::translate(FloorMatrix, glm::vec3(0.0, 2.0 * BOXSIZE, -2.0 * BOXSIZE));
 	FloorMatrix = glm::rotate(FloorMatrix, (GLfloat)glm::radians(floorR), glm::vec3(1.0, 0.0, 0.0));
 	FloorMatrix = glm::translate(FloorMatrix, glm::vec3(0.0, -2.0 * BOXSIZE, 2.0 * BOXSIZE));
-	FloorMatrix = FloorMatrix * transformMatrix;
+	FloorMatrix = glm::scale(FloorMatrix, glm::vec3(2.0, 2.0, 2.0));
+	FloorMatrix = RotateMatrix * FloorMatrix;
+
 	// 상자 생성
 	glUseProgram(s_program[0]);
 
@@ -473,7 +477,13 @@ void DrawMain()
 	{
 		SphereMatrix = glm::mat4(1.0f);
 		SphereMatrix = glm::translate(SphereMatrix, glm::vec3(SphereX[i], SphereY[i], SphereZ[i]));
-		SphereMatrix = RotateMatrix * SphereMatrix;
+		if (!OpenFloor || SphereZ[i] > -0.89)
+		{
+			SphereMatrix = RotateMatrix * SphereMatrix;
+		}
+
+		else
+			SphereMatrix = tmpMatrix * SphereMatrix;
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(SphereMatrix));
 		qobj = gluNewQuadric();
 		gluQuadricDrawStyle(qobj, GLU_FILL);
@@ -488,15 +498,26 @@ void DrawMain()
 
 	BoxMatrix[0] = glm::translate(BoxMatrix[0], glm::vec3(BoxX[0], BoxY[0], BoxZ[0]));
 	BoxMatrix[0] = glm::scale(BoxMatrix[0], glm::vec3(0.5f, 0.5f, 0.5f));
-	BoxMatrix[0] = RotateMatrix * BoxMatrix[0];
+	if (!OpenFloor)
+	{
+		BoxMatrix[0] = RotateMatrix * BoxMatrix[0];
+	}
+	
 
 	BoxMatrix[1] = glm::translate(BoxMatrix[1], glm::vec3(BoxX[1], BoxY[1], BoxZ[1]));
 	BoxMatrix[1] = glm::scale(BoxMatrix[1], glm::vec3(0.25f, 0.25f, 0.25f));
-	BoxMatrix[1] = RotateMatrix * BoxMatrix[1];
+	if (!OpenFloor)
+	{
+		BoxMatrix[1] = RotateMatrix * BoxMatrix[1];
+	}
 
 	BoxMatrix[2] = glm::translate(BoxMatrix[2], glm::vec3(BoxX[2], BoxY[2], BoxZ[2]));
 	BoxMatrix[2] = glm::scale(BoxMatrix[2], glm::vec3(0.125f, 0.125f, 0.125f));
-	BoxMatrix[2] = RotateMatrix * BoxMatrix[2];
+
+	if (!OpenFloor)
+	{
+		BoxMatrix[2] = RotateMatrix * BoxMatrix[2];
+	}
 
 	viewLocation = glGetUniformLocation(s_program[4], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -632,7 +653,7 @@ void MoveBox()
 
 		if (RRadius == 0)
 		{
-			if (BoxY[i] > -0.99 + BOXSIZE * BoxSize[i])
+			if (BoxY[i] > -0.99 + BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
 			{
 				BoxY[i] -= (0.05f + BoxAccel[i]);
 				BoxAccel[i] += 0.01f;
@@ -647,7 +668,7 @@ void MoveBox()
 
 		else if (RRadius > 0 && RRadius < 90)
 		{
-			if (BoxX[i] > -0.99 + BOXSIZE * BoxSize[i])
+			if (BoxX[i] > -0.99 + BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
 			{
 				BoxX[i] -= (0.05f + BoxAccel[i]);
 				BoxAccel[i] += 0.01f;
@@ -659,7 +680,7 @@ void MoveBox()
 				BoxAccel[i] = 0.0f;
 			}
 
-			if (BoxY[i] > -0.99 + BOXSIZE * BoxSize[i])
+			if (BoxY[i] > -0.99 + BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
 			{
 				BoxY[i] -= (0.05f + BoxAccel[i]);
 				BoxAccel[i] += 0.01f;
@@ -674,7 +695,7 @@ void MoveBox()
 
 		else if (RRadius == 90)
 		{
-			if (BoxX[i] > -0.99 + BOXSIZE * BoxSize[i])
+			if (BoxX[i] > -0.99 + BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
 			{
 				BoxX[i] -= (0.05f + BoxAccel[i]);
 				BoxAccel[i] += 0.01f;
@@ -689,7 +710,7 @@ void MoveBox()
 
 		else if (RRadius > 90 && RRadius < 180)
 		{
-			if (BoxX[i] > -0.99 + BOXSIZE * BoxSize[i])
+			if (BoxX[i] > -0.99 + BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
 			{
 				BoxX[i] -= (0.05f + BoxAccel[i]);
 				BoxAccel[i] += 0.01f;
@@ -701,7 +722,7 @@ void MoveBox()
 				BoxAccel[i] = 0.0f;
 			}
 
-			if (BoxY[i] < 0.99 - BOXSIZE * BoxSize[i])
+			if (BoxY[i] < 0.99 - BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
 			{
 				BoxY[i] += (0.05f + BoxAccel[i]);
 				BoxAccel[i] += 0.01f;
@@ -716,7 +737,7 @@ void MoveBox()
 
 		else if (RRadius == 180)
 		{
-			if (BoxY[i] < 0.99 - BOXSIZE * BoxSize[i])
+			if (BoxY[i] < 0.99 - BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
 			{
 				BoxY[i] += (0.05f + BoxAccel[i]);
 				BoxAccel[i] += 0.01f;
@@ -731,8 +752,8 @@ void MoveBox()
 
 		else if (RRadius > 180 && RRadius < 270)
 		{
-			if (BoxX[i] < 0.99 - BOXSIZE * BoxSize[i])
-			{
+			if (BoxX[i] < 0.99 - BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
+			{ 
 				BoxX[i] += (0.05f + BoxAccel[i]);
 				BoxAccel[i] += 0.01f;
 			}
@@ -743,7 +764,7 @@ void MoveBox()
 				BoxAccel[i] += 0.0f;
 			}
 
-			if (BoxY[i] < 0.99 - BOXSIZE * BoxSize[i])
+			if (BoxY[i] < 0.99 - BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
 			{
 				BoxY[i] += (0.05f + BoxAccel[i]);
 				BoxAccel[i] += 0.01f;
@@ -758,13 +779,13 @@ void MoveBox()
 
 		else if (RRadius == 270)
 		{
-			if (BoxX[i] < 0.99 - BOXSIZE * BoxSize[i])
+			if (BoxX[i] < 0.99 - BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
 			{
 				BoxX[i] += (0.05f + BoxAccel[i]);
 				BoxAccel[i] += 0.01f;
 			}
 
-			if (BoxX[i] > 0.99 - BOXSIZE * BoxSize[i])
+			if (BoxX[i] > 0.99 - BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
 			{
 				BoxX[i] = 0.99 - BOXSIZE * BoxSize[i];
 				BoxAccel[i] += 0.0f;
@@ -773,25 +794,25 @@ void MoveBox()
 
 		else if (RRadius > 270 && RRadius < 360)
 		{
-			if (BoxX[i] < 0.99 - BOXSIZE * BoxSize[i])
+			if (BoxX[i] < 0.99 - BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
 			{
 				BoxX[i] += (0.05f + BoxAccel[i]);
 				BoxAccel[i] += 0.01f;
 			}
 
-			if (BoxX[i] > 0.99 - BOXSIZE * BoxSize[i])
+			if (BoxX[i] > 0.99 - BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
 			{
 				BoxX[i] = 0.99 - BOXSIZE * BoxSize[i];
 				BoxAccel[i] += 0.0f;
 			}
 
-			if (BoxY[i] > -0.99 + BOXSIZE * BoxSize[i])
+			if (BoxY[i] > -0.99 + BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
 			{
 				BoxY[i] -= (0.05f + BoxAccel[i]);
 				BoxAccel[i] += 0.01f;
 			}
 
-			if (BoxY[i] < -0.99 + BOXSIZE * BoxSize[i])
+			if (BoxY[i] < -0.99 + BOXSIZE * BoxSize[i] && BoxZ[i] > -0.99)
 			{
 				BoxY[i] = -0.99 + BOXSIZE * BoxSize[i];
 				BoxAccel[i] = 0.0f;
@@ -830,6 +851,8 @@ void Motion(int x, int y)
 				RRadius = RRadius + 360.0;
 		}
 		mx = x;
+		if (!OpenFloor)
+			tmpRadius = RRadius;
 	}
 
 }
