@@ -19,8 +19,8 @@ char* filetobuf(const char* file);
 
 GLchar* vertexsource;
 GLchar* fragmentsource;
-GLuint vertexShader[3], fragmentShader[3];
-GLuint s_program[3];
+GLuint vertexShader[4], fragmentShader[4];
+GLuint s_program[4];
 GLuint vao, vbo[2], EBO[2];
 GLint width, height;
 GLuint base;
@@ -29,6 +29,8 @@ void DrawMain();
 void DrawText();
 void RandomObjects();
 void UDObjects();
+void RotateCameraX();
+void RotateCameraY();
 void InitMaze();
 void MakeMaze();
 void GetSize();
@@ -36,8 +38,9 @@ void KeyBoard(unsigned char key, int x, int y);
 void Mouse(int button, int state, int x, int y);
 void TimerFunc(int value);
 
-GLfloat cameraX = 0.0, cameraY = 12.0, cameraZ = 12.0;
-GLfloat SizeX = 0.0, SizeY[20][20], SizeZ = 0.0;
+GLUquadricObj* qobj;
+GLfloat cameraX = 0.0, cameraY = 18.0, cameraZ = 12.0;
+GLfloat SizeX = 0.0, SizeY[20][20], SizeZ = 0.0, ObjectSize = 0.0f;
 GLfloat Speed[20][20], MaxY[20][20], MinY[20][20];
 glm::vec3 cameraPos = glm::vec3(cameraX, cameraY, cameraZ); //--- 카메라 위치
 glm::vec3 cameraDirection = glm::vec3(0.0, 0.0, 0.0); //--- 카메라 바라보는 방향
@@ -45,9 +48,10 @@ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); //--- 카메라 위쪽 방향
 
 char left[2], right[2];
 int CursorTimer = 0, lefti = -1, righti = -1;
-int MazeX = 0, MazeY = 0;
+int MazeX = 0, MazeY = 0, n = 0;
+int ObjectX = 0, ObjectZ = 0;
 bool Cursor = true, LeftSelected = true, drawMaze = false;
-bool BloackMoveUD = false;
+bool BlockMoveUD = false, RotateX = false, RotateY = false, RotateMinus = false;
 bool Show[20][20];
 bool UpDown[20][20];
 
@@ -102,10 +106,15 @@ void make_vertexShaders()
 	glShaderSource(vertexShader[1], 1, (const GLchar**)&vertexsource, NULL);
 	glCompileShader(vertexShader[1]);
 
-	vertexsource = filetobuf("vertex.glsl");
+	vertexsource = filetobuf("vertex_block.glsl");
 	vertexShader[2] = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader[2], 1, (const GLchar**)&vertexsource, NULL);
 	glCompileShader(vertexShader[2]);
+
+	vertexsource = filetobuf("vertex_object.glsl");
+	vertexShader[3] = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader[3], 1, (const GLchar**)&vertexsource, NULL);
+	glCompileShader(vertexShader[3]);
 }
 
 void make_fragmentShaders()
@@ -120,10 +129,15 @@ void make_fragmentShaders()
 	glShaderSource(fragmentShader[1], 1, (const GLchar**)&fragmentsource, NULL);
 	glCompileShader(fragmentShader[1]);
 
-	fragmentsource = filetobuf("fragment.glsl");
+	fragmentsource = filetobuf("fragment_block.glsl");
 	fragmentShader[2] = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader[2], 1, (const GLchar**)&fragmentsource, NULL);
 	glCompileShader(fragmentShader[2]);
+
+	fragmentsource = filetobuf("fragment_object.glsl");
+	fragmentShader[3] = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader[3], 1, (const GLchar**)&fragmentsource, NULL);
+	glCompileShader(fragmentShader[3]);
 }
 
 void InitBuffer()
@@ -171,6 +185,21 @@ void InitShader()
 	glAttachShader(s_program[2], vertexShader[2]);
 	glAttachShader(s_program[2], fragmentShader[2]);
 	glLinkProgram(s_program[2]);
+
+	s_program[3] = glCreateProgram();
+
+	glAttachShader(s_program[3], vertexShader[3]);
+	glAttachShader(s_program[3], fragmentShader[3]);
+	glLinkProgram(s_program[3]);
+
+	glDeleteShader(vertexShader[0]);
+	glDeleteShader(vertexShader[1]);
+	glDeleteShader(vertexShader[2]);
+	glDeleteShader(vertexShader[3]);
+	glDeleteShader(fragmentShader[0]);
+	glDeleteShader(fragmentShader[1]);
+	glDeleteShader(fragmentShader[2]);
+	glDeleteShader(fragmentShader[3]);
 }
 
 void DrawScene() //--- glutDisplayFunc()함수로 등록한 그리기 콜백 함수
@@ -262,8 +291,16 @@ void KeyBoard(unsigned char key, int x, int y)
 		GetSize();
 		if (MazeX > 4 && MazeX < 21 && MazeY > 4 && MazeY < 21)
 		{
-			SizeX = 6.0 / (GLfloat)MazeX;
-			SizeZ = 6.0 / (GLfloat)MazeY;
+			SizeX = 6.0 / (GLfloat)MazeY;
+			SizeZ = 6.0 / (GLfloat)MazeX;
+
+			if (SizeX < SizeZ)
+				ObjectSize = SizeX;
+			else
+				ObjectSize = SizeZ;
+
+			ObjectX = 0;
+			ObjectZ = 0;
 			InitMaze();
 			drawMaze = true;
 		}
@@ -455,6 +492,46 @@ void KeyBoard(unsigned char key, int x, int y)
 	case 'r':
 		MakeMaze();
 		break;
+	case 'M':
+	case 'm':
+		BlockMoveUD = !BlockMoveUD;
+		break;
+	case 'X':
+		if (RotateX && RotateMinus)
+			RotateX = false;
+		else
+		{
+			RotateX = true;
+			RotateMinus = true;
+		}
+		break;
+	case 'x':
+		if (RotateX && !RotateMinus)
+			RotateX = false;
+		else
+		{
+			RotateX = true;
+			RotateMinus = false;
+		}
+		break;
+	case 'Y':
+		if (RotateY && RotateMinus)
+			RotateY = false;
+		else
+		{
+			RotateY = true;
+			RotateMinus = true;
+		}
+		break;
+	case 'y':
+		if (RotateY&& !RotateMinus)
+			RotateY = false;
+		else
+		{
+			RotateY = true;
+			RotateMinus = false;
+		}
+		break;
 	case 'z':
 		cameraZ += 0.1f;
 		break;
@@ -472,9 +549,15 @@ void KeyBoard(unsigned char key, int x, int y)
 void TimerFunc(int value)
 {
 	CursorTimer = (CursorTimer + 1) % 20;
-	UDObjects();
+	if (BlockMoveUD)
+		UDObjects();
+	if (RotateY)
+		RotateCameraY();
+	if (RotateX)
+		RotateCameraX();
 	if (CursorTimer == 0)
 		Cursor = !Cursor;
+
 
 	glutTimerFunc(25, TimerFunc, 1);
 	glutPostRedisplay();
@@ -570,14 +653,15 @@ void DrawMain()
 
 	if (drawMaze)
 	{
-		for (int i = 0; i < MazeX; ++i)
+		for (int i = 0; i < MazeY; ++i)
 		{
-			for (int j = 0; j < MazeY; ++j)
+			for (int j = 0; j < MazeX; ++j)
 			{
 				if (Show[i][j])
 				{
-					tmpX = 6.0 - SizeX * (GLfloat)i * 2.0 - SizeX;
-					tmpZ = 6.0 - SizeZ * (GLfloat)j * 2.0 - SizeZ;
+					tmpX = 6.0 - ((GLfloat)i * 2.0 + 1) * SizeX;
+					tmpZ = 6.0 - ((GLfloat)j * 2.0 + 1) * SizeZ;
+
 					transformMatrix = glm::mat4(1.0f);
 					transformMatrix = glm::translate(transformMatrix, glm::vec3(tmpX, BOXSIZE * SizeY[i][j], tmpZ));
 					transformMatrix = glm::scale(transformMatrix, glm::vec3(SizeX, SizeY[i][j], SizeZ));
@@ -591,6 +675,27 @@ void DrawMain()
 			}
 		}
 	}
+
+	// 객체 생성
+	glUseProgram(s_program[3]);
+	glBindVertexArray(vao);
+
+	viewLocation = glGetUniformLocation(s_program[3], "viewTransform");
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
+
+	projectionLocation = glGetUniformLocation(s_program[3], "projectionTransform");
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
+
+	transformMatrix = glm::mat4(1.0f);
+	transformMatrix = glm::translate(transformMatrix, glm::vec3(6.0 - ((GLfloat)ObjectX * 2.0 + 1) * SizeX, ObjectSize, 6.0 - ((GLfloat)ObjectZ * 2.0 + 1) * SizeZ));
+	modelLocation = glGetUniformLocation(s_program[3], "modelTransform");
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+
+	qobj = gluNewQuadric();
+	gluQuadricDrawStyle(qobj, GLU_FILL);
+	gluQuadricNormals(qobj, GLU_SMOOTH);
+	gluQuadricOrientation(qobj, GLU_OUTSIDE);
+	gluSphere(qobj, ObjectSize, 20, 20);
 }
 
 void Mouse(int button, int state, int x, int y)
@@ -665,9 +770,9 @@ void RandomObjects()
 
 void UDObjects()
 {
-	for (int i = 0; i < MazeX; ++i)
+	for (int i = 0; i < MazeY; ++i)
 	{
-		for (int j = 0; j < MazeY; ++j)
+		for (int j = 0; j < MazeX; ++j)
 		{
 			if (UpDown[i][j])
 			{
@@ -697,44 +802,120 @@ void InitMaze()
 	}
 }
 
+void RotateCameraX()
+{
+	GLfloat tmpY = 0.0f, tmpZ = 0.0f;
+
+	if (RotateMinus)
+	{
+		tmpY = cameraY * glm::cos(glm::radians(-1.0)) - cameraZ * glm::sin(glm::radians(-1.0));
+		tmpZ = cameraY * glm::sin(glm::radians(-1.0)) + cameraZ * glm::cos(glm::radians(-1.0));
+	}
+	else
+	{
+		tmpY = cameraY * glm::cos(glm::radians(1.0)) - cameraZ * glm::sin(glm::radians(1.0));
+		tmpZ = cameraY * glm::sin(glm::radians(1.0)) + cameraZ * glm::cos(glm::radians(1.0));
+	}
+
+	cameraY = tmpY;
+	cameraZ = tmpZ;
+}
+
+void RotateCameraY()
+{
+	GLfloat tmpX = 0.0f, tmpZ = 0.0f;
+
+	if (RotateMinus)
+	{
+		tmpX = cameraZ * glm::sin(glm::radians(-1.0)) + cameraX * glm::cos(glm::radians(-1.0));
+		tmpZ = cameraZ * glm::cos(glm::radians(-1.0)) - cameraX * glm::sin(glm::radians(-1.0));
+	}
+
+	else
+	{
+		tmpX = cameraZ * glm::sin(glm::radians(1.0)) + cameraX * glm::cos(glm::radians(1.0));
+		tmpZ = cameraZ * glm::cos(glm::radians(1.0)) - cameraX * glm::sin(glm::radians(1.0));
+	}
+
+	cameraX = tmpX;
+	cameraZ = tmpZ;
+}
+
+
 void MakeMaze()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<int> dis(0, 19);
 
-	int n = 0;
 	int Seed = 0;
+	int iDistance = 0;
 	int tmpX = 0, tmpY = 0;
-	Show[tmpX][tmpY] = false;
-	while (n < 5)
+	bool Reset = true;
+	Show[0][0] = false;
+	n = 0;
+
+	while(Show[MazeY - 1][MazeX - 1])
 	{
-		Seed = dis(gen);
+		Seed = dis(gen) % 4;
 
-		if (Seed < 5)
+		if (Seed < 2)
+			iDistance = dis(gen) % 2 + 3;
+		else
+			iDistance = dis(gen) % 3 + 1;
+
+		switch (Seed)
 		{
-			for (int i = 1; i < Seed + 1; ++i)
+		case 0:
+			for (int i = 0; i < iDistance; ++i)
 			{
-				Show[tmpX + i][tmpY] = false;
+				if (tmpX < MazeX - 1)
+				{
+					Show[tmpY][++tmpX] = false;
+					++n;
+				}
+				else
+					break;
 			}
-			tmpX = tmpX + Seed + 1;
+			break;
+		case 1:
+			for (int i = 0; i < iDistance; ++i)
+			{
+				if (tmpY < MazeY - 1)
+				{
+					Show[++tmpY][tmpX] = false;
+					++n;
+				}
+				else
+					break;
+			}
+			break;
+		case 2:
+			for (int i = 0; i < iDistance; ++i)
+			{
+				if (tmpX > 0)
+				{
+					Show[tmpY][--tmpX] = false;
+					++n;
+				}
+				else
+					break;
+			}
+			break;
+		case 3:
+			for (int i = 0; i < iDistance; ++i)
+			{
+				if (tmpY > 0)
+				{
+					Show[--tmpY][tmpX] = false;
+					++n;
+				}
+				else
+					break;
+			}
+			break;
+		default:
+			break;
 		}
-
-		else if (Seed < 10)
-		{
-
-		}
-
-		else if (Seed < 15)
-		{
-
-		}
-
-		else if (Seed < 20)
-		{
-
-		}
-
-		++n;
 	}
 }
