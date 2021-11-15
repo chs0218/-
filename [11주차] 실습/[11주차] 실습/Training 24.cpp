@@ -22,43 +22,33 @@ GLchar* vertexsource;
 GLchar* fragmentsource;
 GLuint vertexShader[2], fragmentShader[2];
 GLuint s_program[2];
-GLuint vao[2], vbo[3], EBO;
+GLuint vao[3], vbo[3];
 GLint width, height;
+GLfloat OrbitDots[360][3];
 
-bool RotateR = false, RotateT = false, OpenF = false, CloseF = false, OpenO = false;
+bool RotateR = false, RotateT = false, OpenF = false, CloseF = false, OpenO = false, RotateL = false;
 bool OpenLeftRight = false, CloseLeftRight = false;
-bool ShowHexahedron = true, Perspective = false;
-GLfloat Rradius = 0.0f, Tradius = 0.0f, Fradius = 0.0f, OpenClose = 0.0f, Oradius = 0.0f;
+bool ShowHexahedron = true, Perspective = false, RotateMinus = false;
+GLfloat Rradius = 0.0f, Tradius = 0.0f, Fradius = 0.0f, Lradius = 0.0f, OpenClose = 0.0f, Oradius = 0.0f;
+GLfloat lightX = 0.0f, lightY = 0.0f, lightZ = 3.0f, lightColor = 1.0f;
+const double PI = 3.141592;
+
 void KeyBoard(unsigned char key, int x, int y);
 void TimerFunc(int value);
+void InitDots();
 void DrawMain();
 
-GLfloat LineDots[][3] = {
-	{10.0, 0.0, 0.0},
-	{-10.0, 0.0, 0.0},
-	{0.0, 10.0, 0.0},
-	{0.0, -10.0, 0.0},
-	{0.0, 0.0, 10.0},
-	{0.0, 0.0, -10.0},
+float Lines[] = {
+	3.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0,
+	-3.0, 0.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0,
+	0.0, 3.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0,
+	0.0, -3.0, 0.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0,
+	0.0, 0.0, 3.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0,
+	0.0, 0.0, -3.0, 0.0, 0.0, 1.0, 0.0, 0.0, -1.0
 };
 
-GLfloat LineColors[][3] = {
-	{1.0, 0.0, 0.0},
-	{1.0, 0.0, 0.0},
-	{0.0, 1.0, 0.0},
-	{0.0, 1.0, 0.0},
-	{0.0, 0.0, 1.0},
-	{0.0, 0.0, 1.0},
-};
-
-unsigned int Lineindex[] = {
-	0, 1,
-	2, 3,
-	4, 5
-};
 
 float vertices[288];
-
 GLfloat Dots[][3] = {
 	// 육면체
 	{-BOXSIZE, BOXSIZE, BOXSIZE},
@@ -154,31 +144,36 @@ void make_fragmentShaders()
 
 void InitBuffer()
 {
-	glGenVertexArrays(2, vao);
+	glGenVertexArrays(3, vao);
 	glGenBuffers(3, vbo);
-	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(vao[0]);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Lineindex), Lineindex, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(LineDots), LineDots, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Lines), Lines, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(LineColors), LineColors, GL_STATIC_DRAW);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(vao[1]);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	glBindVertexArray(vao[2]);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(OrbitDots), OrbitDots, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 	glEnableVertexAttribArray(1);
 }
 
@@ -249,13 +244,14 @@ void main(int argc, char** argv)	//---윈도우 출력하고 콜백함수 설정
 	width = 900;
 	height = 900;
 	InitVertices();
+	InitDots();
 
 	//---윈도우 생성하기
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 30);
 	glutInitWindowSize(width, height);
-	glutCreateWindow("Training17");
+	glutCreateWindow("Training24");
 
 	//--- GLEW 초기화하기
 	glewExperimental = GL_TRUE;
@@ -271,22 +267,20 @@ void main(int argc, char** argv)	//---윈도우 출력하고 콜백함수 설정
 
 void KeyBoard(unsigned char key, int x, int y)
 {
-	if (key == 'o')
-		ShowHexahedron = false;
-	else if (key != 'y')
-		ShowHexahedron = true;
-
 	switch (key) {
 	case '1':
 		OpenLeftRight = true;
 		CloseLeftRight = false;
+		ShowHexahedron = true;
 		break;
 	case '2':
 		OpenLeftRight = false;
 		CloseLeftRight = true;
+		ShowHexahedron = true;
 		break;
 	case 't':
 		RotateT = !RotateT;
+		ShowHexahedron = true;
 		break;
 	case 'y':
 		RotateR = !RotateR;
@@ -299,19 +293,59 @@ void KeyBoard(unsigned char key, int x, int y)
 		}
 		else
 			OpenF = true;
+		ShowHexahedron = true;
 		break;
 	case 'p':
 		Perspective = !Perspective;
 		break;
-	case 'N':
-	case 'n':
+	case 'm':
+	case 'M':
+		if (lightColor != 0.0f)
+			lightColor = 0.0f;
+		else
+			lightColor = 1.0f;
+		break;
+	case 'R':
+		if (!RotateMinus)
+		{
+			RotateMinus = true;
+			RotateL = true;
+		}
+		else
+			RotateL = !RotateL;
+		break;
+	case 'r':
+		if (RotateMinus)
+		{
+			RotateMinus = false;
+			RotateL = true;
+		}
+		else
+			RotateL = !RotateL;
 		break;
 	case 'o':
+		ShowHexahedron = false;
 		OpenO = !OpenO;
 		break;
 	case 'Q':
 	case 'q':
 		glutLeaveMainLoop();
+		break;
+	case 'Z':
+		if (lightZ < 4.0f)
+		{
+			lightZ += 0.1f;
+			InitDots();
+			InitBuffer();
+		}
+		break;
+	case 'z':
+		if (lightZ > 1.5f)
+		{
+			lightZ -= 0.1f;
+			InitDots();
+			InitBuffer();
+		}
 		break;
 	default:
 		break;
@@ -345,7 +379,7 @@ void TimerFunc(int value)
 
 	if (OpenLeftRight)
 	{
-		if (OpenClose < 0.5f)
+		if (OpenClose < 2.0f)
 			OpenClose += 0.1f;
 		else
 			OpenLeftRight = false;
@@ -357,6 +391,7 @@ void TimerFunc(int value)
 			OpenClose -= 0.1f;
 		else
 		{
+			OpenClose = 0.0f;
 			CloseLeftRight = false;
 		}
 	}
@@ -380,6 +415,14 @@ void TimerFunc(int value)
 				Oradius = 0.0f;
 		}
 	}
+
+	if (RotateL)
+	{
+		if(RotateMinus)
+			Lradius = (GLfloat)((int)(Lradius - 1.0f) % 360);
+		else
+			Lradius = (GLfloat)((int)(Lradius + 1.0f) % 360);
+	}
 	glutTimerFunc(25, TimerFunc, 1);
 	glutPostRedisplay();
 }
@@ -387,11 +430,15 @@ void TimerFunc(int value)
 void DrawMain()
 {
 	glm::mat4 transformMatrix = glm::mat4(1.0f);
+	glm::mat4 OrbitMatrix = glm::mat4(1.0f);
+	glm::mat4 lightMatrix = glm::mat4(1.0f);
 	glm::mat4 view = glm::mat4(1.0f);
-	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f); //--- 카메라 위치
+	glm::vec3 cameraPos = glm::vec3(-2.0f, 2.0f, 4.0f); //--- 카메라 위치
 	glm::vec3 cameraDirection = glm::vec3(0.0f, 0.0f, 0.0f); //--- 카메라 바라보는 방향
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); //--- 카메라 위쪽 방향
 	glm::mat4 projection = glm::mat4(1.0f);
+	GLfloat tmpX = lightZ * glm::sin(glm::radians(Lradius)) + lightX * glm::cos(glm::radians(Lradius));
+	GLfloat tmpZ = lightZ * glm::cos(glm::radians(Lradius)) - lightX * glm::sin(glm::radians(Lradius));
 	unsigned int projectionLocation;
 	unsigned int modelLocation;
 	unsigned int viewLocation;
@@ -400,6 +447,7 @@ void DrawMain()
 	int objColorLocation;
 	int viewPosition;
 
+	
 	if (Perspective)
 	{
 		projection = glm::perspective(glm::radians(65.0f), (float)width / (float)height, 0.1f, 50.0f);
@@ -408,14 +456,14 @@ void DrawMain()
 
 	else
 	{
-		projection = glm::ortho(-8.0, 8.0, -8.0, 8.0, -8.0, 8.0);
+		projection = glm::ortho(-8.0, 8.0, -8.0, 8.0, -10.0, 10.0);
 	}
 
 	view = glm::lookAt(cameraPos, cameraDirection, cameraUp);
-	transformMatrix = glm::rotate(transformMatrix, (GLfloat)glm::radians(30.0), glm::vec3(1.0, 1.0, 0.0));
 	transformMatrix = glm::rotate(transformMatrix, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
 
 	glUseProgram(s_program[0]);
+	glBindVertexArray(vao[0]);
 
 	viewLocation = glGetUniformLocation(s_program[0], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -426,11 +474,17 @@ void DrawMain()
 	modelLocation = glGetUniformLocation(s_program[0], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
 
-	glBindVertexArray(vao[0]);
-	glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, 0);
+	lightPosLocation = glGetUniformLocation(s_program[0], "lightPos");
+	glUniform3f(lightPosLocation, tmpX, lightY, tmpZ);
+
+	lightColorLocation = glGetUniformLocation(s_program[0], "lightColor");
+	glUniform3f(lightColorLocation, lightColor, lightColor, lightColor);
+
+	glDrawArrays(GL_LINES, 0, 6);
 
 	glUseProgram(s_program[1]);
-	glBindVertexArray(vao[1]);
+
+	// Object 생성
 
 	viewLocation = glGetUniformLocation(s_program[1], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
@@ -439,16 +493,21 @@ void DrawMain()
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
 	modelLocation = glGetUniformLocation(s_program[1], "modelTransform");
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(OrbitMatrix));
 
-	lightPosLocation = glGetUniformLocation(s_program[1], "lightPos"); //--- lightPos 값 전달: (0.0, 0.0, 5.0);
-	glUniform3f(lightPosLocation, 0.0, 0.0, 5.0);
+	lightPosLocation = glGetUniformLocation(s_program[1], "lightPos");
+	glUniform3f(lightPosLocation, tmpX, lightY, tmpZ);
 	lightColorLocation = glGetUniformLocation(s_program[1], "lightColor"); //--- lightColor 값 전달: (1.0, 1.0, 1.0) 백색
-	glUniform3f(lightColorLocation, 1.0, 1.0, 1.0);
+	glUniform3f(lightColorLocation, lightColor, lightColor, lightColor);
 	objColorLocation = glGetUniformLocation(s_program[1], "objectColor"); //--- object Color값 전달: (1.0, 0.5, 0.3)의 색
-	glUniform3f(objColorLocation, 1.0, 0.5, 0.3);
-	viewPosition = glGetUniformLocation(s_program[1], "viewPos"); //--- object Color값 전달: (1.0, 0.5, 0.3)의 색
-	glUniform3f(viewPosition, 0.0, 0.0, 5.0);
+	glUniform3f(objColorLocation, 0.23, 0.70, 0.44);
+	viewPosition = glGetUniformLocation(s_program[1], "viewPos");
+	glUniform3f(viewPosition, 0.0, 0.0, 4.0);
+	glBindVertexArray(vao[2]);
+	glDrawArrays(GL_LINES, 0, 360);
+	glDrawArrays(GL_LINES, 1, 359);
+
+	glBindVertexArray(vao[1]);
 
 	if (ShowHexahedron)
 	{
@@ -488,6 +547,8 @@ void DrawMain()
 
 	else
 	{
+		transformMatrix = glm::translate(transformMatrix, glm::vec3(0.0, 0.0, 0.0));
+
 		glm::mat4 Pyramid[4] = { glm::mat4(1.0f), glm::mat4(1.0f), glm::mat4(1.0f), glm::mat4(1.0f) };
 		Pyramid[0] = glm::translate(Pyramid[0], glm::vec3(0.0, -BOXSIZE, +BOXSIZE));
 		Pyramid[0] = glm::rotate(Pyramid[0], (GLfloat)glm::radians(Oradius), glm::vec3(1.0, 0.0, 0.0));
@@ -524,6 +585,19 @@ void DrawMain()
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(Pyramid[3]));
 		glDrawArrays(GL_TRIANGLES, 45, 3);
 	}
+
+	// 빛 생성
+	lightMatrix = glm::translate(lightMatrix, glm::vec3(tmpX, lightY, tmpZ));
+	lightMatrix = glm::rotate(lightMatrix, (GLfloat)glm::radians(Lradius), glm::vec3(0.0, 1.0, 0.0));
+	lightMatrix = glm::scale(lightMatrix, glm::vec3(0.5, 0.5, 0.5));
+
+
+	modelLocation = glGetUniformLocation(s_program[1], "modelTransform");
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(lightMatrix));
+
+	objColorLocation = glGetUniformLocation(s_program[1], "objectColor"); //--- object Color값 전달: (1.0, 0.5, 0.3)의 색
+	glUniform3f(objColorLocation, 0.8, 0.8, 0.8);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
 void InitVertices()
@@ -556,4 +630,15 @@ void InitVertices()
 	{
 		std::cout << i << "번째: (" << vertices[6 * i] << ", " << vertices[6 * i + 1] << ", " << vertices[6 * i + 2] << "), (" << vertices[6 * i + 3] << ", " << vertices[6 * i + 4] << ", " << vertices[6 * i + 5] << ")" << std::endl;
 	}*/
+}
+
+void InitDots()
+{
+	int iDegree = 0;
+	for (int i = 0; i < 360; ++i)
+	{
+		OrbitDots[i][0] = lightZ * (GLfloat)cos(iDegree * PI / 180.0f);
+		OrbitDots[i][2] = lightZ * (GLfloat)sin(iDegree * PI / 180.0f);
+		iDegree = (iDegree + 1) % 360;
+	}
 }
