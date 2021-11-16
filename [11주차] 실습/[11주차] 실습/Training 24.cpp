@@ -430,6 +430,7 @@ void TimerFunc(int value)
 void DrawMain()
 {
 	glm::mat4 transformMatrix = glm::mat4(1.0f);
+	glm::mat4 rotateMatrix = glm::mat4(1.0f);
 	glm::mat4 OrbitMatrix = glm::mat4(1.0f);
 	glm::mat4 lightMatrix = glm::mat4(1.0f);
 	glm::mat4 view = glm::mat4(1.0f);
@@ -442,6 +443,7 @@ void DrawMain()
 	unsigned int projectionLocation;
 	unsigned int modelLocation;
 	unsigned int viewLocation;
+	unsigned int rotateLocation;
 	int lightPosLocation;
 	int lightColorLocation;
 	int objColorLocation;
@@ -461,6 +463,7 @@ void DrawMain()
 
 	view = glm::lookAt(cameraPos, cameraDirection, cameraUp);
 	transformMatrix = glm::rotate(transformMatrix, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
+	rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
 
 	glUseProgram(s_program[0]);
 	glBindVertexArray(vao[0]);
@@ -474,6 +477,9 @@ void DrawMain()
 	modelLocation = glGetUniformLocation(s_program[0], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
 
+	rotateLocation = glGetUniformLocation(s_program[0], "rotateTransform");
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(rotateMatrix));
+
 	lightPosLocation = glGetUniformLocation(s_program[0], "lightPos");
 	glUniform3f(lightPosLocation, tmpX, lightY, tmpZ);
 
@@ -485,7 +491,7 @@ void DrawMain()
 	glUseProgram(s_program[1]);
 
 	// Object 积己
-
+	rotateMatrix = glm::mat4(1.0f);
 	viewLocation = glGetUniformLocation(s_program[1], "viewTransform");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 
@@ -494,6 +500,9 @@ void DrawMain()
 
 	modelLocation = glGetUniformLocation(s_program[1], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(OrbitMatrix));
+
+	rotateLocation = glGetUniformLocation(s_program[1], "rotateTransform");
+	glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(rotateMatrix));
 
 	lightPosLocation = glGetUniformLocation(s_program[1], "lightPos");
 	glUniform3f(lightPosLocation, tmpX, lightY, tmpZ);
@@ -529,13 +538,24 @@ void DrawMain()
 		LeftRightMatrix = transformMatrix * LeftRightMatrix;
 
 		// 拉搁
+		rotateMatrix = glm::mat4(1.0f);
+		rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
+		rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Tradius), glm::vec3(1.0, 0.0, 0.0));
+		glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(rotateMatrix));
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(TopMatrix));
 		glDrawArrays(GL_TRIANGLES, 24, 6);
 		// 菊搁
+		rotateMatrix = glm::mat4(1.0f);
+		rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
+		rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Fradius), glm::vec3(-1.0, 0.0, 0.0));
+		glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(rotateMatrix));
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(FrontMatrix));
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		// 糠搁
+		rotateMatrix = glm::mat4(1.0f);
+		rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
+		glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(rotateMatrix));
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(LeftRightMatrix));
 		glDrawArrays(GL_TRIANGLES, 12, 12);
 
@@ -570,27 +590,47 @@ void DrawMain()
 		Pyramid[3] = glm::translate(Pyramid[3], glm::vec3(+BOXSIZE, +BOXSIZE, 0.0));
 		Pyramid[3] = transformMatrix * Pyramid[3];
 
+		rotateMatrix = glm::mat4(1.0f);
+		rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
+		glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(rotateMatrix));
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
 		glDrawArrays(GL_TRIANGLES, 30, 6);
 
+		rotateMatrix = glm::mat4(1.0f);
+		rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
+		rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Oradius), glm::vec3(-1.0, 0.0, 0.0));
+		glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(rotateMatrix));
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(Pyramid[0]));
 		glDrawArrays(GL_TRIANGLES, 36, 3);
 
+		rotateMatrix = glm::mat4(1.0f);
+		rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
+		rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Oradius), glm::vec3(0.0, 0.0, 1.0));
+		glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(rotateMatrix));
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(Pyramid[1]));
 		glDrawArrays(GL_TRIANGLES, 39, 3);
 
+		rotateMatrix = glm::mat4(1.0f);
+		rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
+		rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Oradius), glm::vec3(1.0, 0.0, 0.0));
+		glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(rotateMatrix));
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(Pyramid[2]));
 		glDrawArrays(GL_TRIANGLES, 42, 3);
 
+		rotateMatrix = glm::mat4(1.0f);
+		rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Rradius), glm::vec3(0.0, 1.0, 0.0));
+		rotateMatrix = glm::rotate(rotateMatrix, (GLfloat)glm::radians(Oradius), glm::vec3(0.0, 0.0, -1.0));
+		glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(rotateMatrix));
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(Pyramid[3]));
 		glDrawArrays(GL_TRIANGLES, 45, 3);
 	}
 
-	// 蝴 积己
 	lightMatrix = glm::translate(lightMatrix, glm::vec3(tmpX, lightY, tmpZ));
 	lightMatrix = glm::rotate(lightMatrix, (GLfloat)glm::radians(Lradius), glm::vec3(0.0, 1.0, 0.0));
 	lightMatrix = glm::scale(lightMatrix, glm::vec3(0.5, 0.5, 0.5));
 
+	
+	glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(lightMatrix));
 
 	modelLocation = glGetUniformLocation(s_program[1], "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(lightMatrix));
