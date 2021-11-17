@@ -27,6 +27,9 @@
     <ClCompile Include="objRead.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Training 26.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader.h">
