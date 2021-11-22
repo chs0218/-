@@ -1,0 +1,26 @@
+﻿  Training27.cpp
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.h(22,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.h(23,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.h(24,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.h(32,1): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.h(89,1): warning C4305: '초기화 중': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\objRead.cpp(73,29): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\objRead.cpp(74,29): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\objRead.cpp(75,29): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.cpp(39,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.cpp(40,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.cpp(50,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.cpp(51,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.cpp(52,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.cpp(54,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.cpp(55,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.cpp(56,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.cpp(58,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.cpp(59,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\shape.cpp(60,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\Training27.cpp(376,48): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\Training27.cpp(388,48): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\Training27.cpp(400,48): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\Training27.cpp(503,46): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\[12주차] 실습\Training27.cpp(518,45): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+  [12주차] 실습.vcxproj -> D:\Visual Studio\Project\컴퓨터그래픽스\[12주차] 실습\Debug\[12주차] 실습.exe

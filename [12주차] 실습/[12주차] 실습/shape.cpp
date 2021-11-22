@@ -41,3 +41,50 @@ void InitDots()
 		iDegree = (iDegree + 1) % 360;
 	}
 }
+
+void Sierpinski(GLfloat V1[], GLfloat V2[], GLfloat V3[], GLfloat Normal[], int n)
+{
+	GLfloat V01[3], V12[3], V20[3];
+	if (n > 0)
+	{
+		V01[0] = (V1[0] + V2[0]) / 2.0;
+		V01[1] = (V1[1] + V2[1]) / 2.0;
+		V01[2] = (V1[2] + V2[2]) / 2.0;
+
+		V12[0] = (V2[0] + V3[0]) / 2.0;
+		V12[1] = (V2[1] + V3[1]) / 2.0;
+		V12[2] = (V2[2] + V3[2]) / 2.0;
+							   
+		V20[0] = (V3[0] + V1[0]) / 2.0;
+		V20[1] = (V3[1] + V1[1]) / 2.0;
+		V20[2] = (V3[2] + V1[2]) / 2.0;
+
+		Sierpinski(V1, V01, V20, Normal, n - 1);
+		Sierpinski(V2, V12, V01, Normal, n - 1);
+		Sierpinski(V3, V20, V12, Normal, n - 1);
+	}
+
+	else
+	{
+		float Sierpinskivertices[] = {
+			V1[0], V1[1], V1[2], Normal[0], Normal[1], Normal[2],
+			V2[0], V2[1], V2[2], Normal[0], Normal[1], Normal[2],
+			V3[0], V3[1], V3[2], Normal[0], Normal[1], Normal[2],
+		};
+		glBindVertexArray(SierpinskiVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, SierpinskiVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Sierpinskivertices), Sierpinskivertices, GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+
+		DrawTriangle();
+	}
+}
+
+void DrawTriangle()
+{
+	glBindVertexArray(SierpinskiVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+}
