@@ -26,7 +26,7 @@ const int num_triangles = 1;
 
 GLfloat lightX = 0.0f, lightY = 3.0f, lightZ = 8.0f, lightColor[3] = { 1.0f, 1.0f, 1.0f };
 GLfloat Lradius = 0.0f, OrbitM = 0.0f, OrbitR = 0.0f, OrbitS = 0.0f, ambientlight = 0.3f;
-bool RotateMinus = false, RotateL = false, RotateM = false, RotateO = false, RotateS = false;
+bool RotateMinus = false, RotateL = false, RotateM = false, RotateO = false, RotateS = false, FallSnow = false;
 void Display();
 void Reshape(int w, int h);
 void Keyboard(unsigned char key, int x, int y);
@@ -170,7 +170,8 @@ void Display()
 	DrawCircle(view, projection, ResultX, ResultZ);
 	DrawShapes(view, projection, ResultX, ResultZ);
 	Drawlight(view, projection, ResultX, ResultZ);
-	DrawSnow(view, projection, ResultX, ResultZ);
+	if(FallSnow)
+		DrawSnow(view, projection, ResultX, ResultZ);
 	glutSwapBuffers();
 }
 
@@ -263,9 +264,13 @@ void Keyboard(unsigned char key, int x, int y)
 	case 'a':
 		RotateO = !RotateO;
 		break;
+	case 'W':
+	case 'w':
+		RotateS = !RotateS;
+		break;
 	case 'S':
 	case 's':
-		RotateS = !RotateS;
+		FallSnow = !FallSnow;
 		break;
 	case 'D':
 	case 'd':
