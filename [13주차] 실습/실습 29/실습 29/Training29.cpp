@@ -25,6 +25,7 @@ const int num_vertices = 3;
 const int num_triangles = 1;
 
 bool RotateMinus = false, RotateY = false, RotateL = false, RotateM = false, RotateO = false, RotateS = false, FallSnow = false;
+bool Light = true;
 void Display();
 void Reshape(int w, int h);
 void Keyboard(unsigned char key, int x, int y);
@@ -49,7 +50,7 @@ int main(int argc, char** argv)
 	glutInitWindowSize(g_window_w, g_window_h);
 	glutInitWindowPosition(0, 0);
 
-	glutCreateWindow("Training 27");
+	glutCreateWindow("Training 29");
 
 	//////////////////////////////////////////////////////////////////////////////////////
 	//// initialize GLEW
@@ -306,6 +307,21 @@ void Keyboard(unsigned char key, int x, int y)
 	case 'Y':
 	case 'y':
 		RotateY = !RotateY;
+		break;
+	case 'M':
+	case 'm':
+		if (lightColor[0] == 0.0f)
+		{
+			lightColor[0] = 1.0f;
+			lightColor[1] = 1.0f;
+			lightColor[2] = 1.0f;
+		}
+		else
+		{
+			lightColor[0] = 0.0f;
+			lightColor[1] = 0.0f;
+			lightColor[2] = 0.0f;
+		}
 		break;
 	case 'i':
 		if (lightZ < 10.0)

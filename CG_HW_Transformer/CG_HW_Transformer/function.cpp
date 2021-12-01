@@ -17,6 +17,8 @@ void InitBuffer()
 
 void Display()
 {
+	
+
 	glm::mat4 transformMatrix = glm::mat4(1.0f);
 	glm::vec3 cameraPos = glm::vec3(cameraX, cameraY, cameraZ); //--- 카메라 위치
 	//glm::vec3 cameraDirection = glm::vec3(transX, transY, transZ); //--- 카메라 바라보는 방향
@@ -127,55 +129,54 @@ void Display()
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	// skyblue
-	glUniform3f(objColorLocation, 0.0, 1.0, 1.0);
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(rightarmMatrix));
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	for (int i = 0; i < robotNum; ++i)
+	{
+		// skyblue
+		glUniform3f(objColorLocation, 0.0, 1.0, 1.0);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getRightArmM()));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	// blue
-	glUniform3f(objColorLocation, 0.0, 0.0, 1.0);
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(bodyMatrix));
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+		// blue
+		glUniform3f(objColorLocation, 0.0, 0.0, 1.0);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getBodyM()));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(headMatrix));
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getHeadM()));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	// purple
-	glUniform3f(objColorLocation, 1.0, 0.0, 1.0);
+		// purple
+		glUniform3f(objColorLocation, 1.0, 0.0, 1.0);
 
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(leftarmMatrix));
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getLeftArmM()));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	// green
-	glUniform3f(objColorLocation, 0.0, 1.0, 0.0);
+		// green
+		glUniform3f(objColorLocation, 0.0, 1.0, 0.0);
 
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(faceMatrix));
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getFaceM()));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	// yello
-	glUniform3f(objColorLocation, 1.0, 1.0, 0.0);
+		// yello
+		glUniform3f(objColorLocation, 1.0, 1.0, 0.0);
 
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(leftlegMatrix));
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getLeftLegM()));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(rightlegMatrix));
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getRightLegM()));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
 
 	// red
 	glUniform3f(objColorLocation, 1.0, 0.0, 0.0);
 
-	ObstacleMatrix = glm::mat4(1.0f);
-	ObstacleMatrix = glm::translate(ObstacleMatrix, glm::vec3(RandomX[0], -0.85 + BOXSIZE, RandomZ[0]));
-	ObstacleMatrix = glm::scale(ObstacleMatrix, glm::vec3(0.5, 0.3, 0.5));
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(ObstacleMatrix));
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-	ObstacleMatrix = glm::mat4(1.0f);
-	ObstacleMatrix = glm::translate(ObstacleMatrix, glm::vec3(RandomX[1], -0.85 + BOXSIZE, RandomZ[1]));
-	ObstacleMatrix = glm::scale(ObstacleMatrix, glm::vec3(0.5, 0.3, 0.5));
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(ObstacleMatrix));
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	for (int i = 0; i < NUM; ++i)
+	{
+		ObstacleMatrix = glm::mat4(1.0f);
+		ObstacleMatrix = glm::translate(ObstacleMatrix, glm::vec3(RandomX[i], -0.85 + BOXSIZE, RandomZ[i]));
+		ObstacleMatrix = glm::scale(ObstacleMatrix, glm::vec3(0.5, 0.3, 0.5));
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(ObstacleMatrix));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
 
 	glutSwapBuffers();
 }
@@ -190,93 +191,8 @@ void Reshape(int w, int h)
 
 void TimerFunc(int value)
 {
-	if (OpenF)
-	{
-		if (Fradius > -89.0)
-		{
-			Fradius = (GLfloat)((int)(Fradius - 1.0f) % 90);
-		}
-	}
-
-	if (CloseF)
-	{
-		Fradius = (GLfloat)((int)(Fradius + 1.0f) % 90);
-		if (Fradius > -1.0)
-		{
-			CloseF = false;
-		}
-	}
-
-	if (modelMove)
-	{
-		if (armlegPlus)
-		{
-			armlegR = armlegR + 2.0;
-			if (armlegR >= 45.0)
-				armlegPlus = false;
-		}
-		else
-		{
-			armlegR = armlegR - 2.0;
-			if (armlegR <= -45.0)
-				armlegPlus = true;
-		}
-
-		switch (dir)
-		{
-		case 0:
-			transZ += Speed;
-			if (transZ > 8.0f)
-				transZ = transZ - 16.0f;
-			if (CheckCollision())
-				transZ -= Speed;
-			break;
-		case 1:
-			transX += Speed;
-			if (transX > 8.0f)
-				transX = transX - 16.0f;
-			if (CheckCollision())
-				transX -= Speed;
-			break;
-		case 2:
-			transZ -= Speed;
-			if (transZ < -8.0f)
-				transZ = transZ + 16.0f;
-			if (CheckCollision())
-				transZ += Speed;
-			break;
-		case 3:
-			transX -= Speed;
-			if (transX < -8.0f)
-				transX = transX + 16.0f;
-			if (CheckCollision())
-				transX += Speed;
-			break;
-		default:
-			break;
-		}
-	}
-
-	else
-	{
-		armlegR = 0.0f;
-	}
-	if (jumpUp)
-	{
-		transY = transY + Speed;
-		if (transY > 3.0)
-			jumpUp = false;
-	}
-
-	else
-	{
-		transY = transY - Speed;
-		if (CheckCollision())
-			transY += Speed;
-		if (transY < 2.0)
-			transY = 2.0;
-	}
-
+	for(int i=0; i<robotNum; ++i)
+		robots[i].Update();
 	if (RotateY)
 		RotateCameraCenterY();
 
@@ -288,40 +204,12 @@ void Keyboard(unsigned char key, int x, int y)
 {	
 	switch (key) {
 	case 's':
-		if (dir == 0 && modelMove)
-			modelMove = false;
-		else
-		{
-			modelMove = true;
-			dir = 0;
-		}
-		break;
 	case 'w':
-		if (dir == 2 && modelMove)
-			modelMove = false;
-		else
-		{
-			modelMove = true;
-			dir = 2;
-		}
-		break;
 	case 'a':
-		if (dir == 3 && modelMove)
-			modelMove = false;
-		else
-		{
-			modelMove = true;
-			dir = 3;
-		}
-		break;
 	case 'd':
-		if (dir == 1 && modelMove)
-			modelMove = false;
-		else
-		{
-			modelMove = true;
-			dir = 1;
-		}
+	case 'J':
+	case 'j':
+		robots[0].GetCommand(key);
 		break;
 	case 'X':
 		cameraX += 0.5f;
@@ -335,32 +223,17 @@ void Keyboard(unsigned char key, int x, int y)
 	case 'z':
 		cameraZ -= 0.5f;
 		break;
-	case 'O':
-	case 'o':
-		if (OpenF)
-		{
-			OpenF = false;
-			CloseF = true;
-		}
-		else
-			OpenF = true;
-		break;
 	case 'I':
 	case 'i':
 		RandomObjects();
 		cameraX = 0.0, cameraY = 0.0, cameraZ = 2.0, Fradius = 0.0f, armlegR = 0.0;
 		transX = 0.0, transY = 0.0, transZ = 0.0;
-		OpenF = false, CloseF = false, armlegPlus = true, modelMove = false, jumpUp = false, jumpDown = true, RotateY = false;
+		armlegPlus = true, modelMove = false, jumpUp = false, jumpDown = true, RotateY = false;
 		dir = 0;
 		break;
 	case 'Y':
 	case 'y':
 		RotateY = !RotateY;
-		break;
-	case 'J':
-	case 'j':
-		if (!jumpUp)
-			jumpUp = true;
 		break;
 	case 'Q':
 	case 'q':
@@ -397,26 +270,6 @@ void InitVertices()
 	}
 }
 
-void RandomObjects()
-{
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<int> dis(-600, 600);
-
-	RandomX[0] = (GLfloat)dis(gen) * 0.01;
-	RandomX[1] = (GLfloat)dis(gen) * 0.01;
-	RandomZ[0] = (GLfloat)dis(gen) * 0.01;
-	RandomZ[1] = (GLfloat)dis(gen) * 0.01;
-
-	while (RandomX[0] < 3.0 && RandomX[0] > -3.0)
-		RandomX[0] = (GLfloat)dis(gen) * 0.01;
-	while (RandomX[1] < 3.0 && RandomX[1] > -3.0)
-		RandomX[1] = (GLfloat)dis(gen) * 0.01;
-	while (RandomZ[0] < 3.0 && RandomZ[0] > -3.0)
-		RandomZ[0] = (GLfloat)dis(gen) * 0.01;
-	while (RandomZ[1] < 3.0 && RandomZ[1] > -3.0)
-		RandomZ[1] = (GLfloat)dis(gen) * 0.01;
-}
 
 void RotateCameraCenterY()
 {
@@ -425,24 +278,4 @@ void RotateCameraCenterY()
 
 	cameraX = tmpX;
 	cameraZ = tmpZ;
-}
-
-bool CheckCollision()
-{
-	if (RandomX[0] - BOXSIZE * 0.5 < transX + BOXSIZE * 0.2 &&
-		RandomX[0] + BOXSIZE * 0.5 > transX - BOXSIZE * 0.2 &&
-		0.0 < -1.1 * BOXSIZE + transY &&
-		0.3 > -2.05 * BOXSIZE + transY &&
-		RandomZ[0] - BOXSIZE * 0.5 < transZ + BOXSIZE * 0.2 &&
-		RandomZ[0] + BOXSIZE * 0.5 > transZ - BOXSIZE * 0.2)
-		return true;
-
-	if (RandomX[1] - BOXSIZE * 0.5 < transX + BOXSIZE * 0.2 &&
-		RandomX[1] + BOXSIZE * 0.5 > transX - BOXSIZE * 0.2 &&
-		0.0 < -1.05 * BOXSIZE + transY &&
-		0.3 > -2.05 * BOXSIZE + transY &&
-		RandomZ[1] - BOXSIZE * 0.5 < transZ + BOXSIZE * 0.2 &&
-		RandomZ[1] + BOXSIZE * 0.5 > transZ - BOXSIZE * 0.2)
-		return true;
-	return false;
 }

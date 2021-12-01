@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 	RandomObjects();
 	InitVertices();
 	InitBuffer();
-
+	CreateRobot(0.0, 2.0, 0.0, 0);
 	// callback functions
 	glutDisplayFunc(Display);
 	glutReshapeFunc(Reshape);

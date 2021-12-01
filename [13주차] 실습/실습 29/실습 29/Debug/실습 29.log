@@ -1,35 +1,35 @@
 ﻿  Training29.cpp
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.h(24,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.h(25,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.h(26,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.h(34,1): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.h(58,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.h(60,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.h(64,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.h(65,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.h(67,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.h(69,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.h(85,64): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.h(146,1): warning C4305: '초기화 중': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\objRead.cpp(73,29): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\objRead.cpp(74,29): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\objRead.cpp(75,29): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.cpp(39,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.cpp(40,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.cpp(73,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.cpp(74,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.cpp(75,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.cpp(77,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.cpp(78,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.cpp(79,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.cpp(81,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.cpp(82,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\shape.cpp(83,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\Training29.cpp(396,48): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\Training29.cpp(405,48): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\Training29.cpp(414,48): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\Training29.cpp(505,46): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\Training29.cpp(519,45): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\Training29.cpp(654,15): warning C4244: '초기화 중': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\실습 29\Training29.cpp(655,15): warning C4244: '초기화 중': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  실습 29.vcxproj -> D:\Visual Studio\Project\컴퓨터그래픽스\[13주차] 실습\실습 29\Debug\실습 29.exe
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.h(24,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.h(25,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.h(26,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.h(34,1): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.h(58,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.h(60,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.h(64,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.h(65,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.h(67,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.h(69,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.h(85,64): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.h(146,1): warning C4305: '초기화 중': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\objRead.cpp(73,29): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\objRead.cpp(74,29): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\objRead.cpp(75,29): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.cpp(39,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.cpp(40,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.cpp(73,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.cpp(74,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.cpp(75,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.cpp(77,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.cpp(78,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.cpp(79,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.cpp(81,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.cpp(82,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\shape.cpp(83,28): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\Training29.cpp(412,48): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\Training29.cpp(421,48): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\Training29.cpp(430,48): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\Training29.cpp(521,46): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\Training29.cpp(535,45): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\Training29.cpp(670,15): warning C4244: '초기화 중': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\-\[13주차] 실습\실습 29\실습 29\Training29.cpp(671,15): warning C4244: '초기화 중': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  실습 29.vcxproj -> D:\Projects\-\[13주차] 실습\실습 29\Debug\실습 29.exe

@@ -7,7 +7,8 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <random>
+#include "Robot.h"
+#include "Robot.cpp"
 
 #define BOXSIZE 1.0
 
@@ -73,22 +74,17 @@ GLuint g_window_h = 900;
 GLuint ShapeVAO;
 GLuint ShapeVBO;
 
-GLfloat RandomX[2], RandomZ[2];
 GLfloat cameraX = 0.0, cameraY = 3.0, cameraZ = 8.0, Fradius = 0.0f, armlegR = 0.0;
 GLfloat transX = 0.0, transY = 2.0, transZ = 0.0;
 GLfloat Speed = 0.05;
 
-bool OpenF = false, CloseF = false, armlegPlus = true, modelMove = false, jumpUp = false, jumpDown = true, RotateY = false;
+bool armlegPlus = true, modelMove = false, jumpUp = false, jumpDown = true, RotateY = false;
 int dir = 0;
 
 void InitBuffer();
-void DrawMain();
 void Display();
 void Reshape(int w, int h);
 void TimerFunc(int value);
 void Keyboard(unsigned char key, int x, int y);
-void RandomObjects();
 void RotateCameraCenterY();
-bool CheckCollision();
-
 #endif
