@@ -17,28 +17,12 @@ void InitBuffer()
 
 void Display()
 {
-	
-
-	glm::mat4 transformMatrix = glm::mat4(1.0f);
-	glm::vec3 cameraPos = glm::vec3(cameraX, cameraY, cameraZ); //--- 카메라 위치
-	//glm::vec3 cameraDirection = glm::vec3(transX, transY, transZ); //--- 카메라 바라보는 방향
-	glm::vec3 cameraDirection = glm::vec3(0.0, 0.0, 0.0); //--- 카메라 바라보는 방향
+	glm::vec3 cameraPos, cameraDirection;
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); //--- 카메라 위쪽 방향
 	glm::mat4 projection = glm::mat4(1.0f);
 	glm::mat4 view = glm::mat4(1.0f);
-
+	glm::mat4 transformMatrix = glm::mat4(1.0f);
 	glm::mat4 ObstacleMatrix = glm::mat4(1.0f);
-	glm::mat4 modeltransformMatrix = glm::mat4(1.0f);
-
-	glm::mat4 faceMatrix = glm::mat4(1.0f);
-	glm::mat4 bodyMatrix = glm::mat4(1.0f);
-	glm::mat4 headMatrix = glm::mat4(1.0f);
-	glm::mat4 leftarmMatrix = glm::mat4(1.0f);
-	glm::mat4 rightarmMatrix = glm::mat4(1.0f);
-	glm::mat4 leftlegMatrix = glm::mat4(1.0f);
-	glm::mat4 rightlegMatrix = glm::mat4(1.0f);
-
-	glm::mat4 FrontMatrix = glm::mat4(1.0f);
 
 	unsigned int projectionLocation;
 	unsigned int modelLocation;
@@ -49,53 +33,36 @@ void Display()
 	int objColorLocation;
 	int viewPosition;
 
+	if (CommandN)
+	{
+		cameraPos = glm::vec3(robots[0].getTransX(), robots[0].getTransY(), robots[0].getTransZ());
+		switch (robots[0].getDir())
+		{
+		case 0:
+			cameraDirection = glm::vec3(robots[0].getTransX(), robots[0].getTransY(), robots[0].getTransZ() + 1.0f);
+			break;
+		case 1:
+			cameraDirection = glm::vec3(robots[0].getTransX() + 1.0f, robots[0].getTransY(), robots[0].getTransZ());
+			break;
+		case 2:
+			cameraDirection = glm::vec3(robots[0].getTransX(), robots[0].getTransY(), robots[0].getTransZ() - 1.0f);
+			break;
+		case 3:
+			cameraDirection = glm::vec3(robots[0].getTransX() - 1.0f, robots[0].getTransY(), robots[0].getTransZ());
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+		cameraPos = glm::vec3(cameraX, cameraY, cameraZ);
+		cameraDirection = glm::vec3(robots[0].getTransX(), robots[0].getTransY(), robots[0].getTransZ()); //--- 카메라 바라보는 방향
+	}
+
 	transformMatrix = glm::scale(transformMatrix, glm::vec3(8.0, 8.0, 8.0));
 	transformMatrix = glm::translate(transformMatrix, glm::vec3(0.0, -BOXSIZE, 0.0));
 
-	modeltransformMatrix = glm::translate(modeltransformMatrix, glm::vec3(transX, -1.4 * BOXSIZE + transY, transZ));
-	modeltransformMatrix = glm::rotate(modeltransformMatrix, (GLfloat)glm::radians(90.0 * (GLfloat)dir), glm::vec3(0.0, 1.0, 0.0));
-
-	bodyMatrix = glm::translate(bodyMatrix, glm::vec3(0.0, 0.0, 0.0));
-	bodyMatrix = glm::scale(bodyMatrix, glm::vec3(0.2, 0.3, 0.2));
-	bodyMatrix = modeltransformMatrix * bodyMatrix;
-
-	headMatrix = glm::translate(headMatrix, glm::vec3(0.0, BOXSIZE * 0.45, 0.0));
-	headMatrix = glm::scale(headMatrix, glm::vec3(0.1, 0.15, 0.1));
-	headMatrix = modeltransformMatrix * headMatrix;
-
-	faceMatrix = glm::translate(faceMatrix, glm::vec3(0.0, BOXSIZE * 0.45, BOXSIZE * 0.1));
-	faceMatrix = glm::scale(faceMatrix, glm::vec3(0.05, 0.05, 0.05));
-	faceMatrix = modeltransformMatrix * faceMatrix;
-
-	leftarmMatrix = glm::translate(leftarmMatrix, glm::vec3(-0.275 * BOXSIZE, 0.0, 0.0));
-	leftarmMatrix = glm::translate(leftarmMatrix, glm::vec3(0.0, 0.075, 0.0));
-	leftarmMatrix = glm::rotate(leftarmMatrix, (GLfloat)glm::radians(armlegR), glm::vec3(1.0, 0.0, 0.0));
-	leftarmMatrix = glm::translate(leftarmMatrix, glm::vec3(0.0, -0.075, 0.0));
-	leftarmMatrix = glm::rotate(leftarmMatrix, (GLfloat)glm::radians(-30.0), glm::vec3(0.0, 0.0, 1.0));
-	leftarmMatrix = glm::scale(leftarmMatrix, glm::vec3(0.05, 0.15, 0.05));
-	leftarmMatrix = modeltransformMatrix * leftarmMatrix;
-
-	rightarmMatrix = glm::translate(rightarmMatrix, glm::vec3(0.275 * BOXSIZE, 0.0, 0.0));
-	rightarmMatrix = glm::translate(rightarmMatrix, glm::vec3(0.0, 0.075, 0.0));
-	rightarmMatrix = glm::rotate(rightarmMatrix, (GLfloat)glm::radians(-armlegR), glm::vec3(1.0, 0.0, 0.0));
-	rightarmMatrix = glm::translate(rightarmMatrix, glm::vec3(0.0, -0.075, 0.0));
-	rightarmMatrix = glm::rotate(rightarmMatrix, (GLfloat)glm::radians(30.0), glm::vec3(0.0, 0.0, 1.0));
-	rightarmMatrix = glm::scale(rightarmMatrix, glm::vec3(0.05, 0.15, 0.05));
-	rightarmMatrix = modeltransformMatrix * rightarmMatrix;
-
-	leftlegMatrix = glm::translate(leftlegMatrix, glm::vec3(-0.1 * BOXSIZE, -BOXSIZE * 0.45, 0.0));
-	leftlegMatrix = glm::translate(leftlegMatrix, glm::vec3(0.0, 0.15 * BOXSIZE, 0.0));
-	leftlegMatrix = glm::rotate(leftlegMatrix, (GLfloat)glm::radians(-armlegR), glm::vec3(1.0, 0.0, 0.0));
-	leftlegMatrix = glm::translate(leftlegMatrix, glm::vec3(0.0, -0.15 * BOXSIZE, 0.0));
-	leftlegMatrix = glm::scale(leftlegMatrix, glm::vec3(0.05, 0.15, 0.05));
-	leftlegMatrix = modeltransformMatrix * leftlegMatrix;
-
-	rightlegMatrix = glm::translate(rightlegMatrix, glm::vec3(0.1 * BOXSIZE, -BOXSIZE * 0.45, 0.0));
-	rightlegMatrix = glm::translate(rightlegMatrix, glm::vec3(0.0, 0.15 * BOXSIZE, 0.0));
-	rightlegMatrix = glm::rotate(rightlegMatrix, (GLfloat)glm::radians(armlegR), glm::vec3(1.0, 0.0, 0.0));
-	rightlegMatrix = glm::translate(rightlegMatrix, glm::vec3(0.0, -0.15 * BOXSIZE, 0.0));
-	rightlegMatrix = glm::scale(rightlegMatrix, glm::vec3(0.05, 0.15, 0.05));
-	rightlegMatrix = modeltransformMatrix * rightlegMatrix;
 
 	viewLocation = glGetUniformLocation(s_program, "viewTransform");	//---뷰변환행렬
 	projectionLocation = glGetUniformLocation(s_program, "projectionTransform");	//---투영변환행렬
@@ -120,7 +87,10 @@ void Display()
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 	glUniform3f(lightPosLocation, 0.0, 3.0, 8.0);
-	glUniform3f(lightColorLocation, 1.0, 1.0, 1.0);
+	if(CommandT)
+		glUniform3f(lightColorLocation, 1.0, 1.0, 1.0);
+	else
+		glUniform3f(lightColorLocation, 0.0, 0.0, 0.0);
 	glUniform3f(viewPosition, 0.0, 0.0, 4.0);
 	glUniform1f(ambientLocation, 0.3);
 
@@ -129,52 +99,61 @@ void Display()
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	for (int i = 0; i < robotNum; ++i)
+	for (int i = 0; i < MAXNUM; ++i)
 	{
-		// skyblue
-		glUniform3f(objColorLocation, 0.0, 1.0, 1.0);
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getRightArmM()));
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		if (robots[i].GetState() != obstacleState)
+		{
+			// skyblue
+			glUniform3f(objColorLocation, 0.0, 1.0, 1.0);
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getRightArmM()));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		// blue
-		glUniform3f(objColorLocation, 0.0, 0.0, 1.0);
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getBodyM()));
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+			// blue
+			glUniform3f(objColorLocation, 0.0, 0.0, 1.0);
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getBodyM()));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getHeadM()));
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getHeadM()));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		// purple
-		glUniform3f(objColorLocation, 1.0, 0.0, 1.0);
+			// purple
+			glUniform3f(objColorLocation, 1.0, 0.0, 1.0);
 
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getLeftArmM()));
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getLeftArmM()));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		// green
-		glUniform3f(objColorLocation, 0.0, 1.0, 0.0);
+			// green
+			glUniform3f(objColorLocation, 0.0, 1.0, 0.0);
 
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getFaceM()));
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getFaceM()));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		// yello
-		glUniform3f(objColorLocation, 1.0, 1.0, 0.0);
+			// yello
+			glUniform3f(objColorLocation, 1.0, 1.0, 0.0);
 
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getLeftLegM()));
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getLeftLegM()));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getRightLegM()));
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(robots[i].getRightLegM()));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+		else
+		{
+			// red
+			glUniform3f(objColorLocation, 1.0, 0.0, 0.0);
+
+			ObstacleMatrix = glm::mat4(1.0f);
+			ObstacleMatrix = glm::translate(ObstacleMatrix, glm::vec3(robots[i].getTransX(), -0.85 + BOXSIZE, robots[i].getTransZ()));
+			ObstacleMatrix = glm::scale(ObstacleMatrix, glm::vec3(0.5, 0.3, 0.5));
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(ObstacleMatrix));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 	}
 
-	// red
-	glUniform3f(objColorLocation, 1.0, 0.0, 0.0);
-
-	for (int i = 0; i < NUM; ++i)
+	for (int i = 0; i < OBS_NUM; ++i)
 	{
-		ObstacleMatrix = glm::mat4(1.0f);
-		ObstacleMatrix = glm::translate(ObstacleMatrix, glm::vec3(RandomX[i], -0.85 + BOXSIZE, RandomZ[i]));
-		ObstacleMatrix = glm::scale(ObstacleMatrix, glm::vec3(0.5, 0.3, 0.5));
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(ObstacleMatrix));
+		glUniform3f(objColorLocation, 0.0, 1.0, 0.0);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(rt_Obs[i].ReturnM()));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 
@@ -191,11 +170,25 @@ void Reshape(int w, int h)
 
 void TimerFunc(int value)
 {
-	for(int i=0; i<robotNum; ++i)
-		robots[i].Update();
+	for (int i = 0; i < MAXNUM; ++i)
+	{
+		robots[i].update();
+	}
+
+	for (int i = 0; i < OBS_NUM; ++i)
+	{
+		rt_Obs[i].update();
+	}
+
 	if (RotateY)
 		RotateCameraCenterY();
 
+	if (AutoMove)
+	{
+		robots[0].automove();
+	}
+
+	CheckCollision();
 	glutTimerFunc(25, TimerFunc, 1);
 	glutPostRedisplay();
 }
@@ -203,40 +196,108 @@ void TimerFunc(int value)
 void Keyboard(unsigned char key, int x, int y)
 {	
 	switch (key) {
+	case 'S':
 	case 's':
+		std::cout << "s/S: Z축으로 + 이동\n";
+		if (AutoMove)
+			AutoMove = false;
+		robots[0].GetCommand(key);
+		break;
+	case 'W':
 	case 'w':
+		std::cout << "w/W: Z축으로 - 이동\n";
+		if (AutoMove)
+			AutoMove = false;
+		robots[0].GetCommand(key);
+		break;
+	case 'A':
 	case 'a':
+		std::cout << "a/A: X축으로 - 이동\n";
+		if (AutoMove)
+			AutoMove = false;
+		robots[0].GetCommand(key);
+		break;
+	case 'D':
 	case 'd':
+		std::cout << "d/D: X축으로 + 이동\n";
+		if (AutoMove)
+			AutoMove = false;
+		robots[0].GetCommand(key);
+		break;
 	case 'J':
 	case 'j':
+		std::cout << "j/J: 점프\n";
+		if (AutoMove)
+			AutoMove = false;
 		robots[0].GetCommand(key);
+		break;
+	case 'M':
+	case 'm':
+		AutoMove = true;
+		std::cout << "m/M: 주인공 자동 이동\n";
+		break;
+	case 'N':
+	case 'n':
+		CommandN = !CommandN;
+		std::cout << "n/N: 시점 변환\n";
+		break;
+	case 'T':
+	case 't':
+		CommandT = !CommandT;
+		std::cout << "t/T: 조명 on/off\n";
 		break;
 	case 'X':
 		cameraX += 0.5f;
+		std::cout << "X: 카메라 X축 +방향 이동\n";
 		break;
 	case 'x':
 		cameraX -= 0.5f;
+		std::cout << "x: 카메라 X축 -방향 이동\n";
 		break;
 	case 'Z':
 		cameraZ += 0.5f;
+		std::cout << "Z: 카메라 Z축 +방향 이동\n";
 		break;
 	case 'z':
 		cameraZ -= 0.5f;
+		std::cout << "z: 카메라 Z축 -방향 이동\n";
 		break;
 	case 'I':
 	case 'i':
-		RandomObjects();
-		cameraX = 0.0, cameraY = 0.0, cameraZ = 2.0, Fradius = 0.0f, armlegR = 0.0;
-		transX = 0.0, transY = 0.0, transZ = 0.0;
-		armlegPlus = true, modelMove = false, jumpUp = false, jumpDown = true, RotateY = false;
-		dir = 0;
+		RotateY = false, RotateMinus = false;
+		std::cout << "i/I: 카메라 정지\n";
 		break;
-	case 'Y':
-	case 'y':
-		RotateY = !RotateY;
+	case 'F':
+	case 'f':
+		cameraX = 0.0, cameraY = 3.0, cameraZ = 8.0;
+		RotateY = false, RotateMinus = false;
+		AutoMove = false, CommandT = true, CommandN = false;
+		InitRobot();
+		std::cout << "f/F: 초기화\n";
+		break;
+	case 'C':
+		if (RotateY && RotateMinus)
+			RotateY = false;
+		else
+		{
+			RotateY = true;
+			RotateMinus = true;
+		}
+		std::cout << "C: 카메라 Y축 시계방향 회전\n";
+		break;
+	case 'c':
+		if(RotateY && !RotateMinus)
+			RotateY = false;
+		else
+		{
+			RotateY = true;
+			RotateMinus = false;
+		}
+		std::cout << "c: 카메라 Y축 반시계방향 회전\n";
 		break;
 	case 'Q':
 	case 'q':
+		std::cout << "q/Q: 프로그램 종료\n";
 		glutLeaveMainLoop();
 		break;
 	}
@@ -273,8 +334,17 @@ void InitVertices()
 
 void RotateCameraCenterY()
 {
-	GLfloat tmpX = cameraZ * glm::sin(glm::radians(1.0)) + cameraX * glm::cos(glm::radians(1.0));
-	GLfloat tmpZ = cameraZ * glm::cos(glm::radians(1.0)) - cameraX * glm::sin(glm::radians(1.0));
+	GLfloat tmpX, tmpZ;
+	if (RotateMinus)
+	{
+		tmpX = cameraZ * glm::sin(glm::radians(-1.0)) + cameraX * glm::cos(glm::radians(-1.0));
+		tmpZ = cameraZ * glm::cos(glm::radians(-1.0)) - cameraX * glm::sin(glm::radians(-1.0));
+	}
+	else
+	{
+		tmpX = cameraZ * glm::sin(glm::radians(1.0)) + cameraX * glm::cos(glm::radians(1.0));
+		tmpZ = cameraZ * glm::cos(glm::radians(1.0)) - cameraX * glm::sin(glm::radians(1.0));
+	}
 
 	cameraX = tmpX;
 	cameraZ = tmpZ;

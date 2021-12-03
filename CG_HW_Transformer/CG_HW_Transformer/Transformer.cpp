@@ -49,10 +49,10 @@ int main(int argc, char** argv)
 	glLinkProgram(s_program);
 	checkCompileErrors(s_program, "PROGRAM");
 
-	RandomObjects();
 	InitVertices();
 	InitBuffer();
-	CreateRobot(0.0, 2.0, 0.0, 0);
+	InitRobot();
+
 	// callback functions
 	glutDisplayFunc(Display);
 	glutReshapeFunc(Reshape);

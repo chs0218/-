@@ -159,6 +159,7 @@
     <ClInclude Include="makeShader.h" />
     <ClInclude Include="objRead.h" />
     <ClInclude Include="Robot.h" />
+    <ClInclude Include="RT_Obstacle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

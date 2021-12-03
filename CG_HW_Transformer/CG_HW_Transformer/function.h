@@ -7,8 +7,10 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <time.h>
 #include "Robot.h"
 #include "Robot.cpp"
+#include "RT_Obstacle.h"
 
 #define BOXSIZE 1.0
 
@@ -74,12 +76,10 @@ GLuint g_window_h = 900;
 GLuint ShapeVAO;
 GLuint ShapeVBO;
 
-GLfloat cameraX = 0.0, cameraY = 3.0, cameraZ = 8.0, Fradius = 0.0f, armlegR = 0.0;
-GLfloat transX = 0.0, transY = 2.0, transZ = 0.0;
-GLfloat Speed = 0.05;
+GLfloat cameraX = 0.0, cameraY = 3.0, cameraZ = 8.0;
 
-bool armlegPlus = true, modelMove = false, jumpUp = false, jumpDown = true, RotateY = false;
-int dir = 0;
+bool RotateY = false, RotateMinus = false;
+bool AutoMove = false, CommandT = true, CommandN = false;
 
 void InitBuffer();
 void Display();

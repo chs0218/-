@@ -1,11 +1,17 @@
 #ifndef _Robot
 #define _Robot
 #include <random>
+#include <ctime>
 
 #define BOXSIZE 1.0
-#define NUM 8
-void RandomObjects();
-GLfloat RandomX[NUM], RandomZ[NUM];
+#define MAXNUM 10
+
+enum State
+{
+	mainState,
+	obstacleState,
+	followState
+};
 
 class Robot {
 	GLfloat transX = 0.0f, transY = 2.0f, transZ = 0.0f;
@@ -18,32 +24,43 @@ class Robot {
 	glm::mat4 rightarmMatrix = glm::mat4(1.0f);
 	glm::mat4 leftlegMatrix = glm::mat4(1.0f);
 	glm::mat4 rightlegMatrix = glm::mat4(1.0f);
+	int nowState = obstacleState;
 	bool armlegPlus = true, modelMove = false, jumpUp = false, jumpDown = true;
 	int dir = 0;
+	clock_t now = clock();
+
+	GLfloat RecordX[10] = {};
+	GLfloat RecordY[10] = {};
+	GLfloat RecordZ[10] = {};
+	int RecordDir[10] = {};
+	bool RecordMove[10] = {};
 public:
+	Robot* target = nullptr;
+
 	Robot() {
 		transX = 0.0f;
 		transY = 2.0f;
 		transZ = 0.0f;
 		Speed = 0.05f;
 		armlegR = 0.0f;
+		target = nullptr;
 		dir = 0;
-		std::cout << "Create NULL" << std::endl;
 	}
 
-	Robot(GLfloat x, GLfloat y, GLfloat z, int dir) {
+	Robot(GLfloat x, GLfloat y, GLfloat z, int Dir) {
 		transX = x;
 		transY = 2.0f;
 		transZ = z;
 		Speed = 0.05f;
 		armlegR = 0.0f;
-		dir = dir;
-		std::cout << "Create Defined" << std::endl;
+		target = nullptr;
+		dir = Dir;
 	}
 
 	void GetCommand(unsigned char key)
 	{
 		switch (key) {
+		case 'S':
 		case 's':
 			if (dir == 0 && modelMove)
 				modelMove = false;
@@ -53,6 +70,7 @@ public:
 				dir = 0;
 			}
 			break;
+		case 'W':
 		case 'w':
 			if (dir == 2 && modelMove)
 				modelMove = false;
@@ -62,6 +80,7 @@ public:
 				dir = 2;
 			}
 			break;
+		case 'A':
 		case 'a':
 			if (dir == 3 && modelMove)
 				modelMove = false;
@@ -71,6 +90,7 @@ public:
 				dir = 3;
 			}
 			break;
+		case 'D':
 		case 'd':
 			if (dir == 1 && modelMove)
 				modelMove = false;
@@ -88,15 +108,64 @@ public:
 		}
 	}
 
-	void Update() {
+	void automove()
+	{
+		if (!modelMove)
+			modelMove = true;
+
+		clock_t tmp = clock();
+
+		if ((difftime(tmp, now) / 1000.0) > 2.0)
+		{
+			std::random_device rd;
+			std::mt19937 gen(rd());
+			std::uniform_int_distribution<int> dis(0, 3);
+
+			dir = dis(gen);
+			now = tmp;
+		}
+	}
+
+	int GetState() {
+		return nowState;
+	}
+
+	void update() {
+		switch (nowState)
+		{
+		case mainState:
+			move();
+			break;
+		case obstacleState:
+			break;
+		case followState:
+			Follow();
+			break;
+		}
+	}
+
+	void move() {
+		for (int i = 9; i > 0; --i)
+		{
+			RecordX[i] = RecordX[i - 1];
+			RecordY[i] = RecordY[i - 1];
+			RecordZ[i] = RecordZ[i - 1];
+			RecordDir[i] = RecordDir[i - 1];
+			RecordMove[i] = RecordMove[i - 1];
+		}
+		RecordX[0] = transX, RecordY[0] = transY, RecordZ[0] = transZ;
+		RecordDir[0] = dir, RecordMove[0] = modelMove;
+
 		if (modelMove)
 		{
+			
 			if (armlegPlus)
 			{
 				armlegR = armlegR + 2.0;
 				if (armlegR >= 45.0)
 					armlegPlus = false;
 			}
+
 			else
 			{
 				armlegR = armlegR - 2.0;
@@ -110,29 +179,21 @@ public:
 				transZ += Speed;
 				if (transZ > 8.0f)
 					transZ = transZ - 16.0f;
-				if (CheckCollision())
-					transZ -= Speed;
 				break;
 			case 1:
 				transX += Speed;
 				if (transX > 8.0f)
 					transX = transX - 16.0f;
-				if (CheckCollision())
-					transX -= Speed;
 				break;
 			case 2:
 				transZ -= Speed;
 				if (transZ < -8.0f)
 					transZ = transZ + 16.0f;
-				if (CheckCollision())
-					transZ += Speed;
 				break;
 			case 3:
 				transX -= Speed;
 				if (transX < -8.0f)
 					transX = transX + 16.0f;
-				if (CheckCollision())
-					transX += Speed;
 				break;
 			default:
 				break;
@@ -143,6 +204,7 @@ public:
 		{
 			armlegR = 0.0f;
 		}
+
 		if (jumpUp)
 		{
 			transY = transY + Speed;
@@ -153,11 +215,10 @@ public:
 		else
 		{
 			transY = transY - Speed;
-			if (CheckCollision())
-				transY += Speed;
 			if (transY < 2.0)
 				transY = 2.0;
 		}
+
 		UpdateMatrix();
 	}
 
@@ -217,20 +278,65 @@ public:
 		rightlegMatrix = glm::scale(rightlegMatrix, glm::vec3(0.05, 0.15, 0.05));
 		rightlegMatrix = modeltransformMatrix * rightlegMatrix;
 	}
-	bool CheckCollision()
+
+	void RandomObjects()
 	{
-		for (int i = 0; i < NUM; ++i)
-		{
-			if (RandomX[i] - BOXSIZE * 0.5 < transX + BOXSIZE * 0.2 &&
-				RandomX[i] + BOXSIZE * 0.5 > transX - BOXSIZE * 0.2 &&
-				0.0 < -1.1 * BOXSIZE + transY &&
-				0.3 > -2.05 * BOXSIZE + transY &&
-				RandomZ[i] - BOXSIZE * 0.5 < transZ + BOXSIZE * 0.2 &&
-				RandomZ[i] + BOXSIZE * 0.5 > transZ - BOXSIZE * 0.2)
-				return true;
-		}
-		return false;
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_int_distribution<int> dis(-600, 600);
+
+		transX = (GLfloat)dis(gen) * 0.01;
+		transZ = (GLfloat)dis(gen) * 0.01;
+
+		while (transX < 3.0 && transX > -3.0)
+			transX = (GLfloat)dis(gen) * 0.01;
+		while (transZ < 3.0 && transZ > -3.0)
+			transZ = (GLfloat)dis(gen) * 0.01;
 	}
+
+	void Follow()
+	{
+		for (int i = 9; i > 0; --i)
+		{
+			RecordX[i] = RecordX[i - 1];
+			RecordY[i] = RecordY[i - 1];
+			RecordZ[i] = RecordZ[i - 1];
+			RecordDir[i] = RecordDir[i - 1];
+			RecordMove[i] = RecordMove[i - 1];
+		}
+		RecordX[0] = transX, RecordY[0] = transY, RecordZ[0] = transZ;
+		RecordDir[0] = dir, RecordMove[0] = modelMove;
+
+		transX = target->getRecordX();
+		transY = target->getRecordY();
+		transZ = target->getRecordZ();
+		dir = target->getRecordDir();
+		modelMove = target->getRecordMove();
+
+		if (modelMove)
+		{
+			if (armlegPlus)
+			{
+				armlegR = armlegR + 2.0;
+				if (armlegR >= 45.0)
+					armlegPlus = false;
+			}
+
+			else
+			{
+				armlegR = armlegR - 2.0;
+				if (armlegR <= -45.0)
+					armlegPlus = true;
+			}
+		}
+
+		else
+		{
+			armlegR = 0.0f;
+		}
+		UpdateMatrix();
+	}
+
 	glm::mat4 getModelM()
 	{
 		return modeltransformMatrix;
@@ -270,12 +376,64 @@ public:
 	{
 		return rightlegMatrix;
 	}
+
+	GLfloat getTransX() 
+	{
+		return transX;
+	}
+
+	GLfloat getTransY()
+	{
+		return transY;
+	}
+
+	GLfloat getTransZ()
+	{
+		return transZ;
+	}
+
+	GLfloat getRecordX()
+	{
+		return RecordX[9];
+	}
+
+	GLfloat getRecordY()
+	{
+		return RecordY[9];
+	}
+
+	GLfloat getRecordZ()
+	{
+		return RecordZ[9];
+	}
+	int getDir()
+	{
+		return dir;
+	}
+
+	int getRecordDir()
+	{
+		return RecordDir[9];
+	}
+
+	bool getRecordMove()
+	{
+		return RecordMove[9];
+	}
+
+	void SetFollow(Robot* Ftarget)
+	{
+		target = Ftarget;
+	}
+
+	void setState(int state)
+	{
+		nowState = state;
+	}
 };
 
-
 Robot robots[10];
-int robotNum = 0;
-
-void CreateRobot(GLfloat x, GLfloat y, GLfloat z, int dir);
-
+int Index = 0;
+void InitRobot();
+void CheckCollision();
 #endif

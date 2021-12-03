@@ -1,30 +1,36 @@
 #include "Robot.h"
 
-void CreateRobot(GLfloat x, GLfloat y, GLfloat z, int dir)
+void InitRobot()
 {
-	if (robotNum < 10)
+	robots[0] = Robot(0.0, 2.0, 0.0, 0);
+	robots[0].UpdateMatrix();
+	robots[0].setState(mainState);
+	Index = 0;
+
+	for (int i = 1; i < MAXNUM; ++i)
 	{
-		robots[robotNum] = Robot(x, y, z, dir);
-		robots[robotNum].UpdateMatrix();
-		++robotNum;
-	}	
-}
-
-void RandomObjects()
-{
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<int> dis(-600, 600);
-
-	for (int i = 0; i < NUM; ++i)
-	{
-		RandomX[i] = (GLfloat)dis(gen) * 0.01;
-		RandomZ[i] = (GLfloat)dis(gen) * 0.01;
-
-		while (RandomX[i] < 3.0 && RandomX[i] > -3.0)
-			RandomX[i] = (GLfloat)dis(gen) * 0.01;
-		while (RandomX[i] < 3.0 && RandomX[i] > -3.0)
-			RandomX[i] = (GLfloat)dis(gen) * 0.01;
+		robots[i] = Robot();
+		robots[i].setState(obstacleState);
+		robots[i].RandomObjects();
+		robots[i].UpdateMatrix();
 	}
 }
 
+void CheckCollision()
+{
+	for (int i = 1; i < MAXNUM; ++i)
+	{
+		if (robots[i].getTransX() - BOXSIZE * 0.5 < robots[0].getTransX() + BOXSIZE * 0.2 &&
+			robots[i].getTransX() + BOXSIZE * 0.5 > robots[0].getTransX() - BOXSIZE * 0.2 &&
+			0.0 < -1.1 * BOXSIZE + robots[0].getTransY() &&
+			0.3 > -2.05 * BOXSIZE + robots[0].getTransY() &&
+			robots[i].getTransZ() - BOXSIZE * 0.5 < robots[0].getTransZ() + BOXSIZE * 0.2 &&
+			robots[i].getTransZ() + BOXSIZE * 0.5 > robots[0].getTransZ() - BOXSIZE * 0.2 &&
+			robots[i].GetState() == obstacleState)
+		{
+			robots[i].setState(followState);
+			robots[i].SetFollow(&robots[Index]);
+			Index = i;
+		}
+	}
+}
