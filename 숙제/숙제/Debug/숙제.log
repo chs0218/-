@@ -1,22 +1,22 @@
 ﻿  main.cpp
-D:\Projects\-\숙제\숙제\main.cpp(101,1): warning C4305: '초기화 중': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Projects\-\숙제\숙제\main.cpp(263,24): warning C4244: '=': 'std::streamoff'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(277,1): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
-D:\Projects\-\숙제\숙제\main.cpp(327,16): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(328,16): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(826,21): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-D:\Projects\-\숙제\숙제\main.cpp(1272,13): warning C4244: 'return': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(1277,13): warning C4244: 'return': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(1295,14): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(1299,14): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(1303,14): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(1307,14): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(1387,49): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(1388,49): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(1392,48): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(1393,48): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(1406,49): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(1407,49): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(1412,48): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\-\숙제\숙제\main.cpp(1413,48): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  숙제.vcxproj -> D:\Projects\-\숙제\Debug\숙제.exe
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(101,1): warning C4305: '초기화 중': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(263,24): warning C4244: '=': 'std::streamoff'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(277,1): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(327,16): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(328,16): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(826,21): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(1272,13): warning C4244: 'return': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(1277,13): warning C4244: 'return': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(1295,14): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(1299,14): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(1303,14): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(1307,14): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(1387,49): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(1388,49): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(1392,48): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(1393,48): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(1406,49): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(1407,49): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(1412,48): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Visual Studio\Project\컴퓨터그래픽스\숙제\숙제\main.cpp(1413,48): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  숙제.vcxproj -> D:\Visual Studio\Project\컴퓨터그래픽스\숙제\Debug\숙제.exe
